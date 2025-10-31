@@ -1,0 +1,72 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+rag_starter_kit.egg-info/
+
+# Virtual environments and env files
+.venv/
+venv/
+env/
+.env
+.env.*
+*.env
+!.env.example
+
+# Test and tool caches
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.cache/
+.mypy_cache/
+.ruff_cache/
+.pyright/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+
+# Editors/IDE
+.vscode/
+.idea/
+
+# Streamlit
+.streamlit/
+
+# Optional Next.js UI / Node
+node_modules/
+.next/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker local volumes
+qdrant_data/
+docker-data/
+
+# Local data and temp artifacts (safe to remove or adjust)
+data/
+!data/example_data/
+!data/example_data/**
+tmp/
+artifacts/
+configs/
+!configs/default.openai.yaml
+!configs/default.qdrant.yaml
+
+# Evals
+evals/datasets/*.jsonl
+evals/reports/*

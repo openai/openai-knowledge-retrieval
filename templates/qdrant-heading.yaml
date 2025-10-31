@@ -1,0 +1,118 @@
+project: "my-rag-project"
+
+env:
+  openai_api_key: ${OPENAI_API_KEY}
+  openai_organization: ${OPENAI_ORG_ID}
+  openai_project: ${OPENAI_PROJECT_ID}
+
+data:
+  paths: [] # Define data paths here
+  include_extensions: [".pdf", ".md", ".html", ".txt", ".docx", ".csv", ".xml"]
+  exclude_globs: ["**/node_modules/**", "**/.git/**", "**/example_data/**"]
+
+chunking:
+  strategy: "heading"
+  target_token_range: [300,700]
+  overlap_tokens: 60
+
+embeddings:
+  provider: "openai"
+  model: "text-embedding-3-large"
+
+vector_store:
+  backend: "custom"
+  custom:
+    kind: "qdrant"
+    qdrant:
+      url: "http://localhost:6333"
+      collection: "my_collection"
+      distance: "cosine"
+      ef: 128
+      m: 64
+
+query:
+  max_context_tokens: 4000
+  top_k: 8
+  expansion:
+    enabled: true
+    prompt_path: "expansion/query_expansion.md"
+    model: "gpt-5-mini"
+    reasoning_effort: "minimal"
+    variants: 3
+    style: ["keywords", "paraphrase"]
+  hyde:
+    enabled: true
+    prompt_path: "expansion/hyde.md"
+    model: "gpt-5-mini"
+    reasoning_effort: "minimal"
+  similarity_filter:
+    enabled: true
+    threshold: 0.4
+  rerank:
+    enabled: true
+    prompt_path: "rerank/cross_encoder.md"
+    model: "gpt-4.1-nano" # Reranker relies on logprobs which is not compatible with GPT-5
+    max_candidates: 24
+    score_threshold: 0.5
+
+synthesis:
+  model: "gpt-5"
+  reasoning_effort: "low"
+
+evals:
+  mode: "auto"
+  judge:
+    model: "gpt-5-mini"
+    style: "single"  # "single" | "pairwise"
+    rubric: "qa_grounded"
+    structured_outputs: true
+  thresholds:
+    pass_rate: 0.75
+    grounding_min: 0.8
+  openai_evals:
+    enabled: true
+    name_prefix: "RAG QA"
+    graders:
+      - type: score_model
+        name: Groundedness
+        model: gpt-5-mini
+        input:
+          - role: system
+            content: |
+              You grade **Groundedness** on 1-5.
+              Only reward claims supported by the provided Context (retrieved snippets).
+              Penalize any unsupported or contradictory statement.
+              Return JSON: {"result":"float"} (stringified float 1..5).
+          - role: user
+            content: |
+              Context (retrieved snippets):
+              {{item.citation_text}}
+              Candidate Answer:
+              {{sample.output_text}}
+        range: [1, 5]
+        pass_threshold: 4.3
+      - type: score_model
+        name: Answer Relevance
+        model: gpt-5-mini
+        input:
+          - role: system
+            content: |
+              You grade **Answer Relevance** on 1-7.
+              Score how directly and completely the answer addresses the user query.
+              Return JSON: {"result":"float"} (stringified float 1..7).
+          - role: user
+            content: |
+              Query:
+              {{item.question}}
+              Answer:
+              {{sample.output_text}}
+        range: [1, 7]
+        pass_threshold: 5.5
+  retrieval_metrics:
+    top_k: 8
+    compute: ["hit@k","recall@k","MRR","context_precision","support_coverage"]
+  auto:
+    items_target: 150
+    mix: {easy: 0.5, medium: 0.35, hard: 0.15}
+    per_tag_cap: 30
+    exclude_patterns: ["confidential", "legal_hold"]

@@ -1,0 +1,17 @@
+[
+  {
+    "type": "function",
+    "name": "retrieve",
+    "description": "Retrieve relevant document chunks from the vector store for the user query.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "Search query. Defaults to the latest user message if omitted."
+        }
+      },
+      "required": []
+    }
+  }
+]

@@ -1,0 +1,64 @@
+[project]
+name = "openai-answer-engine"
+version = "0.1.0"
+description = "Config-first knowledge retrieval starter that pairs OpenAI File Search with pluggable retrieval backends."
+authors = [{ name = "OpenAI" }]
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+keywords = ["RAG", "retrieval", "openai", "qdrant", "streamlit", "fastapi"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+
+dependencies = [
+  "typer>=0.12.3",
+  "rich>=13.7.1",
+  "pyyaml>=6.0.2",
+  "pydantic>=2.7.1",
+  "pydantic-settings>=2.3.1",
+  "openai>=1.40.0",
+  "httpx>=0.27.0",
+  "fastapi>=0.111.0",
+  "uvicorn>=0.30.1",
+  "qdrant-client>=1.13.3",
+  "beautifulsoup4>=4.12.3",
+  "python-docx>=1.1.0",
+  "langdetect>=1.0.9",
+  "lxml>=5.2.2",
+  "pypdf>=4.2.0",
+  "regex>=2024.5.15",
+  "structlog>=24.2.0",
+  "streamlit>=1.36.0",
+  "requests>=2.32.3",
+  "tiktoken>=0.7.0",
+  "rapidfuzz>=3.8.1",
+  "python-dotenv>=1.0.1",
+]
+
+[project.urls]
+Homepage = "https://openai.com/solutions/blueprints/knowledge-retrieval"
+Repository = "https://github.com/openai/openai-knowledge-retrieval"
+Issues = "https://github.com/openai/openai-knowledge-retrieval/issues"
+
+[project.scripts]
+rag = "cli.main:app"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.ruff]
+line-length = 100
+extend-select = ["W"]
+
+[tool.pyright]
+pythonVersion = "3.10"
+
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff", "pytest-cov"]
