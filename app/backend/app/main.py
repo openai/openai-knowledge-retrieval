@@ -548,13 +548,29 @@ knowledge_server = KnowledgeAssistantServer(agent=assistant_agent)
 
 app = FastAPI(title="ChatKit Knowledge Retrieval API")
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+def _parse_cors_allow_origins(value: str | None) -> list[str]:
+    if not value:
+        return []
+    return [origin.strip() for origin in value.split(",") if origin.strip()]
+
+
+cors_allow_origins = _parse_cors_allow_origins(
+    os.getenv("KNOWLEDGE_CORS_ALLOW_ORIGINS")
+) or [
+    "http://localhost:5172",
+    "http://127.0.0.1:5172",
+]
+
+if cors_allow_origins:
+    # Restrict cross-origin access to the known frontend origins.
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=cors_allow_origins,
+        allow_credentials=False,
+        allow_methods=["GET", "POST", "OPTIONS"],
+        allow_headers=["Accept", "Content-Type", "Authorization"],
+        expose_headers=["Content-Disposition"],
+    )
 
 
 def get_server() -> KnowledgeAssistantServer:
