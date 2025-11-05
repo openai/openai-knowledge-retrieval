@@ -38,4 +38,4 @@ a patch or mitigation, please include it.
   (These commands require internet access.)
 
 - Limit access to sample datasets that may contain sensitive information, and replace them with your
-  own data before deploying publicly.
+  own data before deploying publicly
