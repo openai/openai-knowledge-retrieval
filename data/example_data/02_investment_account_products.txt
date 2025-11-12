@@ -1,0 +1,453 @@
+---
+doc_id: NFG-INV-PRD-0007
+doc_type: Enablement Playbook
+title: Investment Account Products — Enablement, Pricing, and Deal Desk Workflow
+business_unit: Wealth & Asset Management
+audience: Advisors, Sales, Relationship Managers, Underwriters, Support (L1–L3)
+owners:
+  - Priya Menon (Head of Product, Investment Accounts)
+  - Daniel Ortiz (Director, Deal Desk)
+owner_dept: Wealth Product Management; Revenue Operations
+tags:
+  - investment-accounts
+  - brokerage
+  - advisory
+  - managed-accounts
+  - pricing
+  - compliance
+search_terms:
+  - brokerage account
+  - advisory account
+  - margin
+  - IRA
+  - model portfolios
+  - fee schedule
+  - account opening
+regions:
+  - US
+  - CA
+  - UK
+  - EU
+  - APAC
+regulatory_scope:
+  - FINRA/SEC (US)
+  - IIROC/CSA (CA)
+  - FCA (UK)
+  - ESMA/MiFID II (EU)
+  - MAS/SFA (SG)
+created_at: 2025-10-03
+updated_at: 2025-10-03
+effective_date: 2025-10-15
+review_cadence: Quarterly
+last_reviewed_by: Marta Kowalska (Chief Compliance Officer, Wealth)
+approvals:
+  - Wealth Product Council (WPC-2025-09)
+  - Compliance Change Control Board (CCCB-INV-2025-05)
+version: 1.0.0
+visibility: Internal
+confidentiality: Internal
+systems:
+  - NFG Orion (Advisor Portal)
+  - Helix (Core Brokerage Platform)
+  - Atlas (CRM)
+  - LedgerX (Billing & Fee Engine)
+  - Sentinel (Surveillance & Trade Compliance)
+  - Vault (Document Archival)
+  - Graphite (Data Lake)
+product_codes:
+  - BRK-STD
+  - ADV-MGD
+  - MRGN-ENH
+  - IRA-TAX
+  - JISA-UK
+related_docs:
+  - NFG-ONB-OPS-0012
+  - NFG-FEE-POL-0021
+  - NFG-KYC-0110
+  - NFG-SUIT-0205
+  - NFG-TRD-OPS-0044
+canonical_url: https://intranet.nfg.com/docs/NFG-INV-PRD-0007
+---
+
+# 1. Quick Reference (TL;DR)
+- What: Investment Account products (Brokerage, Advisory, Margin, Tax-Advantaged) offered via Helix; surfaced in NFG Orion; serviced by Wealth Ops.
+- Who: Individuals, joint, trusts, corporate, and retirement plans (regional eligibility applies).
+- When: New accounts in 1–2 business days (SLA); funding in T+0 for wires, T+2 for ACH; trading immediately upon funding clearance.
+- Where: US/CA/UK/EU/APAC; product variants differ per region (see Section 14).
+- SLAs:
+  - Account opening review: 8 business hours (Ops L2).
+  - Suitability review (Advisory): 4 business hours (Compliance L2).
+  - Transfer of Assets (ACAT/ATON): 7–10 business days.
+  - Statement/confirm generation: T+1 by 08:00 local.
+- Do:
+  - Use Atlas CRM Product record with product_code mappings.
+  - Collect KYC (NFG-KYC-0110) and Suitability (NFG-SUIT-0205) before presenting recommendations.
+  - Route discounts via Deal Desk if exceeding guardrails (Section 5).
+- Don’t:
+  - Promise execution priority or guaranteed returns.
+  - Place trades in advisory accounts without IPS/model alignment.
+  - Waive regulatory or custody fees.
+
+# 2. Customer Personas and Use Cases
+- Mass Affluent Individuals ($250k–$1.5M)
+  - Use: Core Brokerage (BRK-STD); auto-invest; fractional shares.
+  - Fit: DIY with guidance; low fee sensitivity; wants digital + advisor.
+  - Non-fit: Complex estates, concentrated single-stock risk.
+
+- High-Net-Worth (HNW) ($1.5M–$20M)
+  - Use: Advisory Discretionary (ADV-MGD) with model portfolios and tax-loss harvesting.
+  - Fit: Delegates to PM team; holistic planning.
+  - Non-fit: Day trading or options-heavy strategies in advisory.
+
+- Small Business/Corporate Treasury
+  - Use: Corporate Brokerage with cash sweeps; short-duration bond ladders.
+  - Fit: Surplus cash management; policy-constrained investments.
+  - Non-fit: Illiquid alternatives requiring capital calls.
+
+- Retirement Savers
+  - Use: IRA-TAX (US), RRSP (CA), SIPP (UK), ISA/JISA (UK), with low-cost ETF models.
+  - Fit: Tax-advantaged, automatic contributions.
+  - Non-fit: Margin or uncovered options.
+
+- Active Traders
+  - Use: Margin Enhanced (MRGN-ENH), real-time data, options enabled upon approval.
+  - Fit: Experience verified; risk tolerance “Aggressive.”
+  - Non-fit: New-to-investing or low liquidity buffers.
+
+Eligibility Fit Indicators:
+- Verified identity and source of funds (Atlas KYC status = Verified).
+- Risk tolerance matches product type.
+- Minimums met (Section 4).
+
+Non-Fit Red Flags:
+- Inconsistent stated objectives vs. requested features (e.g., capital preservation + margin).
+- Unwillingness to provide tax residency or beneficial ownership (NFG-KYC-0110).
+- Negative suitability outcome (Sentinel score < 65).
+
+# 3. Qualification and Discovery Questions
+Use CHAMP-style prompts:
+- Challenges: What investment challenges are you solving in the next 12 months?
+- Authority: Who signs the custodial/account agreements? Any investment committee?
+- Money: What investable assets today? Planned contributions/withdrawals?
+- Priorities: Liquidity needs, drawdown tolerance, tracking error tolerance?
+
+BANT details:
+- Budget: Target advisory fee cap? Sensitivity to transaction commissions?
+- Authority: Decision-maker(s) and timeframe?
+- Need: Is discretion desired? Tax-loss harvesting important?
+- Timeline: Funding event (bonus, vesting, liquidity) date?
+
+Red Flags:
+- Requests for performance guarantees.
+- Refusal to accept digital statements (violates NFG-SEC-17a-4-Archival consent model).
+- Margin request without income verification (NFG-MRGN-1002).
+
+# 4. Product/Policy Overview
+Products:
+- BRK-STD (Core Brokerage)
+  - Capabilities: Equities/ETFs/fixed income/mutual funds; fractional trading; DRIP; cash sweep.
+  - Limitations: No discretionary trading; options level 1–3 with approval.
+  - Minimum: $0.
+
+- ADV-MGD (Advisory Discretionary)
+  - Capabilities: Model portfolios, IPS, rebalancing, tax-loss harvesting, ESG screens.
+  - Limitations: No individual security speculation outside IPS; performance fees prohibited in US retail.
+  - Minimum: $100,000.
+
+- MRGN-ENH (Margin)
+  - Capabilities: Borrowing against eligible securities, intraday buying power; portfolio margin for qualified clients.
+  - Limitations: No margin in tax-advantaged accounts; concentration and house maintenance requirements apply.
+  - Minimum: $2,000 (US Reg T); higher for portfolio margin ($100,000+).
+
+- IRA-TAX / SIPP/ISA/RRSP
+  - Capabilities: Tax-advantaged wrappers; contribution automation; beneficiary designations.
+  - Limitations: No shorting/margin; contribution limits per region.
+
+Dependencies:
+- Systems: Helix trade/settlement; LedgerX fee computation; Vault statements.
+- Controls: Sentinel suitability/option approval; KYC via Atlas; e-sign via DocuBridge.
+
+Definitions:
+- IPS: Investment Policy Statement defining objectives, risk, constraints.
+- DRIP: Dividend Reinvestment Plan.
+- RPO/RTO: Recovery Point/Time Objectives for service continuity.
+
+Service Continuity:
+- RPO: 5 minutes (Helix order/trade data via Graphite CDC).
+- RTO: 1 hour for NFG Orion; 4 hours for LedgerX (billing).
+
+# 5. Pricing, Fees, and Discounting
+Standard Fees (USD unless noted):
+
+| Component | BRK-STD | ADV-MGD | MRGN-ENH | IRA-TAX/SIPP/ISA/RRSP |
+|---|---|---|---|---|
+| Advisory Fee (AUM) | N/A | 0.85% ≤ $1M; 0.70% $1–5M; 0.50% >$5M | N/A | N/A |
+| Trading Commission | $0 equity/ETF; $19.95 mutual fund; $0 bonds via spread | Included | $0 equity/ETF; $19.95 MF | $0 equity/ETF; $19.95 MF |
+| Options | $0.65/contract | $0.50/contract | $0.50/contract | Not permitted in most tax wrappers |
+| Margin Interest | N/A | N/A | SOFR + 5.00% (≤$100k), + 3.50% ($100k–$1M), + 2.25% (>$1M) | N/A |
+| Account Maintenance | $0 | $0 | $0 | $25/yr (waived >$10k balance) |
+| Transfer (ACAT/ATON) | $75 out | $75 out | $75 out | $75 out |
+| Paper Statement | $3/mo | $3/mo | $3/mo | $3/mo |
+
+Discounting Guardrails:
+- Advisory Fee Floor: 0.40% blended floor without approval.
+- Options Per-Contract Floor: $0.35 without approval.
+- Margin Rate Floor: SOFR + 1.75% absolute floor with CFO exception only.
+
+Approval Matrix (Discounts/Concessions):
+- Level 0 (No approval): Within guardrails above; document rationale in Atlas “Pricing Notes.”
+- Level 1: Up to 20 bps advisory discount below list, or options fee to $0.30/contract. Approver: Regional Sales Manager (RSM). SLA: 8 business hours.
+- Level 2: 21–35 bps advisory discount, or bundled fee waivers (e.g., ACAT out fee waived). Approver: Deal Desk Director + Compliance L2. SLA: 2 business days.
+- Level 3: >35 bps advisory discount, margin rate below SOFR + 2.00%, or multi-year pricing commitments. Approver: VP Wealth Product + CFO delegate. SLA: 5 business days.
+
+Document all concessions in LedgerX “Pricing Override” record with override_id.
+
+# 6. Deal Desk Workflow
+Step-by-step:
+1) Pre-Qualification (Advisor; SLA same-day)
+- Complete Atlas KYC and Suitability questionnaires; ensure Atlas_KYC_Status = Verified.
+- Run Sentinel suitability; target score ≥ 70.
+- Artifact: Atlas Opportunity (OPP-YYYY-####), attach IPS draft if Advisory.
+
+2) Pricing Request (Advisor to Deal Desk; SLA 1 business day acknowledgment)
+- Submit Pricing Ticket in Orion: /orion/dealdesk/new with product_code and requested discounts.
+- Required fields: client_segment, AUM_estimate, concessions_requested, competitive_context.
+- Artifact: Pricing Ticket ID PT-2025-####.
+
+3) Review and Approval (Deal Desk + Compliance; SLAs per Approval Matrix)
+- Deal Desk validates revenue impact in LedgerX sandbox.
+- Compliance checks NFG-SUIT-0205 and NFG-ADV-2040 (marketing entanglement rules).
+- Outcome: Approval/Reject with conditions recorded in PT.
+
+4) Term Sheet Issuance (Advisor; SLA 1 business day)
+- Generate Term Sheet from Orion Template (Section 12).
+- E-sign via DocuBridge; store in Vault with retention per NFG-SEC-17a-4-Archival.
+
+5) Account Opening (Wealth Ops; SLA 8 business hours)
+- Submit application via Helix; ensure KYC artifacts attached.
+- Funding instructions provided (ACH/Wire). For ACAT, initiate via Helix Transfers.
+
+6) Post-Activation Audit (Compliance L1; SLA T+3)
+- Verify pricing applied in LedgerX vs. Term Sheet.
+- Sentinel monitoring activation; options approval if applicable.
+
+Escalation Path:
+- Deal Desk SLA breach: Escalate to Daniel Ortiz; if >24h over SLA, escalate to VP Wealth Product.
+- Compliance block: Escalate to CCO delegate (M. Kowalska).
+
+# 7. Risk and Compliance Disclosures
+Required talk tracks (document in Atlas Call Log):
+- “Investments involve risk, including loss of principal. Past performance is not indicative of future results.” (NFG-DISC-1001)
+- “Margin borrowing increases risk and may result in losses greater than your initial investment.” (NFG-MRGN-1002)
+- “Advisory services are provided on a discretionary basis as outlined in your IPS and Form ADV.” (NFG-ADV-2040)
+- “Tax-advantaged accounts have contribution limits and penalties for early withdrawals; consult a tax advisor.” (NFG-TAX-3003)
+- Recordkeeping: All marketing materials must be archived in Vault per NFG-SEC-17a-4-Archival. No off-channel communications (NFG-COMMS-0909).
+
+Paperwork and acknowledgments:
+- Form CRS (US), KID (EU), PRIIPs where applicable.
+- Margin Agreement and Risk Disclosure Statement (MRGN-ENH).
+- Options Agreement (levels 1–3) with experience attestation.
+
+# 8. Data and CRM Fields
+Atlas (CRM) Canonical Fields:
+
+| Field Name | Type | Validation | Example |
+|---|---|---|---|
+| account_id | String (PK) | Helix pattern ACC-YYYY-#### | ACC-2025-1023 |
+| opportunity_id | String | Required pre-open | OPP-2025-0441 |
+| product_code | Enum | [BRK-STD, ADV-MGD, MRGN-ENH, IRA-TAX, SIPP, ISA, RRSP] | ADV-MGD |
+| client_segment | Enum | [MassAffluent, HNW, Corporate, Retirement] | HNW |
+| atlas_kyc_status | Enum | [Pending, Verified, Exception] | Verified |
+| suitability_score | Integer | 0–100; min 65 | 78 |
+| risk_tolerance | Enum | [Conservative, Moderate, Aggressive] | Moderate |
+| pricing_tier | Enum | [List, L1, L2, L3] | L1 |
+| advisory_fee_bps | Integer | 40–85; floor 40 | 65 |
+| margin_rate_spread | Decimal | >= 1.75 | 2.25 |
+| options_level | Integer | 0–3 | 2 |
+| funding_source | Enum | [ACH, Wire, Check, ACAT, ATON] | ACAT |
+| onboarding_status | Enum | [Draft, Submitted, Review, Approved, Funded, Active] | Active |
+| econsent_optin | Boolean | Required for e-delivery | true |
+| disclosure_ack_ids | Array<String> | Must include NFG-DISC-1001 | ["NFG-DISC-1001","NFG-MRGN-1002"] |
+| pricing_override_id | String | If pricing_tier != List | PO-2025-0077 |
+
+Validation Errors:
+- ERR-KYC-001: KYC not verified blocks account opening.
+- ERR-FEE-009: Advisory fee below floor without approval.
+- ERR-OPT-021: Options level > 0 without Options Agreement.
+
+# 9. Integrations and APIs
+Helix Account API:
+- POST /api/v1/investment-accounts
+  - Request (PII masked):
+  {
+    "product_code": "ADV-MGD",
+    "applicant": {"customer_id": "CUST-27891"},
+    "risk_profile": {"tolerance": "Moderate", "score": 78},
+    "pricing": {"advisory_fee_bps": 65, "pricing_override_id": "PO-2025-0077"},
+    "funding": {"method": "ACAT", "estimate_amount": 250000.00, "currency": "USD"}
+  }
+  - Response:
+  {
+    "account_id": "ACC-2025-1023",
+    "status": "Review",
+    "required_actions": ["Upload_IPS", "Form_ADV_Ack"],
+    "links": {"self": "/api/v1/investment-accounts/ACC-2025-1023"}
+  }
+
+Webhooks (LedgerX):
+- Event: fee.schedule.applied
+  - Payload:
+  {
+    "account_id": "ACC-2025-1023",
+    "effective_date": "2025-10-20",
+    "advisory_fee_bps": 65,
+    "options_per_contract": 0.5,
+    "override_id": "PO-2025-0077",
+    "applied_by": "ledgerx-system"
+  }
+
+Sentinel Suitability API:
+- GET /api/v1/suitability/ACC-2025-1023 -> {"score": 78, "flags": []}
+
+Security and Controls:
+- OAuth2 with mTLS between Orion and Helix.
+- Audit logs shipped to Vault within 5 minutes (RPO) per NFG-SEC-17a-4-Archival.
+
+# 10. Procedures
+Onboarding — Advisory (ADV-MGD):
+1) Discovery and IPS Draft
+- Control: Ensure suitability_score ≥ 70; evidence: Sentinel report attached in Atlas.
+2) Pricing Approval (if needed)
+- Control: Pricing tier L1+ approval artifact PT-####; evidence: PT attachment in Atlas.
+3) Application Submission
+- Control: KYC Verified; evidence: Atlas_KYC_Status = Verified; DocuBridge e-sign complete.
+4) Funding and Activation
+- Control: Funding verified in Helix; evidence: ACH/Wire confirmation or ACAT status “Completed.”
+5) Post-Activation Review
+- Control: Fee schedule applied matches Term Sheet; evidence: LedgerX webhook in Vault.
+
+Servicing — Margin Increase (MRGN-ENH):
+1) Client Request Intake
+- Control: Confirm options_level and margin_eligibility; evidence: Atlas Account Profile.
+2) Income/Net Worth Verification
+- Control: Collect updated financials; evidence: DocuBridge upload; follow NFG-MRGN-1002.
+3) Risk Reassessment
+- Control: Sentinel re-score; threshold ≥ 75 for portfolio margin.
+4) Approval and Update
+- Control: Underwriter approval for house limits; evidence: Underwriting note in Helix.
+5) Confirm Disclosures
+- Control: Margin risk disclosure re-acknowledged; evidence: disclosure_ack_ids updated.
+
+Exceptions — Advisory Fee Below Floor:
+1) Advisor submits PT with rationale and competitor proof.
+2) Deal Desk quantifies revenue impact (LedgerX sandbox model).
+3) Compliance reviews potential conflicts (NFG-ADV-2040).
+4) VP Wealth Product approval if >35 bps discount.
+5) Apply pricing_override_id in Helix and LedgerX; confirm webhook in Vault.
+
+# 11. Objection Handling Matrix
+- “Why should I pay an advisory fee when trading is free?”
+  - Response: Advisory includes ongoing portfolio management, rebalancing, tax-loss harvesting, and IPS-driven oversight. Trading is a tool; advice and management deliver outcomes. We align fees with assets and tier down as you grow. Form ADV details services and costs.
+
+- “Can you guarantee performance if I choose the aggressive model?”
+  - Response: We cannot guarantee performance. Your IPS and model target risk/return over a cycle; we monitor and rebalance. Required: Read NFG-DISC-1001.
+
+- “I want margin in my IRA.”
+  - Response: Regulations prohibit margin in tax-advantaged accounts. Alternatives include limited-purpose credit lines outside the IRA. We can discuss liquidity strategies compliant with NFG-TAX-3003.
+
+- “Competitor offers 0.30% advisory fee.”
+  - Response: We can evaluate pricing within guardrails based on scope and AUM. Provide the written offer; we’ll submit to Deal Desk. Minimum blended floor is 0.40% without Level 2 approval.
+
+- “I don’t want to provide source-of-funds info.”
+  - Response: We’re required by KYC rules (NFG-KYC-0110) to verify identity and source of funds to protect clients and the firm. We cannot open accounts without it.
+
+# 12. Term Sheet Template (Mini)
+Term Sheet — Investment Account (Template ID TS-INV-ADV-01)
+- Client: [Name Redacted] (customer_id)
+- Product: ADV-MGD
+- Account ID: To be assigned upon approval
+- AUM at Inception: $[Amount]
+- Advisory Fee:
+  - First $1,000,000 at 0.85%
+  - Next $4,000,000 at 0.70%
+  - Amount above $5,000,000 at 0.50%
+  - Approved Discount: [Yes/No]; If Yes: Blended rate [x.xx]% (pricing_override_id)
+- Trading Costs: Options $0.50/contract; mutual fund $19.95/trade
+- Services Included: IPS creation; quarterly reviews; tax-loss harvesting; ESG screens (if selected)
+- Benchmark: MSCI ACWI IMI (net) — for reference only, not guaranteed
+- Liquidity: T+2 settlement; cash sweeps daily
+- Disclosures: NFG-DISC-1001, NFG-ADV-2040 acknowledged on [YYYY-MM-DD]
+- Term: Evergreen; cancellable with 30 days’ notice
+- Signatures: Client; NFG Advisor; Approver (if discount Level 2+)
+- Data Retention: Archived in Vault per NFG-SEC-17a-4-Archival
+Constraints:
+- Blended fee cannot be below 0.40% absent Level 3 approval.
+- Options trading requires approved Options Agreement and level assignment.
+
+# 13. KPIs and Dashboards
+Leading Indicators (Owner: Regional Sales Manager):
+- Qualified Opportunities to Account Opened conversion ≥ 45%.
+- Average time from Pricing Ticket to Approval ≤ 2.0 business days.
+- Advisory IPS completion before funding ≥ 95%.
+
+Lagging Indicators (Owner: Head of Product):
+- Net flows (AUM) QoQ growth ≥ 8%.
+- Churn rate ≤ 3% annualized.
+- Average realized advisory fee ≥ 0.62% blended.
+
+Risk/Control KPIs (Owner: Compliance):
+- Accounts trading before KYC Verified = 0 (breach).
+- Margin accounts below house maintenance < 2% at any time.
+- Disclosure acknowledgment completeness ≥ 99.5%.
+
+Dashboards:
+- Orion Sales Cockpit: Pipeline, discounts by tier, SLA timers.
+- Compliance Sentinel Board: Suitability scores, exceptions, options approvals.
+- LedgerX Revenue Monitor: Fee actuals vs. Term Sheets, override impacts.
+
+# 14. Regional Variations
+US:
+- Reg BI applies; Form CRS mandatory.
+- IRA contribution limits per IRS; no margin in IRAs.
+- ACAT transfers supported.
+
+Canada:
+- IIROC suitability rules; RRSP/TFSA available.
+- ATON transfers; Canadian-dollar pricing; HST/GST may apply to fees.
+
+UK:
+- FCA COBS; SIPP/ISA/JISA wrappers; stamp duty on certain UK equity trades.
+- PRIIPs KID required for packaged products.
+
+EU:
+- MiFID II; appropriateness testing for complex products.
+- PRIIPs KID and ex-ante cost disclosures; translations required.
+
+APAC (SG):
+- MAS FAA; suitability and risk profiling strict; SRS (Supplementary Retirement Scheme) supported.
+- No options in certain markets; check local lists (NFG-MKT-ALLOW-APAC).
+
+Operational:
+- Settlement cycles differ (e.g., T+2 US/EU; verify per market).
+- FX conversions: 10 bps spread applied; disclosure per region.
+
+# 15. References
+Internal Policies:
+- NFG-KYC-0110 — Customer Identification and Source of Funds
+- NFG-SUIT-0205 — Suitability and Risk Profiling Standard
+- NFG-SEC-17a-4-Archival — Electronic Records and Retention
+- NFG-ADV-2040 — Advisory Programs and Disclosures
+- NFG-MRGN-1002 — Margin and Options Eligibility
+- NFG-COMMS-0909 — Electronic Communications Policy
+- NFG-FEE-POL-0021 — Pricing and Fee Concessions Policy
+- NFG-TRD-OPS-0044 — Trade Processing and Settlement
+- NFG-ONB-OPS-0012 — Account Opening Procedures
+
+See also:
+- Document NFG-ONB-OPS-0012 (Onboarding)
+- Document NFG-FEE-POL-0021 (Fees and Discounts)
+
+# 16. Change log
+- 1.0.0 (2025-10-03): Initial release covering product definitions, pricing tiers, approval matrix, APIs, SLAs, and regional variations.
+
+Key takeaways: Match the product to the client’s objectives and suitability; capture KYC and disclosures before proposing. Use the pricing guardrails and Approval Matrix to accelerate deals. Submit complete Deal Desk tickets with AUM and competitive context. Track all artifacts in Atlas and Vault. Escalate SLA breaches promptly to keep the account opening timeline on track.

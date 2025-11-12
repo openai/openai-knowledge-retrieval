@@ -1,0 +1,316 @@
+---
+doc_id: NFG-IR-0007
+doc_type: Playbook
+title: Investor Relations — Frontline Enablement and Deal Desk Guide
+business_unit: Corporate Finance & Treasury
+audience: Advisors; Sales; Relationship Managers; Underwriters; Support
+owners: Priya Deshmukh (Director, Investor Relations); Ethan Wu (Deal Desk Manager)
+owner_dept: Investor Relations (IR); Revenue Operations (RevOps)
+tags: investor-relations; institutional-investors; disclosures; Reg-FD; investor-access; roadshows; data-licensing
+search_terms: investor relations; IR portal; earnings call; roadshow; selective disclosure; Reg FD; MAR; MiFID II; investor data subscription; meeting requests
+regions: US; CA; UK; EU; APAC
+regulatory_scope: Reg FD (US); UK MAR; EU MAR; CSA NI 51-102 (CA); MiFID II Inducements
+created_at: 2025-10-03
+updated_at: 2025-10-03
+effective_date: 2025-10-10
+review_cadence: Quarterly
+last_reviewed_by: Compliance Advisory (GRC); Legal-Capital Markets
+approvals: VP-Investor Relations; Head of Legal-Capital Markets; CCO
+version: 1.0.0
+visibility: Internal
+confidentiality: Internal
+systems: NFG-SFDC (Salesforce Org ID 00D3z0000009NFG); IRIS (Investor Relations Information System); CommsHub; ArchiveVault; NFG-Events; NFG-Auth SSO
+product_codes: NFG-MTN; NFG-PRF-A; NFG-ETF-CORE; NFG-IR-ACCESS-B; NFG-IR-ACCESS-P; NFG-IR-DATA-CUST
+related_docs:
+  - NFG-CM-0012
+  - NFG-COMMS-0044
+  - NFG-LEGAL-0089
+canonical_url: https://kb.nfg.corp/playbooks/NFG-IR-0007
+---
+
+# Quick Reference (TL;DR)
+- Who: Institutional investors, rating agencies, sell-side analysts, proxy advisors. Route retail to Support (RET-CARE-010).
+- What: Schedule management access, share public materials, handle inquiries, manage data subscriptions, coordinate roadshows, and respond to shareholder concerns.
+- When: Initial triage in 4 business hours; meeting scheduling within 2 business days; documentation within 1 business day of events.
+- Where: Log all interactions in NFG-SFDC (Record Type=Investor); attach artifacts to IRIS; archive via ArchiveVault per NFG-SEC-17a-4-Archival.
+- SLAs: Response SLA 4 hours (P2), 1 hour (P1—earnings week); Meeting SLA 2 business days; Data Request SLA 3 business days; RPO 15 minutes; RTO 2 hours for IRIS and CommsHub.
+- Do:
+  - Use only public information unless under approved NDA and inside-wall controls (NFG-IB-032).
+  - Read “Required Statements” before calls; use CommsHub templates.
+  - Escalate suspected MNPI exposure within 15 minutes.
+- Don’t:
+  - Provide forward-looking guidance beyond public disclosures.
+  - Offer research or inducements violating MiFID II.
+  - Promise preferential access without compliance approval.
+
+# Customer Personas and Use Cases
+- Institutional Equity Holders (Asset Managers, Pension Funds)
+  - Use cases: Quarterly updates; governance queries; ESG disclosures; voting intent dialogue.
+  - Fit: Holdings >$10M in NFG-ETF-CORE or NFG-PRF-A; active stewardship teams.
+- Debt Investors (Sovereign Wealth, Insurance)
+  - Use cases: MTN program updates; covenant clarifications; ratings review support; roadshow meetings.
+  - Fit: Prior participation in NFG-MTN tranches; appetite >$25M.
+- Sell-Side Analysts
+  - Use cases: Model clarifications; segment metrics; earnings call follow-ups.
+  - Fit: Coverage list maintained in IRIS; require equal-access protocols.
+- Proxy Advisors
+  - Use cases: Governance, compensation policy discussions pre-AGM.
+  - Fit: Recognized firms; discussion limited to public facts.
+- Non-Fit/Redirect
+  - Retail investors: Route to Retail Support.
+  - Media: Route to Corporate Communications (NFG-COMMS-0044).
+  - Vendors soliciting IR tools: Route to Procurement.
+
+# Qualification and Discovery Questions
+BANT/CHAMP prompts:
+- Budget: “Are you currently allocating funds to additional NFG securities or data services? Range?”
+- Authority: “Will you be the attendee(s) for management meetings? Any compliance constraints for your firm?”
+- Need: “Which KPIs or disclosures are critical to your thesis? Debt vs equity focus?”
+- Timing: “Is this tied to an upcoming IC date, rating committee, or AGM?”
+- Metrics: “Which segments require deeper detail? E.g., ETF net flows, MTN tenor mix.”
+- Red Flags:
+  - Requests for non-public KPIs or intra-quarter guidance.
+  - Offering to share competitor MNPI.
+  - Quid pro quo for research, access, or commissions.
+  - Requests to change published disclosures without governance review.
+
+# Product/Policy Overview
+- Public Information Access
+  - Channels: IR website, EDGAR/SEDAR filings, earnings call webcasts, investor deck.
+  - Policy: Equal access (NFG-IR-Policy-100), Reg FD adherence.
+- Investor Access Program (IAP)
+  - Tiers: Basic (public distribution, no fee), Plus (priority Q&A routing), Premium (concierge scheduling, bespoke analyst days under equal-access constraints).
+  - Constraints: No preferential disclosure; access governed by public availability.
+- Bespoke Data Subscription (NFG-IR-DATA-CUST)
+  - Deliverables: Aggregated, anonymized metrics (e.g., product-level AUM lagged T+15 days).
+  - Controls: No client-level data; k-anonymity >= 10; latency >= T+10 to avoid MNPI.
+- Roadshows and Non-Deal Roadshows (NDRs)
+  - Coverage: MTN issuances, strategic updates.
+  - Materials: Pre-cleared slides (Legal-CM); Q&A scripts.
+- Information Barriers
+  - Inside vs outside wall, codified in NFG-IB-032. All IR operates outside wall. Any potential crossing requires Compliance case and wall-cross memo.
+
+# Pricing, Fees, and Discounting
+Investor Access Program pricing (where allowed by regulation; see Regional Variations):
+- Basic (NFG-IR-ACCESS-B): $0.00/year; distribution of public releases; standard Q&A queue.
+- Plus (NFG-IR-ACCESS-P): $15,000.00/year; priority queue; quarterly small-group Q&A; invite-only public events.
+- Premium (NFG-IR-ACCESS-PREM): $45,000.00/year; dedicated scheduling support; guaranteed seats in public events; limited bespoke scheduling windows.
+
+Bespoke Data Subscription:
+- Standard Package (Monthly, T+15): $60,000.00/year.
+- Enhanced Package (Biweekly, T+15): $90,000.00/year.
+- Custom Fields Add-on: $5,000.00/year per additional approved metric.
+
+Discounting Guardrails:
+- Max discretionary discount:
+  - IR Director up to 10%.
+  - VP-IR up to 20%.
+  - CCO + CFO joint approval required >20% or any free arrangement.
+- Multi-year prepay: Additional 5% discount with CFO approval.
+
+Approval Matrix
+- Level 0: Basic Program — No approval; auto-enroll; RevOps provisioning.
+- Level 1: Plus/Premium <=10% discount — IR Director; RevOps ticket.
+- Level 2: Data Subscription or >10%–20% discount — VP-IR; Legal-CM review; Compliance attestation (MiFID II inducements).
+- Level 3: Any custom metric; >20% discount; NDA with wall-cross — CCO + CFO + Legal-CM sign-off; InfoSec DPA review.
+
+# Deal Desk Workflow
+1. Intake (SLA: 4 business hours)
+   - Log lead in NFG-SFDC (Record Type=Investor; Lead Source=IR-Web/Analyst/Conference).
+   - Attach inbound request email to IRIS; tag “IAP” or “DATA”.
+   - Auto-ack via CommsHub template IR-ACK-001.
+2. Qualification (SLA: same day)
+   - Validate persona fit and region. Run MiFID II inducement check via ComplianceBot.
+   - If Data Subscription: run k-anonymity pre-check and metrics catalog match.
+3. Structuring (SLA: 2 business days)
+   - Select tier/pricing; prepare Term Sheet (see template).
+   - For custom metrics: open Legal-CM JIRA LEG-IR-####; attach metric definitions.
+4. Approval (SLA: 1 business day)
+   - Route per Approval Matrix using Deal Desk workflow in NFG-SFDC (Path=IR-Deal).
+   - Evidence: approvals stored in NFG-SFDC Related List “Approvals__c”; auto-archived.
+5. Contracting (SLA: 2 business days)
+   - Generate Order Form and DPA via DocGen; NDA if required (no MNPI access unless wall-crossed).
+   - eSign through NFG-Auth integrated SignFlow; archive to ArchiveVault.
+6. Provisioning (SLA: 1 business day)
+   - RevOps creates access in IRIS; CommsHub adds to distribution lists; SSO enablement.
+   - Validate against data latency constraints (>= T+10).
+7. Post-Sale Handover
+   - Assign CSM-IR owner; schedule onboarding call; set Success Plan in NFG-SFDC.
+8. Escalation Path
+   - P1 (earnings week, issuer event): IR Director -> VP-IR -> CCO.
+   - P2 (standard): Deal Desk Manager -> VP-IR within 8 hours.
+   - Legal issues: route to Legal-CM hotline LEG-HOT-24x7.
+
+# Risk and Compliance Disclosures
+Required statements (read or included in written communications):
+- Equal Access: “We can only discuss information already publicly disclosed by Northbridge Financial Group.”
+- Forward-Looking: “Any statements about future performance are subject to risks and uncertainties; please refer to our latest filings.”
+- No MNPI: “We cannot comment on intra-quarter performance beyond what is public.”
+- Recording & Archival: “This call may be recorded and archived for compliance per NFG-SEC-17a-4-Archival.”
+- MiFID II Inducements: “Access services do not include research and are not contingent on brokerage commissions.”
+- UK/EU MAR: “We do not disclose inside information outside the normal course of public disclosure.”
+
+Control checks:
+- Use CommsHub templates with disclosure blocks.
+- Archive all emails/call recordings to ArchiveVault within 24 hours.
+- Quarterly audit by GRC on sample of interactions (NFG-GRC-IR-AUD-22).
+
+# Data and CRM Fields
+Canonical Investor Profile schema (NFG-SFDC, Object: Investor__c)
+- Investor_ID__c (Text, 18) — Example: INV-2025-00421 — Required; unique.
+- Firm_Name__c (Text, 255) — Example: AlphaCore Asset Mgmt.
+- Region__c (Picklist) — US; CA; UK; EU; APAC.
+- Persona__c (Picklist) — Equity; Debt; Analyst; Proxy.
+- AUM_Range__c (Picklist) — <$1B; $1–$10B; $10–$50B; >$50B.
+- Holdings_Size__c (Currency) — Example: $125,000,000.00 — Mask precise amounts in exports.
+- IAP_Tier__c (Picklist) — Basic; Plus; Premium.
+- Data_Subscription__c (Checkbox) — Example: true.
+- Metrics_Subscribed__c (Long Text) — Example: “ETF net flows (T+15), MTN tenor mix (lag 30).”
+- Compliance_Notes__c (Long Text) — Example: “Requires MiFID II inducement confirmation annually.”
+- NDA_Status__c (Picklist) — None; Standard; Wall-Crossed (Expiry).
+- Risk_Rating__c (Picklist) — Low; Medium; High — Based on compliance exposure.
+- Last_Interaction_Date__c (Date) — Example: 2025-09-28.
+- Consent_Marketing__c (Checkbox) — Example: true (GDPR-compliant consent).
+- Preferred_Contact_Window__c (Text) — Example: “09:00–12:00 ET.”
+Validation:
+- Wall-Crossed requires active case ID; expiry date must be in future.
+- Data_Subscription true requires IAP_Tier in {Plus, Premium} unless exception approved Level 3.
+
+# Integrations and APIs
+IRIS REST API
+- Endpoint: POST https://ir.api.nfg.corp/v1/inquiries
+  - Request:
+    {
+      "investor_id": "INV-2025-00421",
+      "subject": "Q3 ETF net flow methodology",
+      "priority": "P2",
+      "region": "US",
+      "source": "email",
+      "contains_mnpi": false
+    }
+  - Response:
+    {
+      "case_id": "IR-CASE-2025-11388",
+      "status": "OPEN",
+      "sla_hours": 4,
+      "archive_ref": "AV-IR-2025-77812"
+    }
+- Endpoint: GET https://ir.api.nfg.corp/v1/earnings-call/events
+  - Response:
+    {
+      "event_id": "IR-EVT-2025-Q3",
+      "date": "2025-11-07T14:00:00Z",
+      "dial_in": "masked",
+      "webcast_url": "https://investors.nfg.com/q3",
+      "materials": ["10Q-2025-Q3", "Deck-Q3-vFinal"]
+    }
+Event Bus (CommsHub)
+- Topic: ir.email.sent; Payload includes investor_id, template_id, archive_ref; Retention 7 years (ArchiveVault).
+- Topic: ir.meeting.booked; Triggers calendar block for execs; Enforces preloaded disclosure slide.
+
+Auth and Security
+- OAuth2 client credentials; scopes: ir.read, ir.write, archive.write.
+- RPO: 15 minutes; RTO: 2 hours across IRIS/CommsHub; failover region: NFG-DC2.
+
+# Procedures
+A. Onboard an Institutional Investor to IAP Plus
+1. Intake: Create Investor__c; set IAP_Tier__c=Plus; validate Region__c and Persona__c.
+2. Compliance check: Run inducements check; log result in Compliance_Notes__c.
+3. Order Form: Generate via DocGen template IR-IAP-OF-Plus; include fee and term dates.
+4. Signatures: Route through SignFlow; verify KYC if billing entity is new vendor (NFG-KYC-0110).
+5. Provisioning: RevOps provisions IRIS access; ensure Consent_Marketing__c captured.
+6. Control check: Confirm archive of contract in ArchiveVault; attach archive_ref on record.
+7. Evidence: Upload provisioning confirmation from IRIS to SFDC under “Files”.
+
+B. Schedule Management Meeting (Debt Investor)
+1. Verify persona=Debt and holdings in NFG-MTN >$25M (Holdings_Size__c).
+2. Propose time slots via NFG-Events; ensure disclosure slide pack is attached.
+3. Pre-brief: Send Management Q&A outline; include Required Statements.
+4. Meeting: Record via CommsHub; tag IR-EVT; avoid non-public topics.
+5. Post: Send written recap with public links; archive recording and recap within 24 hours.
+6. Control check: Compliance spot-review flag set=true; GRC sampling list updated.
+
+C. Fulfill Bespoke Data Subscription Request
+1. Qualification: Confirm metrics requested exist in Approved Metrics Catalog (IRIS: cat_id IR-MET-2025).
+2. Privacy check: Validate k-anonymity >=10 and latency >= T+10; document in LEG-IR ticket.
+3. Deal Desk: Prepare Term Sheet; route approvals per Level 2/3 as applicable.
+4. Build: Data Engineering enables feed; restrict to investor_id via tokenized S3 link.
+5. Delivery: CommsHub notification with links and Required Statements.
+6. Control check: Automated test delivers masked sample; QA sign-off attached.
+7. Evidence: ArchiveVault references for contract, approvals, QA report.
+
+D. Exception — Suspected MNPI Exposure
+1. Stop conversation immediately; state: “We cannot discuss non-public information.”
+2. Escalate within 15 minutes via Compliance Hotline (COMP-24x7) and file IR-INC ticket.
+3. Tag all artifacts “MNPI-SUSPECT”; restrict access to inside-wall group.
+4. Compliance determines wall-cross necessity; if approved, issue wall-cross memo with expiry.
+5. Control check: IRIS case shows lock icon; audit trail immutable per NFG-SEC-17a-4-Archival.
+6. Resume only with Compliance clearance; send written confirmation to investor.
+
+# Objection Handling Matrix
+- “We need intra-quarter numbers.”
+  - Response: “We can’t provide intra-quarter figures beyond public disclosures. We can walk through the drivers we’ve published and timing of next release.”
+- “Competitor X shared more detail.”
+  - Response: “We adhere to equal-access and regulatory standards. Here’s what we’ve disclosed, and we’ll log your request for future disclosure review.”
+- “Fees look high for data.”
+  - Response: “Our pricing reflects compliance-safe aggregation, latency controls, and QA. For multi-year prepay we can consider up to 5% additional discount with CFO approval.”
+- “Prefer one-on-one with the CEO.”
+  - Response: “We can arrange subject to availability, ensuring discussions remain within public information. We’ll also provide materials ahead for efficient use of time.”
+- “Is this research under MiFID II?”
+  - Response: “No. Investor Access services exclude research and are not contingent on brokerage services. We can provide public materials and access scheduling support.”
+
+# Term Sheet Template (Mini)
+Term Sheet: NFG IR Data Subscription (Ref: TSM-IR-2025-0098)
+- Parties: Northbridge Financial Group; Subscriber: [Firm Name] (Entity ID: VEN-CA-5549)
+- Services:
+  - Package: Enhanced (Biweekly, T+15)
+  - Metrics: ETF net flows (T+15), MTN tenor mix (lag 30)
+  - Delivery: Secure link (tokenized), SFTP optional
+- Term: 2025-11-01 to 2026-10-31; Auto-renew 12 months unless 30-day notice
+- Fees: $90,000.00/year; Billing annual in advance; Late fee 1.5%/month
+- Compliance:
+  - No MNPI; k-anonymity >=10; latency >= T+10
+  - Use limited to internal investment analysis; no redistribution without consent
+  - Audit: NFG may audit usage with 10 business days’ notice
+- Data Protection: DPA v3.2; GDPR SCCs if EU data accessed
+- Inducements: Not research; not contingent on execution services
+- Approvals: VP-IR; Legal-CM; CCO (custom metrics only)
+- Termination: For breach with 10 business days’ cure; immediate for MNPI breach
+- Notices: Via CommsHub; ArchiveVault copies retained 7 years
+
+# KPIs and Dashboards
+- Leading Indicators:
+  - Response Time (P1/P2): Target <=1h/<=4h; Owner: IR Ops
+  - Meeting Conversion Rate (qualified requests to meetings): Target >=65%; Owner: IR Managers
+  - Data Subscription Pipeline ($): Target $5M/quarter; Owner: Deal Desk
+- Lagging Indicators:
+  - Investor Satisfaction (CSAT post-interaction): >=4.6/5
+  - Compliance Exceptions: <=2 per quarter; zero repeat events
+  - Churn (IAP Plus/Premium): <=8% annually
+- Dashboards (NFG-SFDC):
+  - IR Command Center: SLA Heatmap, Open Cases by Priority
+  - Data Subscriptions: ARR, Discount Waterfall, Approval Cycle Time
+  - Compliance: Disclosures Coverage, ArchiveVault Sync Status
+- Alerts:
+  - Breach of SLA triggers PagerDuty: IR-P1
+  - Archive lag >24h triggers GRC alert
+
+# Regional Variations
+- US (Reg FD): No selective disclosure; investor access fees allowed if non-research and not tied to brokerage.
+- UK/EU (MAR; MiFID II):
+  - Inducements: Do not bundle access with execution; separate invoices; obtain annual inducement attestation.
+  - Research Unbundling: Label all materials “Corporate Access—Non-Research.”
+- Canada (NI 51-102): Timely disclosure standards; SEDAR+ filings synchronized; bilingual (EN/FR) support for Quebec institutional investors.
+- APAC: Jurisdiction-by-jurisdiction marketing restrictions; avoid performance comparisons not in local factsheets; route to Regional Compliance for Japan and Australia queries.
+
+Note: If overlap with Capital Markets issuance processes, see also NFG-CM-0012 (Debt Issuance Playbook) and NFG-LEGAL-0089 (Disclosure Controls).
+
+# References
+- Policies: NFG-IR-Policy-100 (Equal Access); NFG-SEC-17a-4-Archival; NFG-IB-032 (Information Barriers); NFG-KYC-0110 (Client Onboarding); NFG-GRC-IR-AUD-22 (IR Audit Standard)
+- Communications: NFG-COMMS-0044 (Media Protocols); CommsHub Templates IR-ACK-001; IR-REC-STD
+- Systems: IRIS Admin Guide (SYS-IRIS-AG-21); ArchiveVault SOP (AV-SOP-09)
+
+# Change log
+- 1.0.0 (2025-10-03): Initial release covering Investor Access Programs, data subscription workflows, pricing/approval matrix, CRM schema, APIs, SLAs, and compliance protocols.
+
+Key takeaways: Log every investor touchpoint, stick to public information with required disclosures, route deals through the IR Deal Desk with the defined approval matrix, meet SLAs (4h response; 2d scheduling), and escalate any MNPI risk within 15 minutes.

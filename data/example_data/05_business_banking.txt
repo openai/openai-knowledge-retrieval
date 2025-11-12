@@ -1,0 +1,414 @@
+---
+doc_id: NFG-BB-0001
+doc_type: Enablement Playbook
+title: Business Banking — Product, Pricing, and Deal Desk Workflow
+business_unit: Commercial & Business Banking
+audience: Frontline Advisors; Sales; Relationship Managers; Underwriters; Support
+owners: [Maya Chen, Director of Business Banking Product; Leo Hart, Deal Desk Lead]
+owner_dept: Commercial Product & Pricing; Revenue Operations
+tags: [Business Banking, SMB, Mid-Market, Treasury, Checking, Lending, Onboarding, KYC, Pricing, Approvals]
+search_terms: [business checking, treasury management, ACH, wires, remote deposit, cash management, merchant services, onboarding, compliance, underwriting]
+regions: [US, CA, UK, EU, APAC]
+regulatory_scope: [Banking, Payments, KYC/AML, Sanctions, Data Privacy]
+created_at: 2025-10-03
+updated_at: 2025-10-03
+effective_date: 2025-10-10
+review_cadence: Quarterly
+last_reviewed_by: Priya Natarajan (Compliance), Thomas Reed (Risk)
+approvals: [NFG-PRD-Board-2025-09-14, NFG-Risk-CC-2025-09-20]
+version: 1.0.0
+visibility: Internal
+confidentiality: Internal
+systems: [Orion CRM, Atlas Core Banking, Helios Payments Hub, KYC Sentinel, DocuSafe Archival, Nova Pricing Engine, Argus Sanctions, Horizon Data Lake]
+product_codes: [BB-CHK-100, BB-MM-120, BB-TM-200, BB-RDC-220, BB-ACH-240, BB-WIRE-260, BB-MRS-280, BB-LOC-300]
+related_docs:
+  - NFG-TREASURY-0020
+  - NFG-KYC-0110
+  - NFG-ONB-0042
+  - NFG-LEND-0088
+  - NFG-SEC-17a-4-Archival
+canonical_url: https://kb.nfg.internal/docs/NFG-BB-0001
+---
+
+# 1. Quick Reference (TL;DR)
+
+- Who: Small/Mid-Market businesses (1–500 FTEs), annual revenue $250,000–$250,000,000; supported entities: LLC, Corp, LLP, Nonprofit (US/EU), Sole Proprietor (region-specific).
+- What: Business Checking, Money Market, Treasury (ACH/Wires/Lockbox), Remote Deposit Capture (RDC), Merchant Services, and Working Capital Line of Credit (LOC) adjunct.
+- When: Standard onboarding SLA 3 business days (T+3) from complete KYC package; expedited path 1 business day with pre-approval flags.
+- Where: Orion CRM drives workflow; Atlas Core Banking for account provisioning; Helios for payments; KYC Sentinel for risk; DocuSafe for records (retention 7 yrs per NFG-SEC-17a-4-Archival).
+- Do:
+  - Use Qualification matrix in Section 3.
+  - Capture mandatory CRM fields (Section 8) before submitting to Deal Desk.
+  - Price within guardrails (Section 5) or route approvals via Nova.
+  - Disclose fees and transaction limits verbatim (Section 7).
+- Don’t:
+  - Promise same-day onboarding without KYC completion.
+  - Waive monthly fees beyond your approval band.
+  - Onboard entities in sanctioned jurisdictions (see Section 14).
+- SLAs:
+  - KYC review: 24 hours (US/CA), 48 hours (EU/UK).
+  - Account opening: 4 hours after KYC pass.
+  - Payment rail enablement: ACH 24 hours; Wires 4 hours post-Nostro test.
+- Escalations: Deal Desk via Slack #deal-desk-bb (P1 in 2 hours), or ServiceNow INC-BB severity matrix (Section 6).
+
+# 2. Customer Personas and Use Cases
+
+- SMB Owner-Operator (10–50 FTEs; $1–$10M revenue)
+  - Use cases: Basic checking, ACH payroll, card settlement, RDC.
+  - Fit: Limited international activity; <5,000 monthly transactions.
+- Mid-Market Controller (50–300 FTEs; $10–$150M revenue)
+  - Use cases: Multicurrency wires, positive pay, dual approvals.
+  - Fit: Needs Treasury entitlements and ERP integration.
+- E-commerce Scale-up (5–100 FTEs; $2–$50M revenue)
+  - Use cases: High-volume ACH/merchant settlements, API access.
+  - Fit: >50,000 monthly transactions, needs Helios API and fraud monitoring.
+- Nonprofit Finance Director
+  - Use cases: Fee concessions, donation batch processing, grant segregation.
+  - Fit: Eligibility for nonprofit pricing tier with board minutes and EIN/charity number.
+
+Eligibility Fit:
+- Yes if: Registered business, verifiable ownership ≤4 UBOs >25%, clean sanctions screen, anticipated monthly average ledger ≥$5,000.
+- No if: MSB without enhanced due diligence (EDD), crypto exchanges, cannabis (US federal charter), sanctioned countries, shell/blank-check companies, anonymous trusts.
+
+# 3. Qualification and Discovery Questions
+
+BANT/CHAMP Prompts:
+- Budget: What monthly fee budget and current bank fees do you have? Any fee waivers tied to balances?
+- Authority: Who signs on accounts? Dual signers needed? Treasurer/Controller involvement?
+- Need: What volumes for ACH, wires, RDC? Cash handling needs? International currency needs?
+- Timing: Target go-live date? Payroll cycles? Any critical payments in next 10 days?
+- Metrics: Current payment failure rate, fraud incidents, average DSO.
+- Pain: Limits with current bank (e.g., low ACH limits, slow onboarding)?
+- Constraints: ERP/TMS integration? SSO requirements? Browser/network constraints?
+
+Red Flags:
+- Refusal to disclose UBOs >10%.
+- High chargeback rates (>1%) without mitigation plan.
+- Unclear source of funds or shell entity structures.
+- Requests to bypass dual control for wires.
+
+# 4. Product/Policy Overview
+
+Capabilities:
+- Business Checking (BB-CHK-100): Non-interest; 300 free items/mo; FDIC/FSCS equivalent coverage per region.
+- Money Market (BB-MM-120): Tiered interest; six preauthorized transfers/day limit per regional rules.
+- Treasury Suite (BB-TM-200): ACH origination, wires (domestic/international), positive pay, lockbox, controlled disbursement.
+- RDC (BB-RDC-220): Desktop and mobile; daily limit configurable; check image quality scoring via Helios ML.
+- ACH (BB-ACH-240): Same Day ACH available; cutoffs 16:00 ET (US).
+- Wires (BB-WIRE-260): Domestic cutoff 17:00 local; SWIFT for intl; MT103 confirmation.
+- Merchant Services (BB-MRS-280): Card settlement via partner gateway; next-day funding.
+- Working Capital LOC (BB-LOC-300): Optional; separate credit approval; cross-sell discount bundle.
+
+Limitations:
+- No cash vault services in APAC.
+- No onboarding of virtual asset service providers (VASPs) in US per NFG-COM-AML-052.
+- Max daily wire limit default $250,000; higher requires risk approval.
+- API access limited to OAuth2 service accounts; no personal tokens.
+
+Dependencies:
+- KYC Sentinel must return “Low/Moderate” risk; “High” requires EDD and VP Risk sign-off.
+- Treasury services require dual control configured in Helios Admin.
+- SSO via SAML2 with SCIM provisioning for enterprises >50 seats.
+
+# 5. Pricing, Fees, and Discounting
+
+Pricing Table (USD; regional FX equivalents apply):
+
+- BB-CHK-100: $25.00 monthly; waiver at $10,000 avg balance; $0.40 per excess item >300.
+- BB-MM-120: $35.00 monthly; interest tiers: 0.75% APY (≤$250k), 1.10% APY ($250k–$2M).
+- BB-ACH-240: $15.00 monthly; $0.12 per transaction; Same Day +$0.055/txn.
+- BB-WIRE-260: Domestic $18.00 outgoing/$10.00 incoming; Intl $35.00 outgoing.
+- BB-RDC-220: $45.00 monthly/device; $0.05 per check; daily limit default $50,000.
+- Positive Pay: $30.00 monthly; $0.02/item review.
+- Merchant Services: Interchange+ 25 bps and $0.08/txn; PCI non-compliance $19.95/mo.
+
+Approval Matrix (Discounting and Limits):
+
+- Level 0 (Advisor): Up to 10% fee discount; waive 1 month fees for service outage; increase wire limit to $500,000 with documented need; evidence in Orion.
+- Level 1 (RM Manager): Up to 20% discount; custom ACH pricing to $0.08/txn; wire limit to $1,000,000; require Nova price justification ID.
+- Level 2 (Regional Director): Up to 35% discount; bundle waiver up to 3 months; wire limit to $5,000,000; EDD proof; Risk consult ticket.
+- Level 3 (VP, Commercial): Exceptions beyond 35%; bespoke tiering; pricing floors cannot go below variable cost + 20 bps per NFG-PRC-002.
+
+Guardrails:
+- Nonprofit concession: waive monthly maintenance; per-item fees unchanged.
+- Term ≥12 months for discounts >20%.
+- Margin tests run via Nova; attach Nova-PRC-Ref (e.g., NOVA-2025-11345).
+
+# 6. Deal Desk Workflow
+
+Steps (target SLA end-to-end 48 hours after complete package):
+
+1) Qualify
+- Capture discovery details; set Opportunity Stage = “Qualified” in Orion (opp_type: BUSINESS_BANKING).
+- Control check: Red flags cleared.
+
+2) Build Pricing
+- Use Nova Pricing Engine; select product_codes; apply discounts within level; generate quote ID (e.g., QUO-2025-00456).
+- Control check: Margin ≥ minimum per NFG-PRC-002; Nova report attached to Opportunity.
+
+3) KYC Package
+- Initiate via Orion “Start KYC” button; KYC Sentinel workflow: collect BOI (UBOs >25%), IDs, EIN/Registration.
+- Control check: Argus Sanctions screen “Clear”; risk_score ≤60.
+
+4) Deal Desk Submission
+- Submit form DEAL-BB in Orion; required artifacts: Nova quote, KYC summary, term sheet draft, implementation plan.
+- SLA: Deal Desk triage 4 hours; decision 24 hours.
+
+5) Underwriting (if LOC or limits >$1M)
+- Route to Commercial Credit (Credit App ID APP-2025-0001); SLA 48 hours.
+- Control check: Financials 2 years; DSCR ≥1.20.
+
+6) Approval & Doc
+- Receive DD-APP-Ref (e.g., DDAPP-2025-09021); generate term sheet; send via DocuSafe eSign.
+- SLA: Doc execution within 2 business days.
+
+7) Provisioning
+- Atlas account creation within 4 hours of doc execution; Helios entitlements within 24 hours.
+- Control check: Dual control enforced; limits implemented per approval.
+
+8) Go-Live & Handoff
+- Welcome call; training; support contacts shared.
+- Evidence: Go-Live Checklist stored in DocuSafe (DSF-2025-33421).
+
+Escalation Path:
+- P1 (client at risk of churn): Notify Deal Desk Lead (Leo Hart) and VP Commercial; ServiceNow INC-BB-P1; ETA response 2 hours.
+- P2: Manager approval; response 8 hours.
+- P3: Standard; response next business day.
+
+# 7. Risk and Compliance Disclosures
+
+Required Statements:
+- Account terms and fees are subject to change with 30 days’ notice per NFG-BB-T&C-2025.
+- Funds availability follows Reg CC analogues; RDC deposits may be held up to 2 business days.
+- International wires subject to correspondent fees; FX spreads disclosed at time of send.
+- Data privacy complies with NFG-DATA-PR-100 (GDPR/CCPA equivalents).
+- We do not bank prohibited industries listed in NFG-AML-PROH-041; enhanced due diligence may apply.
+- ACH origination requires NACHA rule compliance; violations may result in suspension.
+
+Recordkeeping:
+- Communications and agreements archived for 7 years (NFG-SEC-17a-4-Archival).
+- Call notes and acknowledgments logged in Orion within 24 hours.
+
+# 8. Data and CRM Fields
+
+Canonical Field List (Orion CRM, object: Opportunity and Account):
+
+- account_legal_name (string; required; e.g., “BrightSpoke LLC”)
+- account_dba (string; optional; “BrightSpoke Bikes”)
+- registration_country (enum: US|CA|UK|DE|FR|SG|HK; required)
+- tax_id (string; masked display; format per region; e.g., EIN 12-3456789)
+- naics_code (string; required; 6-digit; e.g., 541511)
+- ubo_count (int; required; 1–4)
+- monthly_avg_balance_usd (currency; required; >= 5000.00)
+- ach_monthly_volume (int; required; >= 0; e.g., 12000)
+- wire_monthly_volume (int; required; >= 0; e.g., 75)
+- rdc_daily_limit_req (currency; optional; e.g., 150000.00)
+- intl_activity (bool; required)
+- risk_score (int; readonly from KYC Sentinel; 0–100; e.g., 42)
+- sanctions_status (enum: Clear|Potential|Hit; readonly)
+- dual_control_required (bool; default true)
+- quote_id (string; required when stage >= Proposal; e.g., QUO-2025-00456)
+- dd_app_ref (string; set post-approval; e.g., DDAPP-2025-09021)
+- implementation_date (date; target go-live)
+- primary_contact_id (lookup; required; e.g., CUST-12345)
+- kyc_package_id (string; readonly; e.g., KYC-2025-77102)
+
+Validation:
+- If intl_activity = true, wire_monthly_volume must be >0.
+- If discount >20%, approval_level must be ≥ Level 1 with approver_id present.
+- risk_score >60 triggers edd_required = true and blocks stage advancement.
+
+# 9. Integrations and APIs
+
+Key Systems:
+- Helios Payments Hub API (payments.nfg.internal/v1)
+- Atlas Core Banking API (atlas.nfg.internal/v2)
+- KYC Sentinel API (kyc.nfg.internal/v1)
+- Nova Pricing API (nova.nfg.internal/v1)
+
+Example: Create ACH Origination Profile (Helios)
+
+POST https://payments.nfg.internal/v1/clients/{client_id}/ach-profiles
+Headers:
+- Authorization: Bearer svc_ACH_eyJhbGci...
+- Idempotency-Key: 5c1a8d86-8f9b-4c7b-bc51-7f1a8e5f9e21
+
+Request:
+{
+  "company_name": "BrightSpoke LLC",
+  "tax_id_last4": "6789",
+  "odfi_account_id": "ATLAS-11550022",
+  "sec_codes": ["PPD","CCD","SAME_DAY"],
+  "daily_limit_usd": 250000.00,
+  "returns_threshold_pct": 0.5,
+  "dual_control": true,
+  "notifications": ["positive_pay_alerts","ach_returns"]
+}
+
+Response:
+{
+  "profile_id": "ACH-PROF-90211",
+  "status": "PENDING_RISK",
+  "created_at": "2025-10-03T14:05:22Z",
+  "review_eta_hours": 24
+}
+
+Webhook Event (ACH Return, masked):
+POST https://orion.nfg.internal/hooks/helios
+{
+  "event_type": "ach_return",
+  "profile_id": "ACH-PROF-90211",
+  "company_name": "BrightSpoke LLC",
+  "tax_id_last4": "6789",
+  "return_code": "R01",
+  "amount": 1540.25,
+  "effective_date": "2025-10-10",
+  "trace_id": "TR-88112233"
+}
+
+Error Patterns:
+- 403 Forbidden: Missing dual control flag for wires. Remediation: Update Helios Admin.
+- 422 Unprocessable: daily_limit_usd exceeds approved_limit. Remediation: attach DDAPP ref and retry.
+
+RPO/RTO:
+- Helios: RPO 5 minutes; RTO 30 minutes (active-active).
+- Atlas: RPO 0; RTO 15 minutes.
+- Orion: RPO 15 minutes; RTO 60 minutes. Offline playbook in NFG-OPS-BCP-010.
+
+# 10. Procedures
+
+A) Onboarding (New Business Checking + Treasury)
+1. Discovery and Qualification
+- Complete Section 3 prompts. Evidence: Discovery Note in Orion.
+2. KYC Intake
+- Send DocuSafe link; collect IDs, BOI, formation docs. Evidence: KYC-2025-XXXX.
+- Control: Sanctions Clear; risk_score ≤60.
+3. Pricing and Term Sheet
+- Generate QUO in Nova; include all services; attach to Orion.
+- Control: Discount within approval band; Nova margin test pass.
+4. Deal Desk Approval
+- Submit DEAL-BB; attach artifacts; track DDAPP ref.
+5. Documentation and eSign
+- Term sheet via DocuSafe; require two officer signatures if dual control.
+6. Account and Services Provisioning
+- Atlas account open; assign account_id; enable ACH/Wires in Helios with approved limits.
+- Control: Dual control configured before enabling wires.
+7. Training and Go-Live
+- 30-minute session; share cutoffs; provide support contacts.
+8. Post-Go-Live Review (T+14)
+- Check usage vs. plan; adjust limits; log in Orion.
+
+B) Servicing (Limit Increase Request)
+1. Intake ticket in ServiceNow (SRV-BB-LIMIT); attach 3 months statements if external.
+2. Risk review (ACH returns <0.5%, chargebacks <1%).
+3. Approval per matrix; update Helios limits with DDAPP ref.
+4. Confirm to client; update Orion notes.
+
+C) Exceptions (High-Risk Entity but Strategic)
+1. Flag in Orion as EXCEPTION_REQ = true; auto-route to Risk Committee.
+2. Prepare EDD memo (ownership chart, source of funds, compliance posture).
+3. VP Risk decision within 72 hours; if approved, set risk_controls = enhanced.
+4. Controls: Lower limits initially; daily monitoring; 30-day review.
+
+# 11. Objection Handling Matrix
+
+- “Your monthly fees are higher than my current bank.”
+  - Response: We can tailor fees based on your volumes. With your ACH volume at 12,000/month, Nova supports $0.09/txn and a checking fee waiver at $25,000 average balance. Let’s model total cost of ownership.
+- “I need higher wire limits on day one.”
+  - Response: We can provision $1,000,000 with manager approval today, and scale to $5,000,000 after 30 days of clean history. This protects you and meets NFG-AML-041 thresholds.
+- “Onboarding takes too long.”
+  - Response: Once we receive complete KYC documents, our SLA is T+3 business days; expedited is T+1 for low-risk profiles. I’ll help assemble your package today to hit the faster path.
+- “I don’t want dual control.”
+  - Response: Dual control is required for wires to mitigate fraud per NFG-FRD-PP-022. We can configure flexible approvers to keep your process fast and secure.
+- “We need API access with no user approvals.”
+  - Response: We support OAuth2 service accounts and role-based entitlements. For wires, an approval webhook is required to comply with payment control policy; ACH can be fully automated within approved limits.
+
+# 12. Term Sheet Template (Mini)
+
+Term Sheet ID: TS-2025-00781
+Client: BrightSpoke LLC (EIN: XX-XXX6789)
+Products:
+- BB-CHK-100: Monthly $25.00; waiver at $10,000 avg balance.
+- BB-ACH-240: Monthly $15.00; $0.09/txn; Same Day +$0.055/txn.
+- BB-WIRE-260: Domestic $18.00 out/$10.00 in; Intl $35.00 out; daily limit $1,000,000.
+- BB-RDC-220: $45.00/device; limit $75,000/day.
+Treasury Controls:
+- Dual Control: Required for wires.
+- Positive Pay: Enabled; default auto-return after 24 hours.
+Discounts:
+- 20% discount on ACH per Level 1 approval (APPROVER: RM-MGR-118).
+Term:
+- 24 months; early termination $250.00.
+Service Levels:
+- KYC SLA: 24 hours; Provisioning: 4 hours after KYC pass; ACH enablement: 24 hours.
+Approvals:
+- Nova Quote: QUO-2025-00456; Margin test PASS.
+- Deal Desk Approval: DDAPP-2025-09021.
+Signatures:
+- Client Officers (2): [NAME, TITLE], [NAME, TITLE]
+- NFG RM: [NAME]
+Effective Date: 2025-10-15
+
+# 13. KPIs and Dashboards
+
+Leading Indicators:
+- Onboarding cycle time (Target ≤3 days). Owner: Onboarding Ops.
+- KYC rework rate (Target <10%). Owner: KYC Ops.
+- ACH return rate (Target <0.5%). Owner: Treasury Ops.
+- Wire dual-control adoption (Target 100%). Owner: Risk.
+
+Lagging Indicators:
+- 90-day churn (Target <3%). Owner: RM.
+- Net revenue per account (Target ≥$150/month). Owner: Product Finance.
+- Fraud loss per $1M volume (Target < $250). Owner: Fraud Ops.
+
+Dashboards (Horizon Data Lake, Tableau Server):
+- BB Funnel (lead-to-live) — refresh hourly.
+- Pricing Compliance (Nova vs actual) — refresh daily.
+- Risk Heatmap (risk_score distribution) — refresh daily.
+
+Alerts:
+- If ACH returns >0.75% over 7 days, auto-create INC-BB-P2.
+- If onboarding >5 days cycle time, escalate to Deal Desk Lead.
+
+# 14. Regional Variations
+
+US:
+- Same Day ACH per NACHA; cutoff 16:00 ET.
+- Cannabis-related businesses excluded (federal charter).
+
+Canada:
+- EFT instead of ACH; pricing parity; cutoff 16:00 ET.
+- FINTRAC KYC requirements; beneficial ownership threshold 25%.
+
+UK/EU:
+- SEPA Credit Transfer; cutoff 15:00 CET; Faster Payments for domestic UK.
+- PSD2 SCA for portal access; GDPR data subject rights fulfilled via NFG-DATA-PR-100.
+
+APAC (SG/HK):
+- RTGS domestic rails; no cash vault support.
+- Enhanced sanctions screening; higher false positive rate; SLA +24 hours KYC.
+
+Sanctions/Restrictions:
+- No onboarding from OFAC/EU consolidated lists; Argus enforces.
+- Dual language docs for FR/DE clients; translated templates available.
+
+See also: Treasury Management Deep Dive (NFG-TREASURY-0020) and Onboarding Playbook (NFG-ONB-0042).
+
+# 15. References
+
+- NFG-KYC-0110 — Business Customer Identification Program
+- NFG-AML-PROH-041 — Prohibited Industries
+- NFG-PRC-002 — Pricing Governance and Margin Floors
+- NFG-SEC-17a-4-Archival — Communications Archival and Retention
+- NFG-FRD-PP-022 — Payment Fraud Prevention Controls
+- NFG-DATA-PR-100 — Data Privacy and Subject Rights
+- NFG-OPS-BCP-010 — Business Continuity and Disaster Recovery
+- NFG-LEND-0088 — Working Capital LOC Credit Policy
+- NFG-BB-T&C-2025 — Business Banking Terms & Conditions
+
+# 16. Change log
+
+- 1.0.0 (2025-10-03): Initial release covering product overview, pricing/approval matrix, deal desk workflow, CRM schema, APIs, procedures, and regional variations.
+
+Key takeaways: Qualify thoroughly, capture canonical CRM data, price within guardrails using Nova, and submit a complete KYC and deal package to hit T+3 onboarding. Use dual control and disclose fees/limits clearly. Escalate through Deal Desk with evidence and approval references to accelerate provisioning and protect risk posture.

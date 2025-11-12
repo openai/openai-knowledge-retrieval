@@ -1,0 +1,391 @@
+---
+doc_id: DOC-TRSY-OPS-001
+doc_type: Playbook
+title: Treasury Operations — Sales and Frontline Enablement Guide
+business_unit: Corporate & Institutional Banking
+audience: Advisors, Sales, Relationship Managers, Underwriters, Support
+owners: ["Maya Chen (Head of Treasury Operations)", "Alex Romero (Deal Desk Lead)"]
+owner_dept: Treasury Operations & Deal Desk
+tags: ["treasury", "cash management", "payments", "liquidity", "deal-desk", "pricing", "compliance"]
+search_terms: ["treasury operations", "cash pooling", "account sweeps", "wire", "ACH", "RTP", "controlled disbursement", "escrow", "notional pooling", "liquidity management"]
+regions: ["US", "CA", "UK", "EU", "APAC"]
+regulatory_scope: ["Banking", "Payments", "Sanctions", "Recordkeeping"]
+created_at: 2025-10-03
+updated_at: 2025-10-03
+effective_date: 2025-10-10
+review_cadence: Quarterly
+last_reviewed_by: Priya Natarajan (Compliance Partner, GRC)
+approvals: ["Treasury Ops ExCo 2025-09-28", "GRC Committee 2025-09-30"]
+version: 1.0.0
+visibility: Internal
+confidentiality: Internal
+systems: ["Atlas TMS", "NexusPay Hub", "Orion GL", "Salesforce (NFG-ORG)", "Helios Case Manager", "Argus Data Lake", "Sentinel Sanctions"]
+product_codes: ["TRSY-WIRE", "TRSY-ACH", "TRSY-RTP", "TRSY-ZBA", "TRSY-NPOOL", "TRSY-ESCROW", "TRSY-LOCKBOX"]
+related_docs:
+  - DOC-TRSY-PRC-002
+  - DOC-KYC-BASE-010
+  - DOC-SANCTIONS-004
+  - DOC-BCP-OPS-007
+  - DOC-CASHMGT-LOCKBOX-013
+canonical_url: https://kb.nfg.internal/docs/DOC-TRSY-OPS-001
+---
+
+# 1. Quick Reference (TL;DR)
+
+- Who: Corporate clients with average collected balances ≥ $2,000,000; SMBs via packaged bundles require simplified onboarding.
+- What: Treasury services (payments, liquidity, information reporting) delivered via Atlas TMS + NexusPay Hub; settlement via Orion GL.
+- When: Standard onboarding 5–7 business days (KYC cleared). Fast-Track eligible ≤ $5M monthly volume in standard geos: 2–3 days.
+- Where: Supported regions US, CA, UK, EU; RTP currently US-only (The Clearing House). SEPA Credit Transfer via EU branch.
+- SLAs:
+  - Deal Desk response: 4 business hours.
+  - Pricing proposal: 1 business day (<$50M annualized volume), 2 business days (>$50M).
+  - Implementation kickoff after signed term sheet: 1 business day.
+  - Payment processing cutoffs: US wire 17:00 ET; ACH files 20:00 ET; SEPA 15:30 CET; RTP 24/7/365.
+  - RPO/RTO (NFG-BCP-0007): RPO 5 minutes; RTO 30 minutes for payment initiation; 4 hours for reporting.
+- Do:
+  - Run sanctions/KYC checks before quoting custom pricing.
+  - Align pricing tiers to margin guardrails (see Section 5).
+  - Capture canonical CRM fields exactly (Section 8).
+- Don’t:
+  - Promise same-day high-value cross-border without FX booking.
+  - Offer notional pooling (TRSY-NPOOL) to US-only entities (regulatory constraint).
+  - Modify term sheets outside Deal Desk templates.
+
+# 2. Customer Personas and Use Cases
+
+- Mid-Market CFO/Controller (MME): $50M–$500M revenue, ACH-heavy AP/AR, needs balanced pricing and file integration. Fit for ACH, controlled disbursement, ZBA.
+- Large Corporate Treasurer: $500M–$5B revenue, multi-currency, complex liquidity structures. Fit for cross-border, notional pooling (UK/EU), multi-entity overlays.
+- Fintech/Marketplace Ops Lead: High transaction counts, API-first payouts/disbursements. Fit for NexusPay APIs, RTP, virtual accounts, fraud controls.
+- Real Estate/Title: Escrow-heavy, high wire utilization. Fit for escrow sub-accounts, positive pay, wire templates.
+
+Eligibility Fit:
+- Minimum average balances: $2M (US), £1.5M (UK/EU).
+- Monthly payment volume: ≥ 5,000 ACH or 300 wires, or ≥ $25M total throughput.
+- Non-Fit/Deferral:
+  - Sanctioned jurisdictions or adverse media flags (NFG-SANC-0301).
+  - Cash-intensive businesses without enhanced due diligence.
+  - Crypto-native custodians (handled by Specialized Financial Institutions team; See also DOC-TRSY-PRC-002).
+
+# 3. Qualification and Discovery Questions
+
+BANT/CHAMP Prompts:
+- Budget: “What is your current monthly spend on treasury fees (wires, ACH, information reporting)?”
+- Authority: “Who signs the treasury services agreement and the service fee schedule?”
+- Need: “Which payment rails do you use today and where are settlement pain points?”
+- Timeline: “Is there a regulatory or system-go-live date we should align with?”
+- Challenges: “How do you manage liquidity across entities and currencies now?”
+- Metrics: “What KPIs do you track (DPO/DSO, straight-through processing rate)?”
+
+Red Flags:
+- Requests for anonymous account structures or third-party payments without invoices.
+- Exclusive need for US notional pooling.
+- Commingling of client funds without escrow or trust framework.
+- Refusal to enable sanctions screening or to provide UBO documentation.
+
+# 4. Product/Policy Overview
+
+Capabilities:
+- Payments: Wires (domestic/international), ACH, RTP (US), SEPA CT (EU), BACS (UK).
+- Liquidity: Zero Balance Accounts (ZBA), target balancing, end-of-day sweeps, EU/UK notional pooling (intercompany).
+- Information Reporting: Prior-day, intraday via Atlas TMS and API webhooks.
+- Fraud Controls: Positive pay, dual approval, IP allowlists, velocity thresholds.
+- Escrow: Segregated accounts with sub-ledgering.
+
+Limitations:
+- RTP credit-only; max $1,000,000 per transaction; no cross-border RTP.
+- Notional pooling available only in UK/EU under TRSY-NPOOL policy NFG-TRE-1021.
+- Cross-border wires subject to FX booking via NFG Markets; cutoffs vary by corridor.
+
+Dependencies:
+- KYC/AML clearance (NFG-KYC-0110, NFG-AML-0202).
+- Sanctions screening via Sentinel (NFG-SANC-0301).
+- Record retention (NFG-SEC-17a-4-Archival): 7 years for payment artifacts.
+
+Definitions:
+- Atlas TMS: NFG treasury portal and engine.
+- NexusPay Hub: Payment orchestration and rail routing.
+- Orion GL: Core ledger for settlement and fee assessment.
+- RPO/RTO: Recovery Point/Time Objective under BCP.
+
+# 5. Pricing, Fees, and Discounting
+
+Pricing Table (USD unless noted):
+
+- Domestic Wire: $12.00–$22.00 per item; cost floor $6.50; cutoff 17:00 ET.
+- International Wire: $18.00–$38.00 per item + FX spread 8–20 bps; cost floor $10.00.
+- ACH Credit/Debit: $0.07–$0.30 per item; cost floor $0.04.
+- RTP: $0.75–$1.50 per item; cost floor $0.50.
+- ZBA/Target Sweeps: $150.00 monthly per structure.
+- Notional Pooling (EU/UK): 10–25 bps on net credit; legal documentation fee £2,500 setup.
+- Information Reporting/API: $250.00 monthly + $0.002 per webhook event after 100k.
+
+Discounting Guardrails:
+- Minimum margin: 35% above cost floor without VP approval.
+- Bundled discount up to 15% for clients with ≥ $100M average balances.
+- Strategic logo exception requires CRO approval and clawback clause.
+
+Approval Matrix:
+
+- Level 1 (RM/Advisor): Discount ≤ 10% from list; ensure margin ≥ 40%; evidence: Pricing Calculator PDF, CRM note.
+- Level 2 (Deal Desk Lead): Discount > 10% to ≤ 20%; margin ≥ 35%; requires Competitive Justification Memo; SLA 1 business day.
+- Level 3 (Head of Treasury Ops): Discount > 20% to ≤ 30%; must show payback < 9 months; SLA 2 business days.
+- Level 4 (CRO + Compliance): Any discount > 30% or policy exceptions (e.g., bespoke pooling); SLA 3 business days; requires Risk Impact Assessment (RIA-TRSY-##).
+
+# 6. Deal Desk Workflow
+
+Steps:
+1) Intake (SLA 4h): Submit DEAL-REQ in Salesforce (Record Type: Treasury), attach recent statements, volume file, and signed NDA.
+2) Sanctions Pre-Check (SLA 4h): Sentinel quick screen on legal entities and key officers; evidence stored in Helios Case ID HEL-TRSY-####.
+3) Pricing Build (SLA 1–2 days): Deal Desk uses Pricing Engine v3.4; attach output PDF to Salesforce and tag Product Codes.
+4) Legal Review (as needed; SLA 2 days): Standard terms via Treasury Services Agreement v2025.1; deviations logged in Contract Companion.
+5) Client Presentation: RM delivers pricing and implementation plan; capture verbal acceptance notes in CRM.
+6) Approval: Route via Approval Matrix; capture approvals in Salesforce Approval History; non-compliant deals auto-rejected.
+7) Term Sheet Issuance: Generate via Term Sheet Template (Section 12); DocuSign envelope ID linked.
+8) Implementation Kickoff (SLA 1 day post-signature): PM assigned, project plan in Atlas TMS; IT tickets created in JIRA TSY-####.
+9) Go-Live Readiness Check: Control checklist signed by Ops Supervisor; evidence stored in Argus Data Lake bucket argus://trsy/go-live/CLIENTID.
+10) Post-Go-Live Review (Day 30): Validate KPIs and fee realization; variance report to RM and Ops.
+
+Escalation Path:
+- Deal Desk Lead → Head of Treasury Ops → CRO; Compliance consult at any level for sanctions/KYC or RTS constraints.
+
+# 7. Risk and Compliance Disclosures
+
+Required Talking Points:
+- “All payments are subject to sanctions and AML screening. NFG may delay or reject transactions to comply with laws.”
+- “For cross-border, FX rates are indicative until booked and may change.”
+- “RTP payments are irrevocable; ensure controls and recipient validation.”
+
+Paperwork Disclosures:
+- Sanctions & AML Acknowledgement (Form TRSY-SAN-01).
+- Recordkeeping Consent under NFG-SEC-17a-4-Archival.
+- Service Interruption Clause referencing NFG-BCP-0007 (RPO/RTO commitments).
+
+Controls:
+- Dual approval mandatory for wires > $100,000 unless explicit waiver by Risk (RIA-TRSY).
+- Positive pay required for check disbursement clients.
+- Beneficiary account validation (via Payee Confirm) for first-time wires.
+
+# 8. Data and CRM Fields
+
+Canonical Salesforce Fields (Object: Opportunity + Treasury Addendum):
+
+- Treasury_Use_Case__c (Picklist): ["AP", "AR", "Liquidity", "Marketplace Payouts"] — required.
+- Avg_Collected_Balance__c (Currency, 2dp): min $0.00; example: 2450000.00 — required.
+- Monthly_Wire_Count__c (Number, 0dp): min 0; example: 320 — required if Wires selected.
+- Monthly_ACH_Count__c (Number, 0dp): min 0; example: 12500.
+- Expected_RTP_Utilization__c (Percent, 0–100): example: 35.
+- Multicurrency__c (Checkbox): example: true.
+- Jurisdictions__c (Multi-picklist): ["US", "CA", "UK", "EU", "SG"] — required.
+- Sanctions_Precheck_Status__c (Picklist): ["Clear", "Review", "Hold"] — required before pricing.
+- Pricing_Proposal_ID__c (Text 20): e.g., PP-2025-01482 — required.
+- Implementation_Risk_Rating__c (Picklist): ["Low", "Medium", "High"]; driver for PM assignment.
+- Term_Sheet_Executed_Date__c (Date): format YYYY-MM-DD.
+- Product_Codes__c (Multi-picklist): ["TRSY-WIRE", "TRSY-ACH", "TRSY-RTP", "TRSY-ZBA", "TRSY-NPOOL", "TRSY-ESCROW"] — required.
+
+Validation Rules:
+- IF Product_Codes includes TRSY-NPOOL THEN Jurisdictions must include "UK" or "EU".
+- If RTP selected, Avg_Collected_Balance__c ≥ $1,000,000 OR explicit Head of Ops waiver.
+- Sanctions_Precheck_Status__c must be "Clear" to submit for approval.
+
+Example Values (CUST-98421):
+- Treasury_Use_Case__c: "Marketplace Payouts"
+- Avg_Collected_Balance__c: 3,450,000.00
+- Monthly_Wire_Count__c: 95
+- Monthly_ACH_Count__c: 22,400
+- Expected_RTP_Utilization__c: 20
+- Multicurrency__c: true
+- Jurisdictions__c: "US;UK;EU"
+- Sanctions_Precheck_Status__c: "Clear"
+- Pricing_Proposal_ID__c: "PP-2025-01482"
+- Product_Codes__c: "TRSY-ACH;TRSY-RTP;TRSY-ZBA"
+
+# 9. Integrations and APIs
+
+Primary Endpoints (NexusPay Hub):
+- POST /v1/treasury/transfers
+- GET /v1/treasury/transfers/{id}
+- POST /v1/treasury/beneficiaries
+- GET /v1/treasury/balances
+- Webhook: POST https://client.example.com/webhooks/nfg/payments
+
+Example Request (masked):
+POST /v1/treasury/transfers
+{
+  "client_id": "CLI-2025-00117",
+  "transfer_type": "WIRE_DOMESTIC",
+  "amount": "125000.00",
+  "currency": "USD",
+  "debit_account": "DDA-****4321",
+  "beneficiary_id": "BEN-****8890",
+  "schedule": {"type": "IMMEDIATE"},
+  "metadata": {"customer_ref": "INV-2025-0915-007"}
+}
+
+Example Response:
+{
+  "transfer_id": "TRF-2025-0901-000721",
+  "status": "PENDING_REVIEW",
+  "cutoff_time": "2025-10-03T21:00:00Z",
+  "approvals_required": 2,
+  "created_at": "2025-10-03T15:02:11Z",
+  "links": {
+    "self": "/v1/treasury/transfers/TRF-2025-0901-000721"
+  }
+}
+
+Webhook Event (payment.posted):
+{
+  "event_id": "EVT-9b2f3c",
+  "event_type": "payment.posted",
+  "occurred_at": "2025-10-03T15:07:41Z",
+  "data": {
+    "transfer_id": "TRF-2025-0901-000721",
+    "status": "POSTED",
+    "posted_at": "2025-10-03T15:07:40Z",
+    "amount": "125000.00",
+    "currency": "USD",
+    "value_date": "2025-10-03"
+  },
+  "signature": "sha256=abf0...f2"
+}
+
+Error Patterns:
+- 429 Too Many Requests: Throttle to 100 TPS burst, 20 TPS sustained.
+- 402 Payment Required: Fee pre-funding shortfall; instruct client to top-up DDA.
+- 422 Validation Error: Beneficiary account format invalid; refer to regional IBAN rules.
+
+# 10. Procedures
+
+Onboarding (Standard)
+1) Pre-Screen (RM): Capture CRM fields; run Sentinel quick check; set Sanctions_Precheck_Status__c to “Clear”.
+2) KYC Package (Underwriting): Collect KYB/KYC docs (articles, UBO IDs per NFG-KYC-0110); log in Helios.
+3) Risk Rating (Compliance): Compute inherent risk; if Medium/High, require Enhanced Due Diligence checklist.
+4) Contracting (Legal): Issue TSA v2025.1; add Service Fee Schedule; ensure sanctions clause present.
+5) Technical Setup (Ops/IT): Provision Atlas TMS; enable products; API keys via Atlas Developer Console.
+6) Controls Verification (Ops Supervisor): Validate dual approvals, IP allowlist, velocity limits.
+7) Go-Live Call (PM + Client): Confirm cutoffs and file formats; record in project journal.
+
+Control Checks & Evidence:
+- Evidence of UBO verification stored in Helios under KYC-CASE ##.
+- Atlas TMS audit log snippet attached to Argus go-live folder.
+- Dual-approval test payment $0.01 executed and cancelled; log retained.
+
+Servicing
+1) Payment Exception: Client flags issue via Atlas or RM; create Helios ticket; attach transfer_id.
+2) Investigation (Ops): Review NexusPay trace; check Sentinel sanctions logs.
+3) Resolution: If bank reject, re-send or credit back; communicate root cause; update client within 4 business hours.
+4) Post-Mortem (> $1M impact or > 2h delay): Open Incident INC-TRSY-####; follow NFG-INC-0302.
+
+Exceptions
+- Policy Waiver: Submit RIA-TRSY form for any deviation (e.g., single approver on RTP); Head of Ops must sign.
+- Rapid Onboarding (< 48h): Allowed for existing clients with ACB ≥ $10M; Compliance approval required.
+
+BCP/DR
+- Failover to secondary data center on Atlas/NexusPay within RTO 30 minutes; client IPs unchanged (global anycast).
+- RPO 5 minutes via synchronous replication; reconcile ledger deltas post-recovery.
+
+# 11. Objection Handling Matrix
+
+- “Your wire fees are higher than Bank X.”
+  Response: “We can align tiers based on your exact volumes and our fraud controls. With your 300 wires/month, we can target $14.00/item subject to 35% margin. I’ll route this through Deal Desk today.”
+
+- “RTP is too risky since it’s irrevocable.”
+  Response: “Agreed RTP requires strong controls. We enforce dual approval and velocity limits by default, and offer payee validation. We can cap per-transaction at $250k initially and scale with you.”
+
+- “We need US notional pooling.”
+  Response: “US regulations limit notional pooling. We can implement ZBA and intercompany sweeps domestically, and offer notional pooling from our UK/EU entities if your structure permits.”
+
+- “Our finance team can’t wait 2 weeks to integrate.”
+  Response: “We support file-based onboarding in 2–3 days with CSV/ISO 20022, then transition to APIs. Implementation kickoff is next business day after signature.”
+
+# 12. Term Sheet Template (Mini)
+
+Term Sheet ID: TS-TRSY-2025-####
+
+Client Legal Name: [Entity Name]
+Client IDs: [CUST-#####]
+Jurisdictions: [US/UK/EU/CA]
+
+Products:
+- TRSY-WIRE: Domestic $XX.XX/item; International $XX.XX/item + FX spread YY bps; cutoff 17:00 ET.
+- TRSY-ACH: $0.XX/item; same-day ACH $0.XX/item.
+- TRSY-RTP: $X.XX/item; per-transaction limit $XXX,XXX.
+- TRSY-ZBA: $XXX.00/month per structure.
+- TRSY-NPOOL (if UK/EU): XX bps on net credit; setup £X,XXX.
+
+Controls:
+- Dual approval for wires ≥ $100,000; RTP per-payment cap $XXX,XXX.
+- IP allowlist and SSO required; token-based API auth.
+
+Service Levels:
+- Payment availability 99.95% monthly; incident comms within 30 minutes.
+- RPO 5 minutes; RTO 30 minutes (payments), 4 hours (reporting).
+
+Term & Fees:
+- Term: 24 months; early termination fee: $5,000 or 10% of trailing 3 months’ average fees, whichever higher.
+- Fee review after 12 months based on actual volumes.
+
+Approvals:
+- Level: [1/2/3/4] per Section 5; Approval IDs: [APR-#####].
+- Compliance Confirmation: [Yes/No]; Ref: [HEL-TRSY-####].
+
+Signatures:
+- Client Authorized Signer; NFG Head of Treasury Ops or Delegate.
+
+# 13. KPIs and Dashboards
+
+Leading Indicators:
+- Onboarding Cycle Time (target ≤ 7 business days; owner: Ops PM).
+- Sanctions False Positive Rate (target ≤ 1.5%; owner: Compliance).
+- API STP Rate (target ≥ 98%; owner: NexusPay Product).
+
+Lagging Indicators:
+- Fee Realization vs Proposal (target ≥ 95%; owner: Deal Desk).
+- Payment Availability (target ≥ 99.95%; owner: SRE).
+- Incident MTTR (target ≤ 45 minutes; owner: Ops).
+
+Dashboards (Atlas Insights):
+- Treasury Sales Funnel: conversion by segment and product code.
+- Payment Rail Utilization: ACH/Wire/RTP mix by client; alerts on abnormal shifts.
+- Liquidity Balances: average collected balances vs commitments.
+
+# 14. Regional Variations
+
+US:
+- RTP via The Clearing House; $1,000,000 cap; FedNow pilot scheduled Q1 2026.
+- Same-Day ACH cutoff windows: 10:30, 14:45, 16:45 ET; premium pricing applies.
+
+UK/EU:
+- SEPA CT and BACS supported; IBAN structure validation mandatory.
+- Notional pooling permitted with intercompany agreements; withholding tax implications reviewed by Tax (NFG-TAX-2204).
+
+Canada:
+- EFT supported; wires via LVTS; RTP equivalent under review (Payments Canada RTR).
+- Data residency: client artifacts stored in CA region per NFG-DATA-1201.
+
+APAC (Limited Pilot):
+- Cross-border only; no domestic RTP; additional due diligence for CN/HK corridors.
+
+# 15. References
+
+Internal Policies:
+- NFG-KYC-0110 Customer Identification and UBO Verification
+- NFG-AML-0202 Transaction Monitoring Standards
+- NFG-SANC-0301 Sanctions Screening and Blocking
+- NFG-SEC-17a-4-Archival Records Retention
+- NFG-BCP-0007 Business Continuity for Payments
+- NFG-INC-0302 Incident Management Protocol
+- NFG-TRE-1021 Notional Pooling Policy (UK/EU)
+
+See also:
+- DOC-TRSY-PRC-002 Treasury Pricing Calculator Guide
+- DOC-KYC-BASE-010 KYC Documentation Checklist
+- DOC-SANCTIONS-004 Sentinel Sanctions User Guide
+- DOC-BCP-OPS-007 Payments BCP/DR Playbook
+- DOC-CASHMGT-LOCKBOX-013 Lockbox Services Overview
+
+# 16. Change log
+
+- 1.0.0 (2025-10-03): Initial release. Introduces pricing/approval matrix, CRM schema, API examples, SLAs, RPO/RTO, and standardized term sheet. 
+
+Key takeaways: Qualify early on balances, volume, and jurisdictions; run sanctions pre-check before pricing; adhere to discount guardrails and approval levels; capture canonical CRM fields verbatim; use the standard Deal Desk workflow for speed and compliance; emphasize controls and irrevocability where relevant; set clear cutoffs and SLAs with clients.

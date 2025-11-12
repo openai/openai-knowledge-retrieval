@@ -1,0 +1,357 @@
+---
+doc_id: NFG-COM-0012
+doc_type: Enablement Guide
+title: Compliance and Regulations — Frontline Guide for Conversations and Deal-Making
+business_unit: Group Compliance Enablement
+audience:
+  - Financial Advisors
+  - Sales Executives
+  - Relationship Managers
+  - Underwriters
+  - Customer Support
+owners:
+  - Jane Park (Director, Compliance Enablement)
+  - Ravi Desai (Deal Desk Lead)
+owner_dept: Group Compliance & Deal Desk
+tags:
+  - Compliance
+  - KYC
+  - AML
+  - Sanctions
+  - Record Retention
+  - Data Privacy
+  - Suitability
+  - Archival
+search_terms:
+  - KYC tiering
+  - AML red flags
+  - sanctions screening
+  - GDPR consent
+  - SEC 17a-4
+  - record retention
+  - PEP
+  - UBO
+  - onboarding checklist
+regions:
+  - AMER
+  - EMEA
+  - APAC
+regulatory_scope: Multi-jurisdiction (US, CA, UK, EU, SG, HK)
+created_at: 2025-10-03
+updated_at: 2025-10-03
+effective_date: 2025-10-10
+review_cadence: Quarterly
+last_reviewed_by: Maria Alvarez (Chief Compliance Officer)
+approvals:
+  - Maria Alvarez (CCO)
+  - Daniel Cho (Head of Global Sales)
+  - Priya Raman (General Counsel)
+version: 1.0.0
+visibility: Internal
+confidentiality: Internal
+systems:
+  - Nexus360 CRM
+  - Veriscope KYC
+  - AtlasScreen (Sanctions/PEP)
+  - HawkEye TM (Transaction Monitoring)
+  - VaultEdge DMS
+  - Sentinel Archive (WORM)
+  - Quorum DD (Deal Desk)
+  - ServiceGate (Ticketing)
+  - SignBridge (eSignature)
+  - AuroraLake (Data Lake)
+product_codes:
+  - COMPLIANCE-SVC-01 (Standard KYC/AML Package)
+  - COMPLIANCE-SVC-02 (Enhanced Due Diligence Add-on)
+  - ARCH-RET-17A4 (Broker-Dealer Archival)
+  - PRIV-GDPR-CTRL (GDPR Consent Management)
+related_docs:
+  - NFG-KYC-0110
+  - NFG-SEC-17a-4-Archival
+  - NFG-SAN-0042
+  - NFG-DATA-PRIV-0201
+  - NFG-DEAL-0007
+canonical_url: https://kb.nfg.internal/docs/NFG-COM-0012
+---
+
+# 1. Quick Reference (TL;DR)
+- Who: All frontline staff must follow this guide for prospecting, onboarding, cross-sell, renewals, and service changes.
+- What: KYC/AML, sanctions/PEP, suitability, privacy/consent, and record-retention controls that must be completed before account activation, product upgrades, or large transactions.
+- When:
+  - Initial KYC: within 8 business hours of receiving complete documents (SLA).
+  - Sanctions/PEP screening: within 2 business hours (SLA) pre-trade or pre-funding.
+  - Record archival: within 24 hours of creation to Sentinel WORM (RPO 0, RTO 4h).
+  - Periodic review: KYC Tier 1 annually; Tier 2 semi-annually; Tier 3 quarterly.
+- Where: Submit via Nexus360 case “COM-ONB” and Quorum DD for exceptions.
+- Do:
+  - Use approved scripts for disclosures and consent.
+  - Capture UBO ≥25% and control prong for entities.
+  - Log all client communications to VaultEdge and tag retention class.
+- Don’t:
+  - Don’t send PII via email; use SecureShare link in Nexus360.
+  - Don’t override sanctions hits without Compliance approval (L2+).
+  - Don’t promise timelines shorter than SLA without Quorum DD exception.
+
+# 2. Customer Personas and Use Cases
+- Retail HNW Individual (Wealth)
+  - Use case: Managed accounts, structured notes.
+  - Fit: Government-issued ID, proof of address, passes sanctions/PEP. Suitability evidence for complex products.
+  - Non-fit: Refuses source-of-funds or politically exposed without EDD tolerance.
+- Corporate (LLC/Inc.)
+  - Use case: Treasury, FX hedging, custody.
+  - Fit: KYB docs, UBO disclosure, board resolution. Clear ownership chain.
+  - Non-fit: Bearer shares, complex offshore chains with no verifiable UBO.
+- Financial Institution (FI)
+  - Use case: Correspondent services.
+  - Fit: Global intermediary certification, AML attestation, Wolfsberg questionnaire.
+  - Non-fit: High-risk jurisdictions (OFAC comprehensive sanctions).
+- Non-Profit/Charity
+  - Use case: Donation management, custody.
+  - Fit: Tax-exempt certification, mission alignment.
+  - Non-fit: Inconsistent funding sources; negative media on diversion of funds.
+
+# 3. Qualification and Discovery Questions
+- Business intent: “Describe the purpose, expected volumes, and counterparties.” Red flag: vague or cash-intensive without rationale.
+- Identity: “Who owns/controls 25%+? Any senior managing officials?” Red flag: reluctance to name UBOs.
+- Geography: “Where are you incorporated and operating?” Red flag: operations in sanctioned regions.
+- Source of funds/wealth: “What is the origin of the funds?” Red flag: third-party funding with no contract.
+- Expected activity: “Monthly deposits, wires, jurisdictions?” Red flag: high-risk corridors with no ties.
+- Politically exposed: “Any PEP affiliations?” Red flag: recent appointment or close associate without transparency.
+- Data privacy: “Can we capture and store your consent preferences?” Red flag: refusal while requesting digital services.
+- Suitability: “Experience with derivatives/leverage?” Red flag: no experience but seeking complex products.
+
+# 4. Product/Policy Overview
+- Capabilities:
+  - KYC/AML: Automated identity/KYB in Veriscope KYC; EDD available (COMPLIANCE-SVC-02).
+  - Sanctions/PEP: AtlasScreen daily refresh; real-time screening on onboarding and payments.
+  - Record Retention: Sentinel Archive WORM storage per NFG-SEC-17a-4-Archival; VaultEdge for working docs.
+  - Privacy/Consent: GDPR/CCPA flags in Nexus360; consent ledger in AuroraLake.
+  - Suitability: Product risk rating engine integrated to Nexus360; questionnaire in SignBridge.
+- Limitations:
+  - No onboarding of comprehensively sanctioned jurisdictions listed in NFG-SAN-0042.
+  - No omnibus accounts without look-through at 25% or control prong.
+  - Digital-only onboarding restricted for Tier 3 clients; requires in-person verification.
+- Dependencies:
+  - E-signature via SignBridge for attestations.
+  - Trade activation hinges on sanctions clearance and record archival confirmation.
+
+# 5. Pricing, Fees, and Discounting
+Compliance review fees (assessed to client or internal P&L per product):
+
+| Item | Code | Standard Fee | When Applied | Notes |
+|---|---|---|---|---|
+| Standard KYC/AML Package | COMPLIANCE-SVC-01 | $125.00 | New onboard, periodic review | Waivable L1 |
+| Enhanced Due Diligence (EDD) | COMPLIANCE-SVC-02 | $650.00 | PEP/high-risk | Requires L2 |
+| Wolfsberg/Correspondent Diligence | COMPLIANCE-SVC-03 | $900.00 | FIs | Non-waivable |
+| Document Retrieval (Archive) | ARCH-RET-17A4 | $15.00/request | Ad hoc retrieval | First 3 free |
+| Data Privacy Consent Management | PRIV-GDPR-CTRL | $0.00 | Included | — |
+
+Approval Matrix (Discounting/Exceptions)
+
+| Level | Role | Authority | Examples | Ticket System |
+|---|---|---|---|---|
+| L0 | RM/Advisor | Up to 25% discount on COMPLIANCE-SVC-01 | Waive $31.25 | Quorum DD |
+| L1 | Sales Manager | Up to 50% on COMPLIANCE-SVC-01 | Waive $62.50 | Quorum DD |
+| L2 | Regional Compliance Manager | Approve EDD fee waiver up to 20% | Reduce to $520.00 | Quorum DD |
+| L3 | CCO | Fee waivers beyond L2; onboarding of Tier 3 | Full waiver; one-time exception | Quorum DD + Legal sign-off |
+
+# 6. Deal Desk Workflow
+- Initiation (SLA: 2 hours to acknowledge)
+  1. Create Quorum DD case type “COM-EXC” with Nexus360 Opportunity ID.
+  2. Attach artifacts: UBO form (NFG-KYC-0110-F1), Source of Funds letter, ID/registration docs.
+  3. Select exception category: Fee, Timeline, Sanctions false positive, EDD scope, Retention.
+- Review (SLA: 8 business hours for decision)
+  4. Compliance screens in AtlasScreen; logs evidence in case.
+  5. Legal reviews regulatory exposure where needed.
+  6. Sales Manager signs off on commercial impact.
+- Decision and Communication
+  7. Approval recorded in Quorum DD; e-sign via SignBridge for client acknowledgments.
+  8. Nexus360 record updated; ServiceGate task auto-created for operations.
+- Escalation Path
+  - If SLA breach imminent, ping #deal-desk in Teams and escalate to L2 (Regional Compliance Manager). If unresolved within 4 hours, escalate to CCO.
+
+Required Artifacts (no exceptions):
+- Government ID (individual) or Articles of Incorporation (entity).
+- UBO Declaration and Control Prong identification.
+- Sanctions screening report (AtlasScreen) with timestamp.
+- Suitability questionnaire (for complex products).
+- Consent capture proof (SignBridge audit trail).
+- Retention classification tag in Nexus360.
+
+# 7. Risk and Compliance Disclosures
+Use the approved script during onboarding:
+- AML/KYC: “Northbridge Financial Group is required to verify identity, beneficial ownership, and source of funds under applicable anti-money laundering laws. Your information will be used for this purpose and monitored on an ongoing basis.”
+- Sanctions: “We will screen your information against sanctions and politically exposed persons lists and may decline or restrict services if you are listed or associated.”
+- Privacy: “We process your personal data in accordance with our Privacy Notice and your region’s laws. You can update consent preferences at any time.”
+- Record Retention: “Regulations require us to preserve records and communications for set periods. We will archive relevant records in secure, tamper-evident systems.”
+- Suitability: “Certain products may not be appropriate given your risk profile. We will assess suitability before providing access.”
+
+Required paperwork language references:
+- NFG-KYC-0110 (Customer Identification Program).
+- NFG-SEC-17a-4-Archival (WORM retention).
+- NFG-DATA-PRIV-0201 (Data Subject Rights and Consent).
+
+# 8. Data and CRM Fields
+Canonical fields in Nexus360 (object: Customer__c)
+
+| Field Name | Type | Validation | Example |
+|---|---|---|---|
+| Regulatory_Classification__c | Picklist (Retail, Corp, FI, NPO) | Required | Corp |
+| KYC_Tier__c | Picklist (1,2,3) | Auto-calculated by risk engine | 2 |
+| UBO_Disclosed__c | Boolean | Required for Corp/FI/NPO | true |
+| Control_Prongs__c | Text(255) | Required if no UBO ≥25% | “CFO John D.” |
+| Sanctions_Status__c | Picklist (Clear, Hit, Pending) | Locked prior to activation | Clear |
+| PEP_Status__c | Picklist (No, Yes, RCA) | Trigger EDD if Yes/RCA | RCA |
+| Source_of_Funds__c | Text(255) | Required | “Operating revenue, NA” |
+| Expected_Activity__c | JSON | Schema validated | {"wires":50,"avg_txn":25000,"countries":["US","CA"]} |
+| Consent_Privacy__c | Multiselect | GDPR/CCPA choices | “Email;Marketing:Opt-In;Profiling:Opt-Out” |
+| Retention_Class__c | Picklist (BD-17a4, MiFID, GDPR, Standard) | Required | BD-17a4 |
+| Suitability_Risk_Rating__c | Picklist (Low, Med, High) | Questionnaire dependency | Med |
+| Last_KYC_Review_Date__c | Date | Required after onboarding | 2026-04-15 |
+| Archive_Record_ID__c | Text(36) | UUID from Sentinel | “SEN-8f3b-1a90-4421” |
+
+Validation rule snippets:
+- IF(Regulatory_Classification__c IN (“Corp”,“FI”,“NPO”) AND NOT UBO_Disclosed__c, ERROR “UBO required.”)
+- IF(Sanctions_Status__c <> “Clear”, LOCK Activation__c)
+
+# 9. Integrations and APIs
+Compliance API (internal): api.compliance.nfg.internal
+
+- POST /v1/screenings
+  - Request: {"customer_id":"CUST-12345","name":"J— D—","dob":"1980-01-01","country":"US"}
+  - Response: {"screening_id":"SCN-2025-000789","status":"CLEAR","sources":["OFAC","PEP"],"timestamp":"2025-10-03T13:04:22Z"}
+- GET /v1/kyc/{customer_id}
+  - Response: {"customer_id":"CUST-12345","kyc_tier":2,"last_review":"2025-09-15","next_due":"2026-03-15","flags":["PEP_RCA"]}
+- Webhook: POST /v1/events/screening.completed
+  - Payload: {"screening_id":"SCN-2025-000789","status":"HIT","entity_type":"INDIVIDUAL","match_score":0.92,"lists":["EU-Cons"],"customer_id":"CUST-67890"}
+
+Event routing:
+- Success -> Nexus360 update -> ServiceGate task “Activate Account.”
+- Hit -> Quorum DD exception “SAN-HIT” auto-created; SLA clock starts.
+
+Artifact: Log snippet (Sentinel Archive)
+
+2025-10-03T13:10:08Z | ARCHIVE | DOC-ID=VAULT-3321 | SEN-ID=SEN-8f3b-1a90-4421 | HASH=3a6f...c91 | WORM=LOCKED | RETAIN-UNTIL=2031-10-03 | USER=svc-vaultedge
+
+# 10. Procedures
+Onboarding (Individuals)
+1. Create Nexus360 Lead; capture consent via SignBridge. Control check: Consent_Privacy__c not null. Evidence: SignBridge audit ID.
+2. Submit ID docs via SecureShare. Control check: Liveness/face match ≥0.85 in Veriscope. Evidence: KYC report PDF in VaultEdge.
+3. Run sanctions/PEP. Control check: Sanctions_Status__c=Clear. Evidence: AtlasScreen report ID.
+4. Suitability assessment for complex products. Control check: Suitability_Risk_Rating__c not High for restricted products. Evidence: Questionnaire file.
+5. Archive all onboarding comms. Control check: Sentinel status WORM=LOCKED. Evidence: SEN-ID in Nexus360.
+
+Onboarding (Entities)
+1. Collect Articles, EIN, ownership chart, UBO form. Control check: UBO_Disclosed__c=true. Evidence: UBO form signed.
+2. Verify control prong if no UBO >=25%. Control check: Control_Prongs__c populated. Evidence: Board resolution.
+3. Sanctions/PEP on entity and UBOs. Control check: All statuses Clear or EDD approved. Evidence: AtlasScreen IDs.
+4. Source-of-funds letter and expected activity JSON. Control check: JSON schema pass. Evidence: Attached JSON.
+5. FI only: Wolfsberg Questionnaire. Control check: Completed within last 12 months. Evidence: Dated PDF.
+
+Periodic Review
+1. System generates due list weekly. Control check: Next_due within 30 days triggers task. Evidence: ServiceGate queue.
+2. Refresh sanctions, update PEP changes, re-validate activity thresholds. Control check: No material deviation >30% without EDD. Evidence: HawkEye TM report.
+
+Sanctions Hit Handling
+1. Quorum DD case auto-created. Control check: L2 assignment within 2 hours. Evidence: Case timestamp.
+2. Perform name resolution, secondary identifiers, adverse media. Control check: Documented rationale. Evidence: Case notes.
+3. Decision: Clear (false positive), Reject, or Proceed with license (Legal). Control check: L3 approval if license needed.
+
+Data Subject Request (DSR)
+1. Log request in ServiceGate “PRIV-DSR”. Control check: Verify identity. Evidence: ID confirmation.
+2. Retrieve data from AuroraLake using subject key. Control check: Fulfill within 30 days (EU/UK); 45 days (US). Evidence: Delivery receipt.
+3. Update consent if requested. Control check: Consent ledger updated. Evidence: Nexus360 field updated.
+
+Incident Response (Data/Compliance)
+- RTO 4 hours (Sentinel); RPO 0 for archival data.
+- Escalate via “INC-COM” in ServiceGate; notify CCO within 1 hour for material incidents.
+
+# 11. Objection Handling Matrix
+- “Why do you need my personal information?”
+  - Response: Regulations require us to verify identity and monitor for financial crime. We collect only what’s necessary and secure it per industry standards. We cannot open accounts without this.
+- “I don’t want to disclose owners.”
+  - Response: Laws mandate beneficial ownership disclosure of 25%+ or control prong. We can provide our confidentiality terms; without it, we cannot proceed.
+- “We were flagged on sanctions; this must be a mistake.”
+  - Response: Many hits are name matches. We’ll resolve using additional identifiers within our 8-business-hour SLA before making a decision.
+- “Can you waive the EDD fee?”
+  - Response: Limited waivers exist. I can submit a Deal Desk request; Compliance must approve any EDD fee reduction.
+- “Delete all my data now.”
+  - Response: Some records must be retained for legal obligations (e.g., 5–7 years). We can restrict processing and delete what’s not legally required.
+
+# 12. Term Sheet Template (Mini)
+Compliance Undertakings (attach to product term sheet)
+
+- Client Legal Name: __________________________
+- NFG Customer ID: CUST-__________
+- Regulatory Classification: Retail / Corp / FI / NPO
+- KYC Tier: 1 / 2 / 3 (auto-assigned by NFG)
+- Sanctions/PEP Status: Clear / EDD / Pending (must be Clear prior to activation)
+- UBO Disclosure: Provided / Not Applicable (FI) / Control Prong
+- Source of Funds: __________________________
+- Expected Activity: Wires/month ____ Avg Txn $____ Countries: __________
+- Privacy Consent: Marketing Opt-In / Opt-Out; Profiling Opt-In / Opt-Out
+- Suitability Risk Rating: Low / Medium / High (note: High restricts structured products)
+- Retention Class: BD-17a4 / MiFID / GDPR / Standard
+- Fees: COMPLIANCE-SVC-01 $______; EDD $______
+- Periodic Review Cycle: Annual / Semi-Annual / Quarterly
+- Special Conditions: ___________________________________
+- Client Acknowledgment (SignBridge ID): _______________
+Constraints:
+- Activation contingent on Sanctions Status=Clear and Retention WORM confirmation.
+- Any exception requires Quorum DD approval and L2 Compliance sign-off.
+
+# 13. KPIs and Dashboards
+- Leading indicators:
+  - KYC Cycle Time (target ≤ 8 business hours) — Owner: Regional Compliance.
+  - Sanctions Resolution Time (target ≤ 8 business hours) — Owner: AML Ops.
+  - Consent Capture Rate (target ≥ 99%) — Owner: Sales Ops.
+- Lagging indicators:
+  - Periodic Review Timeliness (target ≥ 98% on-time).
+  - False Positive Rate in Sanctions (target ≤ 5% escalations to L2).
+  - Suitability Exceptions (target ≤ 1% of complex product sales).
+- Dashboards:
+  - Compliance Cockpit (PowerBI): displays SLA adherence by region, heatmap of hits.
+  - Nexus360 Compliance Tab: client-level status; red banners for blockers.
+- Alerts:
+  - Auto Slack alert to #compliance-ops if any KYC exceeds 6 hours pending.
+  - Weekly executive summary emailed to CCO and Heads of Sales.
+
+# 14. Regional Variations
+- US
+  - Regulations: BSA/AML, OFAC, SEC 17a-4 for broker-dealer records, Regulation Best Interest (Reg BI).
+  - Retention: 6 years (customer records), WORM for electronic broker-dealer records.
+- Canada
+  - Regulations: PCMLTFA (FINTRAC), PIPEDA, OSFI Guideline B-8.
+  - Retention: 5 years KYC records, DSR 30 days typical.
+- EU/EEA
+  - Regulations: AMLD5/6, GDPR. Consent opt-in required for marketing; DSR 30 days.
+  - Retention: MiFID II 5 years (7 years if requested by NCAs) for recordings.
+- UK
+  - Regulations: UK Money Laundering Regulations, FCA COBS, UK GDPR.
+  - Retention: 5 years MiFID voice/e-comm.
+- Singapore/Hong Kong
+  - Regulations: MAS Notice 626 (SG), AMLO (HK), PDPA (SG), PDPO (HK).
+  - Retention: 5–7 years per product; cross-border data transfer controls.
+
+Note: Where country rules conflict, apply the stricter control by default. See also: NFG-DATA-PRIV-0201 and NFG-SEC-17a-4-Archival.
+
+# 15. References
+- Internal Policies:
+  - NFG-KYC-0110 Customer Identification Program
+  - NFG-SAN-0042 Sanctions and PEP Screening Standards
+  - NFG-SEC-17a-4-Archival Electronic Records Retention
+  - NFG-DATA-PRIV-0201 Data Privacy and Consent Management
+  - NFG-SUIT-0305 Product Suitability and Appropriateness
+  - NFG-TM-0402 Transaction Monitoring Rules
+- External Regulations (mapped internally):
+  - US: BSA/AML, OFAC, SEC 17a-4, Reg BI
+  - EU/UK: AMLD6, MiFID II, GDPR/UK GDPR
+  - CA: PCMLTFA, PIPEDA
+  - SG/HK: MAS 626, AMLO, PDPA/PDPO
+
+# 16. Change log
+- 1.0.0 (2025-10-03)
+  - Initial release consolidating KYC/AML, sanctions, privacy, retention, and suitability guidance.
+  - Added pricing/approval matrix, CRM schema, API examples, and procedures with SLAs, RPO/RTO.
+
+Key takeaways: Always secure identity, ownership, sanctions clearance, consent, suitability, and archival before activation. Use Nexus360 and Quorum DD to document and obtain approvals within SLAs. Escalate early through defined paths to protect clients and NFG from regulatory and reputational risk.

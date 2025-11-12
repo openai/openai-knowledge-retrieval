@@ -1,0 +1,440 @@
+---
+doc_id: RES-2025-0012
+doc_type: Enablement Playbook
+title: Investment Research Methods — Frontline Guide and Deal-Desk Controls
+business_unit: Wealth & Institutional Markets
+audience: Advisors, Sales, Relationship Managers (RMs), Underwriters, Support
+owners:
+  - Priya Raman, Head of Research Enablement
+  - Marco Diaz, Deal Desk Lead (Research & Insights)
+owner_dept: Global Research & Insights (GRI)
+tags:
+  - research-methods
+  - due-diligence
+  - miFID-II
+  - compliance
+  - enablement
+  - pricing
+search_terms:
+  - equity research process
+  - fixed income research
+  - ESG research methodology
+  - macro strategy notes
+  - proprietary scoring models
+  - MiFID II research unbundling
+regions:
+  - US
+  - CA
+  - UK
+  - EU
+  - APAC
+regulatory_scope:
+  - FINRA 2210
+  - SEC 17a-4
+  - MiFID II Article 24
+  - UK COBS 12
+  - NFG-RESEARCH-020-METHODS
+  - NFG-SEC-17a-4-Archival
+  - NFG-KYC-0110
+  - NFG-COI-0901 (Conflicts of Interest)
+created_at: 2025-10-03
+updated_at: 2025-10-03
+effective_date: 2025-10-10
+review_cadence: Quarterly
+last_reviewed_by: Dana Cho, Director Compliance Advisory (Markets)
+approvals:
+  - Research Management Committee (RMC) — 2025-10-01
+  - Compliance Advisory Council — 2025-10-02
+version: 1.0.0
+visibility: Internal
+confidentiality: Internal
+systems:
+  - Atlas CRM
+  - NFG Research Hub (NRH)
+  - KMS-Search
+  - ComplyTrack
+  - Snowflake DataLake (DLK-SF1)
+  - Bloomberg (BBG)
+  - FactSet (FDS)
+  - MSCI ESG Manager
+  - ServiceNow (SNOW)
+product_codes:
+  - RCH-STD
+  - RCH-PRO
+  - RCH-BSPK
+related_docs:
+  - RES-2025-0003
+  - RES-2025-0009
+  - COM-2025-0101
+canonical_url: https://kb.nfg.local/research/RES-2025-0012
+---
+
+# 1. Quick Reference (TL;DR)
+- Who: For Advisors, Sales, RMs, Underwriters, Support engaging clients seeking investment research, models, or bespoke insights.
+- What: Standardized research methods, deliverables, pricing, and compliance controls. Covers equity, fixed income, multi-asset, and ESG research.
+- When:
+  - Standard research request SLA: 1 business day triage; 3 business days delivery (RCH-STD).
+  - Premium/bespoke SLA: scoped within 2 business days; delivery per SOW, typically 5–10 business days.
+  - Inquiry response SLA: 4 business hours for tiered clients (RCH-PRO+); 1 business day standard.
+- Where: Submit via Atlas CRM > Research Request [OBJ: RESQ], or ServiceNow > Research Intake [CAT: GRI-RCH].
+- Do:
+  - Use approved talking points and disclosures (see Section 7).
+  - Log every research touchpoint in Atlas CRM with ResearchMethodID and DataSource tags.
+  - Route bespoke work via Deal Desk workflow and Approval Matrix (Section 6).
+- Don’t:
+  - Provide investment recommendations without suitability context (NFG-KYC-0110).
+  - Share draft research externally or circumvent NRH watermarking.
+  - Promise performance or undisclosed access to restricted analysts.
+- Systems RTO/RPO:
+  - NRH RTO: 4 hours; RPO: 15 minutes. Atlas CRM RTO: 2 hours; RPO: near-real-time (NRT).
+- Escalations: Research Triage Lead on-call (Slack #gri-triage, pager 555-0199); Compliance escalation via ComplyTrack ticket CT-RESEARCH-ESC.
+
+# 2. Customer Personas and Use Cases
+- Private Wealth Clients (PWM)
+  - Needs: Thematic equity notes, muni bond ladders, ESG screens aligned to values.
+  - Fit: RCH-STD, RCH-PRO for model overlays; bespoke values-alignment memo (≤10 hrs).
+  - Non-Fit: Quant code delivery, backtest IP transfer.
+- Institutional (Asset Owners, Endowments)
+  - Needs: Macro outlook, sector deep-dives, factor exposures, policy impact.
+  - Fit: RCH-PRO, RCH-BSPK SOWs; analyst workshops.
+  - Non-Fit: Exclusive access to material nonpublic information (MNPI) — prohibited.
+- Middle-Market Corporates/Treasury
+  - Needs: Cash management, short-duration fixed income research, rating outlooks.
+  - Fit: RCH-STD notes; RCH-PRO access to credit model summaries.
+  - Non-Fit: Ratings advice as if NRSRO; we provide research, not ratings.
+- Intermediaries (RIAs/BDs via Platforms)
+  - Needs: White-labeled research packets, model commentary, data-feed summaries.
+  - Fit: RCH-PRO platform licensing; API pull from NRH.
+  - Non-Fit: Unlimited redistribution without license extension.
+
+Eligibility assumptions:
+- KYC/KYB completed (NFG-KYC-0110).
+- Research entitlements configured in NRH (roles: STD_VIEW, PRO_VIEW, BSPK_CLIENT).
+- MiFID II unbundling flagged for UK/EU entities; separate research invoice setup.
+
+# 3. Qualification and Discovery Questions
+BANT/CHAMP-aligned prompts:
+- Budget: “Is your research funded via execution commissions or hard-dollar budget? For UK/EU, do you require separate research invoicing under MiFID II?”
+- Authority: “Who signs off on research subscriptions and bespoke SOWs? Any procurement thresholds we should know?”
+- Need: “Which asset classes and time horizons are critical? Are you after single-name deep dives, macro themes, factor tilts, or ESG controversy monitoring?”
+- Timing: “What is your cadence for investment committee meetings? Do you need pre-read packets on a fixed schedule?”
+- Metrics: “How will you measure research impact—alpha capture, risk reduction, or governance compliance?”
+- Red flags:
+  - Requests for MNPI or pre-publication drafts.
+  - Pressure to alter ratings for deal considerations (trigger COI protocol).
+  - Promise-seeking (“guaranteed outperformance”) or exclusive distribution rights without license.
+
+# 4. Product/Policy Overview
+Core research methods and deliverables:
+- Equity Research (Fundamental)
+  - Methods: DCF, EVA, relative multiples, channel checks using compliant public sources; factor overlays (quality, value, momentum).
+  - Deliverables: Initiation notes, earnings previews/reviews, valuation models (PDF only; spreadsheets restricted to summary).
+  - Limits: No raw expert network transcripts. No MNPI. Model spreadsheets require RMC approval.
+- Fixed Income Research
+  - Methods: Spread decomposition, credit migration matrices, scenario analysis (rate shocks ±100/200 bps), liquidity scoring (NFG-LIQ-Score v2.1).
+  - Deliverables: Sector outlooks, issuer summaries, ladder construction guidance, stress-test exhibits.
+- Multi-Asset & Macro
+  - Methods: Regime classification (HML-VOL map), drawdown probability via block bootstrap, policy event trees.
+  - Deliverables: Quarterly outlook, tactical tilts memo, risk heatmaps.
+- ESG Research
+  - Methods: SASB materiality mapping, controversy scoring (NFG-ESG-CV v3.0), UN SDG alignment tags.
+  - Deliverables: ESG tear sheets, exclusion lists, stewardship talking points.
+- Data Quality and Governance
+  - Sources: Bloomberg, FactSet, MSCI ESG, internal DataLake DLK-SF1.
+  - Controls: Source tagging in NRH, analyst sign-off, compliance review via ComplyTrack workflow.
+- Archival and Retention
+  - NRH auto-archives to SEC-17a-4 storage; retention 7 years per NFG-SEC-17a-4-Archival.
+- Conflicts Management
+  - Wall-crossing protocol NFG-COI-0901; research independence statement appended to all notes.
+
+See also: RES-2025-0003 (Equity Research Ratings & Models), RES-2025-0009 (ESG Scoring Framework).
+
+# 5. Pricing, Fees, and Discounting
+Research subscriptions (annual, per legal entity):
+- RCH-STD: $18,000 — access to published notes, monthly webinars, email Q&A (best effort).
+- RCH-PRO: $65,000 — STD plus priority Q&A (SLA 4 business hours), model summaries, analyst office hours (2x/month).
+- RCH-BSPK: SOW-based, starting at $15,000 per engagement; rate card $350/hour analyst, $500/hour senior analyst, $800/hour sector head.
+
+Discounting guardrails:
+- Volume tier: 2–4 entities: 10% off; 5+ entities: 15% off (US only). No stacking beyond 20%.
+- Strategic logo discount up to 15% with Marketing VP approval.
+- MiFID II markets: discounts prohibited that tie to execution; hard-dollar only.
+
+Approval Matrix (Pricing/Contracting):
+- Level 0: List price, standard MSA — Advisor/RM may close.
+- Level 1: ≤10% discount or ≤$50,000 bespoke SOW — Deal Desk (Marco Diaz) approval within 1 business day.
+- Level 2: 11–20% discount or $50,001–$150,000 SOW — Research Finance Controller + Compliance sign-off; SLA 2 business days.
+- Level 3: >20% discount or >$150,000 SOW, white-label rights, data feed redistribution — RMC approval; SLA 5 business days.
+
+# 6. Deal Desk Workflow
+Step-by-step with SLAs and artifacts:
+1) Intake
+- Create Atlas CRM Research Opportunity [OPP Type: Research] and link a Research Request [RESQ].
+- Required artifacts: Client need summary, persona, regions, MiFID flag, data sources required.
+- SLA: Triage within 1 business day by Research Triage Lead.
+
+2) Scoping Call
+- Participants: Advisor/RM, Lead Analyst, Deal Desk, Compliance (if EU/UK).
+- Output: Scope of Work (SOW) draft with deliverables, IP/use rights, SLAs, pricing.
+- SLA: Schedule within 2 business days of intake.
+
+3) Risk & Compliance Review
+- ComplyTrack workflow CT-RVW-RE-Methods: review for MNPI risk, redistribution rights, and geographic compliance.
+- SLA: 2 business days. Evidence: checklist signed by Compliance reviewer in ComplyTrack.
+
+4) Pricing & Approvals
+- Apply Approval Matrix (Section 5). Capture approvals in Atlas CRM [APP records] with approver IDs.
+- SLA: per matrix. Evidence: approval email attached or ComplyTrack approval log.
+
+5) Contracting
+- Generate Order Form using DocGen template RCH-OF-2025; attach T&Cs RID: RCH-TC-2025.
+- For EU/UK: add Research Annex RA-24 (MiFID II hard-dollar terms).
+- SLA: Legal turnaround 3 business days standard.
+
+6) Delivery & Onboarding
+- Entitle users in NRH to appropriate roles; confirm watermarking is enabled.
+- Schedule kickoff and delivery cadence. Record dates in Atlas CRM [OBJ: DELV].
+- SLA: Entitlements within 1 business day post-signature.
+
+7) Post-Delivery QA
+- QA checklist in NRH: verify source tags, disclosures, and archive ID.
+- SLA: 24 hours from publication. Evidence: NRH Publication Log entry.
+
+Escalation path:
+- Triage issues: Research Triage Lead (on-call).
+- Pricing disputes: Deal Desk Lead.
+- Compliance holds: Compliance Advisory Director.
+- System outages: NRH Support via SNOW INC queue (RTO 4h).
+
+# 7. Risk and Compliance Disclosures
+Required statements in conversations and documents:
+- Independence: “NFG Research is produced independently of Investment Banking and Sales & Trading. Opinions may differ from other NFG units.”
+- No MNPI: “We do not share unpublished, material information. Research is based on public or appropriately licensed sources.”
+- Suitability: “This research is not a personal recommendation and does not consider your specific objectives or constraints. Consult your advisor.”
+- MiFID II (EU/UK): “Research is provided on a hard-dollar basis and is not contingent on trade execution.”
+- Conflicts: “See NFG Conflict Disclosures at https://nfg.local/disclosures/coi.”
+- Reproduction: “Redistribution requires written permission or a redistribution license.”
+- Archival: “All published research is archived per NFG-SEC-17a-4-Archival.”
+
+# 8. Data and CRM Fields
+Atlas CRM canonical fields for research:
+- ResearchMethodID (string, required): e.g., RM-ESG-0031
+- ProductCode (enum): RCH-STD | RCH-PRO | RCH-BSPK
+- MiFIDFlag (boolean): true/false; validation: required for UK/EU region.
+- Persona (enum): PWM | Institutional | Corporate | Intermediary
+- AssetClass (multi-enum): Equity | Fixed Income | Multi-Asset | ESG
+- DataSources (multi-enum): BBG | FDS | MSCI | DLK-SF1 | Public
+- UseRights (enum): Internal Only | External Client | Redistribution
+- SLA_Tier (enum): STD | PRO | BSPK
+- DeliveryCadence (enum): Ad-hoc | Monthly | Quarterly | Event-Driven
+- RegionsCovered (multi-enum): US | CA | UK | EU | APAC
+- COICheck (boolean): default false; must be true before publication.
+- ComplianceReviewID (string): e.g., CT-REV-009812
+- ArchiveID (string): e.g., NRH-ARC-2025-114233
+- EntitlementRole (enum): STD_VIEW | PRO_VIEW | BSPK_CLIENT
+- BillingMode (enum): Hard-Dollar | Commission | Hybrid (not allowed EU/UK)
+- Example Record:
+  - ResearchMethodID: RM-EQ-VAL-0107
+  - ProductCode: RCH-PRO
+  - MiFIDFlag: false
+  - Persona: Institutional
+  - AssetClass: Equity
+  - DataSources: BBG, FDS, DLK-SF1
+  - UseRights: External Client
+  - SLA_Tier: PRO
+  - DeliveryCadence: Monthly
+  - RegionsCovered: US, EU
+  - COICheck: true
+  - ComplianceReviewID: CT-REV-010311
+  - ArchiveID: NRH-ARC-2025-118901
+  - EntitlementRole: PRO_VIEW
+  - BillingMode: Hard-Dollar
+
+Validation rules:
+- If MiFIDFlag = true, then BillingMode must = Hard-Dollar.
+- If UseRights = Redistribution, requires Level 3 approval.
+- COICheck must be true before generating ArchiveID.
+
+# 9. Integrations and APIs
+NRH API endpoints (internal):
+- GET /v1/research/notes?assetClass={}&dateFrom={}
+  - Purpose: List published notes with metadata.
+  - Example request: GET https://nrh.api.nfg.local/v1/research/notes?assetClass=Equity&dateFrom=2025-09-01
+  - Example response:
+    {
+      "count": 2,
+      "items": [
+        {
+          "noteId": "RN-2025-0915-001",
+          "title": "US Semis: Capex Cycle Turns",
+          "assetClass": "Equity",
+          "persona": ["Institutional"],
+          "archiveId": "NRH-ARC-2025-118233",
+          "disclosureUrl": "https://nrh.nfg.local/d/NRH-ARC-2025-118233"
+        },
+        {
+          "noteId": "RN-2025-0928-004",
+          "title": "Tech Factor Pulse: Quality Over Growth",
+          "assetClass": "Multi-Asset",
+          "persona": ["PWM","Institutional"],
+          "archiveId": "NRH-ARC-2025-118811",
+          "disclosureUrl": "https://nrh.nfg.local/d/NRH-ARC-2025-118811"
+        }
+      ]
+    }
+- POST /v1/research/requests
+  - Purpose: Submit bespoke request (authenticated via SSO).
+  - Example payload (PII masked):
+    {
+      "clientId": "CUST-78421",
+      "requestId": "RESQ-2025-01017",
+      "productCode": "RCH-BSPK",
+      "region": "US",
+      "scope": "ESG controversy screening for large-cap portfolio",
+      "deadline": "2025-10-24",
+      "miFIDFlag": false,
+      "dataSources": ["MSCI","Public","DLK-SF1"]
+    }
+  - Example response:
+    {
+      "status": "received",
+      "triageETA": "2025-10-06T15:00:00Z",
+      "triageLead": "user:praman"
+    }
+Event streams (Snowflake DLK-SF1):
+- Topic: NRH_PUBLICATIONS_V2 — emits on publication with fields noteId, archiveId, sources[], analystId, complianceReviewId, persona[].
+- SLA: Events available NRT (<5m). RPO: 15m.
+
+# 10. Procedures
+A) Onboarding a New Research Subscriber (RCH-PRO)
+1. Verify KYC/KYB completion in Atlas CRM; control: field KYCStatus=Verified; evidence: KYC Doc ID.
+2. Confirm MiFIDFlag and BillingMode; control: validation rule fires if misaligned; evidence: CRM validation log.
+3. Submit entitlements in NRH Admin; control: role must equal PRO_VIEW; evidence: NRH Entitlement Ticket EN-2025-3312.
+4. Send welcome packet (Doc RCH-WP-2025) including disclosures and portal guide; evidence: email logged with MessageID.
+5. Schedule analyst office hours; control: calendar invite with RM and client; evidence: CAL-2025-8842.
+6. QA check watermarking on sample note; evidence: screenshot stored in Atlas [DOC-IMG-1142].
+SLA: Complete within 1 business day of contract signature.
+
+B) Publishing a Research Note
+1. Draft in NRH Composer; tag sources; control: required field DataSources non-empty.
+2. Internal peer review; control: at least one AnalystPeer reviewer; evidence: NRH Review Log entry.
+3. Compliance review via ComplyTrack; control: CT checklist completed; evidence: CT-REV-ID.
+4. Assign disclosures; control: standard and issuer-specific; evidence: appended block.
+5. Publish; control: ArchiveID generated; evidence: NRH-ARC ID.
+6. Distribute to entitled users only; control: NRH entitlement check; evidence: Email campaign ID RCH-BLT-2025-221.
+SLA: Draft to publish in 3 business days for standard notes.
+
+C) Handling a Bespoke Request
+1. Intake via POST /v1/research/requests or Atlas RESQ; control: fields complete.
+2. Scope with client; control: SOW template RCH-SOW-2025 used; evidence: Doc ID.
+3. Run COI check; control: ComplyTrack case CT-COI-XXXXX; evidence: approval stamp.
+4. Estimate hours and price; control: rate card applied; evidence: pricing worksheet PW-2025-##.
+5. Route for approval per matrix; evidence: APP-XXXX records.
+6. Execute work; control: method log maintained (see D).
+7. Deliverables via NRH with watermark; evidence: ArchiveID.
+SLA: Scope within 2 business days; delivery per SOW.
+
+D) Methodology Logging (Audit Trail)
+- Maintain a Method Log for bespoke deliverables:
+  - MethodLogID, DataSources, ModelsUsed (e.g., DCF-v4.2), Assumptions, AnalystIDs, DateTimeUTC.
+- Stored in NRH under the deliverable; immutable post-publication.
+- Evidence example:
+  {
+    "methodLogId": "ML-2025-00412",
+    "dataSources": ["BBG","MSCI","DLK-SF1"],
+    "modelsUsed": ["DCF-v4.2","ESG-CV v3.0"],
+    "assumptions": ["WACC 8.2%","LTG 2.5%","ESG penalty beta -0.03"],
+    "analystIds": ["user:skline","user:tmori"],
+    "timestamp": "2025-10-07T14:11:22Z"
+  }
+
+Control checks:
+- No publication without ComplianceReviewID.
+- If DataSources includes “Expert Network” then hard block; escalation to Compliance.
+
+# 11. Objection Handling Matrix
+- “We get research bundled with execution. Why pay?”
+  - Response: “In UK/EU, MiFID II requires hard-dollar separation. In US, our PRO tier adds priority access, analyst hours, and audit-ready documentation of methods and sources.”
+- “We need preliminary drafts.”
+  - Response: “We cannot share drafts externally. We can schedule a post-publication debrief and customize a follow-up memo compliant with our policies.”
+- “Guarantee this model will outperform.”
+  - Response: “We don’t guarantee performance. Our methods are transparent, independently reviewed, and stress-tested across regimes.”
+- “Give us the raw model code/data.”
+  - Response: “We provide summary outputs and methodology. Raw code and proprietary datasets aren’t licensed for transfer, but we can add fields or create tailored exhibits.”
+- “We need redistribution rights to our 500 sub-advisors.”
+  - Response: “Redistribution is available via a license and requires Level 3 approval. We’ll scope it and ensure proper watermarking and tracking.”
+
+# 12. Term Sheet Template (Mini)
+Research Services Term Sheet — Example
+- Client: CUST-78421 (Acme Endowment, Inc.)
+- ProductCode: RCH-BSPK
+- Scope: “Quarterly macro outlook + ESG controversy screening for US large-cap portfolio (250 names).”
+- Deliverables:
+  - Qtrly macro report (20–30 pages), ESG screening summary (CSV + PDF), 1x workshop/quarter.
+- Methods:
+  - Regime classifier (HML-VOL), ESG-CV v3.0, BBG and MSCI licensed data, DLK-SF1 aggregates.
+- SLAs:
+  - Triage: 1 business day; Delivery: 10 business days post quarter-end; Q&A response: 4 business hours.
+- Pricing:
+  - Fixed fee $85,000/year; includes up to 80 analyst hours; additional hours at rate card.
+- Use Rights:
+  - External client distribution; no redistribution to third parties; watermarking required.
+- Compliance:
+  - ComplyTrack ID CT-REV-010311; Archive per NFG-SEC-17a-4-Archival.
+- Term:
+  - 12 months; auto-renew 30-day notice.
+- Billing:
+  - Hard-Dollar; annual in advance (MiFID Flag false, US entity).
+- Approvals:
+  - Level 2 approval: Finance Controller (ID: user:jlin), Compliance (ID: user:dcho).
+- KPIs:
+  - Delivery timeliness ≥95%, Q&A SLA compliance ≥98%, Client satisfaction ≥4.2/5.
+
+# 13. KPIs and Dashboards
+Leading indicators:
+- Time to Triage (median): Target ≤0.5 business day; Owner: Research Triage Lead.
+- Compliance Review Throughput: Target ≥90% within 2 business days; Owner: Compliance Ops.
+- Analyst Utilization (Bespoke): Target 70–85%; Owner: Research PMO.
+
+Lagging indicators:
+- On-time Publication Rate: ≥95% against plan.
+- Q&A SLA Adherence (PRO/BSPK): ≥98%.
+- Client Satisfaction (CSAT): ≥4.2/5.
+- Renewal Rate (PRO): ≥88%.
+- Audit Findings (major): 0 per quarter.
+
+Dashboards:
+- KMS-Search: “Research Ops Overview” (DSH-RE-OPS-01).
+- Atlas CRM: “Research Pipeline & SLA” (DSH-RES-PIPE-02).
+- ComplyTrack: “Review Aging & Holds” (DSH-CT-RE-03).
+
+# 14. Regional Variations
+- US/CA: Commission-funded research permitted; ensure disclosures clarify separation of banking and research. FINRA 2210 content standards apply.
+- UK/EU: MiFID II unbundling; research must be hard-dollar and separately invoiced. Add Research Annex RA-24. No hybrid billing. UK COBS 12 on investment research applies.
+- APAC: Country-specific rules vary; treat as US-like unless flagged by Compliance; China/HK distribution through licensed entities only; pre-clear with ComplyTrack country module.
+
+Rollover nuances:
+- VAT: UK/EU invoices may require VAT on research services; coordinate with Finance.
+- Data residency: EU personal data must not be stored outside EU in free-text notes. Avoid PII in NRH content.
+
+# 15. References
+Internal policies:
+- NFG-RESEARCH-020-METHODS — Standard Research Methods and QA.
+- NFG-SEC-17a-4-Archival — WORM storage standards.
+- NFG-KYC-0110 — Suitability & KYC Requirements.
+- NFG-COI-0901 — Conflicts of Interest Protocol.
+- NFG-DAT-0122 — Data Source Licensing and Usage.
+Related docs:
+- RES-2025-0003 — Equity Research Ratings & Models.
+- RES-2025-0009 — ESG Scoring Framework.
+- COM-2025-0101 — Marketing & Communications Review.
+External:
+- FINRA Rule 2210 — Communications with the Public.
+- MiFID II Article 24 — Inducements and Research Unbundling.
+- UK COBS 12 — Investment Research.
+
+# 16. Change log
+- 1.0.0 (2025-10-03)
+  - Initial release covering methods across asset classes, pricing tiers, Deal Desk workflow, APIs, CRM schema, and compliance controls.
+
+Key takeaways: Qualify for funding model and region early, route anything bespoke through Deal Desk with clear scope and COI checks, log every touchpoint and data source, use disclosures verbatim, and lean on NRH/Atlas integrations to meet SLAs. This enables fast, compliant delivery of research that frontline teams can confidently position and monetize.
