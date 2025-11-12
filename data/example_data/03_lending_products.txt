@@ -1,0 +1,440 @@
+---
+doc_id: NFG-LEND-0001
+doc_type: Enablement Playbook
+title: Lending Products — Frontline Guide
+business_unit: Commercial & Retail Banking
+audience:
+  - Advisors
+  - Sales
+  - Relationship Managers
+  - Underwriters
+  - Support
+owners:
+  - Priya Mehta (Director, Lending Product)
+  - Daniel Ortiz (Head of Deal Desk)
+owner_dept: Product Management, Deal Desk
+tags:
+  - Lending
+  - Term Loan
+  - Line of Credit
+  - Equipment Finance
+  - CRE
+  - Underwriting
+  - Deal Desk
+  - Pricing
+search_terms:
+  - loans
+  - credit facilities
+  - pricing matrix
+  - approval levels
+  - collateral
+  - covenants
+regions:
+  - US
+  - CA
+  - UK
+  - EU
+regulatory_scope:
+  - Banking
+  - Consumer Lending
+  - Commercial Lending
+  - Fair Lending
+  - AML/KYC
+created_at: 2025-10-03
+updated_at: 2025-10-03
+effective_date: 2025-10-15
+review_cadence: Quarterly
+last_reviewed_by: Alex Chen (Chief Credit Officer)
+approvals:
+  - Credit Policy Committee 2025-09-28
+  - Compliance Ops Council 2025-09-30
+  - Product Risk Review Board 2025-10-01
+version: 1.0.0
+visibility: Internal
+confidentiality: Internal
+systems:
+  - Keystone CRM
+  - AuroraCore (Core Banking)
+  - MeridianScore (Credit Engine)
+  - SentinelKYC (KYC/AML)
+  - DocVault360 (Document Management)
+  - SignBridge (e-sign)
+  - LoanSphere (Loan Servicing)
+product_codes:
+  - TL-STD-001 (Commercial Term Loan)
+  - LOC-REV-002 (Revolving Line of Credit)
+  - EQF-003 (Equipment Finance)
+  - CRE-MORT-004 (Commercial Real Estate Mortgage)
+  - CON-PL-005 (Consumer Personal Loan)
+related_docs:
+  - NFG-DEALDESK-0002
+  - NFG-KYC-0110
+  - NFG-PRICING-0201
+  - NFG-FAIRLEND-0300
+canonical_url: https://kb.nfg.corp/docs/NFG-LEND-0001
+---
+
+# 1. Quick Reference (TL;DR)
+
+- Who: For frontline advisors, RMs, underwriters, and support selling/servicing NFG Lending Products (codes TL-STD-001, LOC-REV-002, EQF-003, CRE-MORT-004, CON-PL-005).
+- What: Standard loan types with configured pricing, covenants, and approval thresholds; offered via AuroraCore; documented in DocVault360; signed via SignBridge.
+- When: Initial response to customer within 1 business day; term sheet within 3 business days post-complete app; credit decision SLA 5 business days standard (2 days expedited with fees).
+- Where: Origination in Keystone CRM; underwriting in MeridianScore; funding via AuroraCore; servicing in LoanSphere.
+- Do:
+  - Run KYC/OFAC in SentinelKYC before quoting rates (NFG-KYC-0110).
+  - Use pricing guardrails; obtain approvals per matrix.
+  - Capture covenants and collateral in CRM fields.
+  - Disclose APR ranges, fees, and risk-based pricing factors.
+- Don’t:
+  - Promise approval or rate without credit review.
+  - Backdate documents or bypass e-sign evidence.
+  - Split loans to avoid approval thresholds.
+- SLAs: 
+  - App completeness check: 4 business hours.
+  - Credit decision: 5 business days.
+  - Docs sent: 24 hours post-approval.
+  - Funding: T+1 after countersignature.
+- Escalation: RM -> Deal Desk Queue (DD-LOANS) -> Senior Credit Officer -> CCO.
+
+# 2. Customer Personas and Use Cases
+
+Segments:
+- SMB Owner (revenues $2–$50M): Working capital (LOC-REV-002), equipment purchases (EQF-003).
+- Mid-Market (revenues $50–$500M): Expansion CAPEX (TL-STD-001), acquisition financing (TL-STD-001 + LOC).
+- CRE Investor/Developer: Stabilized or construction-to-perm (CRE-MORT-004).
+- Consumer Prime: Debt consolidation and major purchases (CON-PL-005, unsecured).
+
+Use Cases:
+- Seasonal inventory build: Revolving LOC with borrowing base tied to A/R and inventory.
+- Equipment purchase: Fixed-rate, asset-backed with 20% down and 60-month amortization.
+- Real estate acquisition: 5/25 CRE mortgage with DSCR covenant.
+- Personal loan via digital origination: 24–60 month terms with autopay discount.
+
+Eligibility Fit:
+- Time in business: ≥24 months (commercial), ≥12 months (consumer).
+- FICO/Score: Consumer ≥680; Commercial PKI score (MeridianScore) ≥620.
+- DSCR: CRE ≥1.25x; Term loan minimum global DSCR 1.20x.
+- Leverage: Total debt/EBITDA ≤3.5x (non-CRE).
+- Collateral: UCC-1 for equipment; first lien on CRE; personal guarantee for SMBs.
+
+Non-Fit:
+- Prohibited industries (NFG-RISK-0412): Unlicensed cannabis (US), payday lending, sanctioned entities.
+- Startups pre-revenue (except venture program; see related_docs NFG-VENTURE-0105).
+- Subprime consumer (score <620); high DTI >45% (consumer).
+
+# 3. Qualification and Discovery Questions
+
+CHAMP/BANT Prompts:
+- Challenges: What problem does the capital solve? Inventory, payroll, acquisition?
+- Authority: Who signs? Any board/bank covenants with other lenders?
+- Money: Target amount, max monthly debt service tolerance, down payment?
+- Priority: Timing drivers (close date)? Seasonality?
+- Financials: Last 2 years financials and YTD? Cash flow trends?
+- Collateral: Available assets? Any existing liens/encumbrances?
+- Banking: Current bank relationships and maturities?
+- Covenants: Comfortable with DSCR or leverage covenants?
+- Exit: For CRE/construction, stabilization timeline and takeout plan?
+- Consumer: Employment stability, housing, autopay setup?
+
+Red Flags:
+- Rapid recent leverage increases >1.0x.
+- Tax liens or unresolved UCC filings.
+- Unverifiable revenue; cash-only business without POS records.
+- Mismatch between collateral value and ask; appraisal avoidance.
+- Consumer debt consolidation but ongoing revolving usage.
+
+# 4. Product/Policy Overview
+
+Capabilities:
+- TL-STD-001: Fixed/variable rate term loans; 12–84 months; amortizing; prepayment with 1–3% fee first 24 months.
+- LOC-REV-002: Revolving, interest-only, annual renewal; borrowing base (A/R 80%, Inventory 50%).
+- EQF-003: Equipment finance; 70–90% LTV; asset-tied; balloon option up to 20%.
+- CRE-MORT-004: 5/25 or 7/25; LTV up to 70% (owner-occupied) / 65% (investment); DSCR ≥1.25x.
+- CON-PL-005: Unsecured $5,000–$75,000; fixed APR; autopay 0.25% discount.
+
+Limitations:
+- Max single-obligor exposure: $25M (commercial); $100k (consumer).
+- Prohibits negative amortization and interest-only on term loans >24 months (policy NFG-CREDIT-1202).
+- No secondary lien positions on CRE except intercreditor-approved.
+
+Dependencies:
+- KYC/AML clearance (SentinelKYC).
+- Collateral appraisal per NFG-APP-200 (CRE/EQF).
+- Income verification via VerifiLink (consumer) or audited financials (commercial >$5M).
+
+# 5. Pricing, Fees, and Discounting
+
+Rate Guardrails (as-of 2025-10-01; subject to base rate AuroraPrime = 7.50%):
+
+Product | Base Spread (over AuroraPrime) | All-in APR Range | Origination Fee | Prepayment | Floor Rate
+-|-|-|-|-|-
+TL-STD-001 | +2.00% to +5.00% | 9.75%–14.50% | 0.75%–1.50% | 3% yr 1, 2% yr 2, 0% thereafter | 8.75%
+LOC-REV-002 | +1.50% to +4.00% (variable) | 9.00%–13.50% | 0.50%–1.00% + 0.25% renewal | None | 8.50%
+EQF-003 | +1.75% to +4.50% | 9.25%–14.00% | 1.00% | 2% first 18 months | 8.75%
+CRE-MORT-004 | +1.25% to +3.50% | 8.75%–12.00% | 0.75%–1.25% + third-party costs | 3-2-1 stepdown | 8.50%
+CON-PL-005 | Risk-based fixed | 8.99%–18.99% | $95–$295 | None | 8.99%
+
+Discounting Guardrails:
+- Max discretionary rate concession: 50 bps by RM with Deal Desk approval; >50 bps requires Senior Credit Officer.
+- Fee waivers capped at $500 without Product sign-off (CON-PL-005) or 25 bps of commitment (commercial).
+
+Approval Matrix (Pricing/Structure):
+
+Level | Authority | Conditions | Evidence Required
+-|-|-|-
+L1 RM | Rate concession ≤25 bps; fee waiver ≤$250 | No covenant weakening; LTV/DSCR within policy | Pricing Rationale Note in CRM; Email approval from Deal Desk
+L2 Deal Desk Manager | Concession >25–50 bps; fee waiver ≤25 bps commitment | DSCR not <1.15x; LTV within -5% of policy | Deal Desk Case ID, MeridianScore output, Sensitivity excel
+L3 Senior Credit Officer | Concession >50–100 bps; covenant adjustments; intercreditor | DSCR ≥1.10x; Stress DSCR ≥1.0x | Credit Memo, Legal Review Ticket, Appraisal
+L4 CCO | Exceptions beyond policy; single-obligor >$15M | Board-level exposure; industry cap exceptions | CCO Memo; Policy Exception Form NFG-EXC-77; Committee minutes
+
+# 6. Deal Desk Workflow
+
+Step-by-step (Keystone CRM Case Type: DEAL-LOAN):
+
+1) Intake (SLA 4h):
+- RM creates Opportunity (OPP-YYYY-####) and Deal Desk Case (DD-LOANS-####).
+- Attach financials, bank statements, and IDs to DocVault360 (min required checklist auto-generates).
+- Control: SentinelKYC pre-screen must be “PASS” before pricing. Evidence: KYC Screen ID.
+
+2) Preliminary Pricing (SLA same-day):
+- Use Pricing Tool in Keystone (module PRC-LOAN) with guardrails.
+- Control: System prevents sub-floor rates. Evidence: Pricing Snapshot export.
+
+3) Underwriting Package (SLA 1 day):
+- Submit to MeridianScore; retrieve PD/LGD and DSCR calculations.
+- Control: Mandatory fields check; auto-stop if missing revenue or collateral values.
+- Evidence: Underwriting Summary PDF.
+
+4) Credit Decision (SLA 5 days):
+- L1/L2/L3 approvals per matrix routed via Workflow WF-CR-APP.
+- Control: Exception logic triggers NFG-EXC-77 form.
+- Evidence: Approval audit log snippet stored in DocVault360.
+
+5) Term Sheet (SLA 24h post-approval):
+- Generate from template TS-LOAN-v5 in Keystone; send via SignBridge.
+- Control: APR and fee disclosures auto-calculated; e-sign IP/Geo evidence stored.
+
+6) Closing & Funding (SLA T+1):
+- Title/UCC filings (for CRE/EQF) recorded in DocVault360 with filing receipt.
+- Funding instruction in AuroraCore; dual-control release (Ops + RM).
+- Control: Pre-funding checklist; covenant schedule confirmed.
+
+7) Post-Close Boarding:
+- LoanSphere boarding with product code and covenants.
+- Control: First payment date confirmed; auto-draft (if opted) set.
+
+Escalation Path:
+- SLA risk or high-priority deals: Tag “Hot” in Keystone; notify Deal Desk Manager; if unresolved in 24h, escalate to Senior Credit Officer; 48h to CCO.
+
+# 7. Risk and Compliance Disclosures
+
+Required Verbal Disclosures (record notes in CRM):
+- “Credit approval is subject to verification of information, collateral valuation, and final underwriting.”
+- “Rates are risk-based and may vary based on credit profile, collateral, and market rates.”
+- For consumer: “APR includes interest and certain fees; prepayment reduces interest but fees may be non-refundable.”
+
+Written Disclosures:
+- ECOA adverse action notices within 30 days if declined (NFG-ECOA-100).
+- Fair Lending parity check logged (NFG-FAIRLEND-0300).
+- Reg Z disclosures for CON-PL-005; TILA-APR calc auto-generated.
+- AML/OFAC attestation for all commercial deals (NFG-KYC-0110).
+
+Recordkeeping:
+- All comms archived per NFG-SEC-17a-4-Archival, 7-year retention.
+- RPO/RTO for DocVault360: RPO 15 min, RTO 4 hours (BCP-REC-200).
+
+# 8. Data and CRM Fields
+
+Canonical Fields (Keystone CRM, Object: Loan_Application__c):
+
+Field | Type | Validation | Example
+-|-|-|- 
+Application_ID__c | String (PK) | Pattern APP-YYYY-#### | APP-2025-1034
+Opportunity_ID__c | Lookup | Required | OPP-2025-2187
+Product_Code__c | Picklist | Required, one of [TL-STD-001, LOC-REV-002, EQF-003, CRE-MORT-004, CON-PL-005] | TL-STD-001
+Requested_Amount__c | Currency | >0; ≤$25,000,000 commercial; ≤$100,000 consumer | $2,500,000.00
+Term_Months__c | Number | 12–84 (except CON-PL: 24–60) | 60
+Rate_Type__c | Picklist | Fixed/Variable | Fixed
+Quoted_Spread_bps__c | Number | 125–500 (except consumer) | 275
+APR__c | Percent | Auto-calc | 10.85%
+DSCR__c | Decimal | ≥1.10 required for exceptions; ≥1.20 standard | 1.32
+LTV__c | Percent | ≤70% CRE owner-occ; ≤65% investment; ≤90% EQF | 65%
+Borrowing_Base__c | Currency | For LOC only | $4,200,000.00
+Collateral_Type__c | Picklist | None/Equipment/CRE/Accounts/Inventory | Equipment
+Guarantor_Required__c | Boolean | SMB default true | true
+MeridianScore__c | Number | 300–900 | 712
+Consumer_FICO__c | Number | 300–850 | 732
+KYC_Status__c | Picklist | PASS/REVIEW/FAIL | PASS
+Exception_Flag__c | Boolean | Auto-set if any policy breach | false
+Approval_Level__c | Picklist | L1/L2/L3/L4 | L2
+Covenants__c | Text | 500 chars | DSCR ≥1.25x; Quarterly reporting
+Funding_Date__c | Date | ≥ Today | 2025-11-01
+Servicing_Account__c | String | AuroraCore Account ID pattern ACCT-##### | ACCT-58231
+
+# 9. Integrations and APIs
+
+Internal APIs (AuroraCore Loan Origination API v3):
+
+- POST /api/v3/loans
+  - Request:
+    {
+      "applicationId": "APP-2025-1034",
+      "productCode": "TL-STD-001",
+      "borrowerId": "CUST-983421",
+      "approvedAmount": 2500000.00,
+      "termMonths": 60,
+      "rate": 0.1085,
+      "rateType": "Fixed",
+      "covenants": ["DSCR>=1.25", "QuarterlyReporting"],
+      "collateral": [{"type":"Equipment","lienPosition":"First","lienId":"UCC-2025-004512"}]
+    }
+  - Response:
+    {
+      "loanId": "LOAN-2025-22014",
+      "status": "Approved",
+      "firstPaymentDate": "2025-12-01",
+      "boardingRef": "LS-772993"
+    }
+
+- GET /api/v3/loans/{loanId}/covenants
+  - Response:
+    {
+      "loanId":"LOAN-2025-22014",
+      "covenants":[
+        {"code":"DSCR","threshold":"1.25","frequency":"Quarterly","status":"Current"}
+      ]
+    }
+
+Events (Keystone -> LoanSphere via EventBridge):
+- LoanApproved (payload includes loanId, productCode, fundingDate).
+- CovenantBreachDetected (DSCR drop; triggers RM alert).
+
+Security:
+- OAuth2 client credentials; scope loan.write/loan.read.
+- PII masked in logs; adhere to NFG-SEC-LOG-012.
+
+# 10. Procedures
+
+Onboarding (Commercial):
+1) Confirm KYC PASS in SentinelKYC. Control: Screenshot evidence attached.
+2) Verify financials: 2 years audited + YTD; tie-out revenue and EBITDA. Control: Underwriter cross-check; attach tie-out worksheet.
+3) Appraisal/valuation: Order via AppNet (CRE/EQF). Control: Independence attestation (NFG-APP-200).
+4) File lien: UCC-1 via LienFlow; get receipt. Control: Dual review by Ops.
+5) Generate term sheet TS-LOAN-v5; send via SignBridge. Control: E-sign audit trail.
+6) Book loan via AuroraCore API; confirm LOAN-#### created. Control: Compare approved vs. booked terms.
+7) Board to LoanSphere; verify payment schedule. Control: First payment letter sent.
+
+Onboarding (Consumer CON-PL-005):
+1) IDV and income verification via VerifiLink. Control: Match rate ≤10% variance vs stated income.
+2) Fair Lending model parity check. Control: Run NFG-FAIRLEND-0300 report.
+3) Provide TILA disclosures. Control: Auto-generated PDF timestamped.
+4) Fund via ACH to verified account; RPO 15 min, RTO 4 hours if failure.
+
+Servicing (All):
+- Covenant monitoring quarterly; LoanSphere auto-ingests financials. Control: Breach event SLA: RM contacts client within 2 business days; remediation plan in CRM.
+
+Exceptions Process:
+1) Flag Exception_Flag__c true triggers NFG-EXC-77 form.
+2) RM drafts rationale; attaches mitigants (additional collateral, guarantees).
+3) Route to L3/L4 as required. Control: Exception log maintained, monthly review by Credit Policy.
+
+Evidence Artifacts:
+- Approval audit log snippet:
+  [2025-09-30 14:12:05Z] APP-2025-1034 -> L2 Approved by D. Ortiz (Deal Desk) Rate Concession 35 bps; DSCR 1.32; Exception: None. DocVault Ref DV-88210.
+
+# 11. Objection Handling Matrix
+
+Objection | Response | Add’l Action
+-|-|-
+“Rate is higher than competitor.” | We price for speed and flexibility. With your DSCR at 1.28 and LTV 68%, the current offer reflects policy. I can request up to 50 bps review with Deal Desk if we secure quarterly reporting and autopay. | Open DD case; propose covenant enhancement for concession.
+“I don’t want a personal guarantee.” | For SMBs, guarantees align incentives and reduce rate. We can explore limited guarantee or higher rate by ~50–100 bps. | Model both scenarios; obtain L2 approval.
+“Appraisal takes too long.” | We can use expedited appraisal (3 business days) with a $1,250 rush fee. Funding within T+1 after clear. | Order AppNet rush; document client consent.
+“Fees seem high.” | Origination covers underwriting and onboarding. If you consolidate deposits with NFG and set autopay, we can reduce by 25 bps. | Add deposit cross-sell requirement in term sheet.
+“I need interest-only.” | Policy limits IO to 12 months on term loans. We can structure 12 months IO followed by 48 months amortization. | L2 approval; ensure DSCR stress remains ≥1.0x.
+
+# 12. Term Sheet Template (Mini)
+
+Term Sheet: TS-LOAN-v5 (Excerpt)
+
+- Borrower: [Legal Name], EIN: [Redacted]
+- Product Code: TL-STD-001
+- Amount: $2,500,000.00
+- Term: 60 months; Amortization: 60 months
+- Rate: AuroraPrime + 2.75% (currently 10.25%); Floor 8.75%
+- Fees: 1.00% origination ($25,000.00) + third-party costs
+- Collateral: First lien on equipment (UCC-1 Filing)
+- Covenants:
+  - DSCR ≥1.25x, tested quarterly
+  - Quarterly financial statements within 45 days of quarter-end
+  - Borrowing not to exceed 3.5x Total Debt/EBITDA
+- Guarantees: Unconditional personal guarantees of primary owners (≥20%)
+- Prepayment: 3% year 1; 2% year 2; 0% thereafter
+- Conditions Precedent:
+  - KYC PASS; no OFAC hits
+  - Appraisal confirming ≥80% of assessed value relative to ask
+  - Insurance naming NFG as loss payee
+- Events of Default: Non-payment; covenant breach; cross-default
+- Expiration: Valid until 2025-11-15
+- Notices: Sent via SignBridge; effective upon electronic delivery
+- Governing Law: State of New York
+- Acceptance: e-sign required via SignBridge
+
+# 13. KPIs and Dashboards
+
+Leading Indicators:
+- App completeness rate ≥90% within 24h. Owner: Sales Ops.
+- Time-to-term-sheet ≤3 business days. Owner: Deal Desk.
+- KYC PASS rate ≥95% initial submissions. Owner: Compliance Ops.
+
+Lagging Indicators:
+- Approval rate by segment (target: SMB 62%, Mid-Market 48%).
+- Net interest margin by product (target: TL 3.25%, LOC 2.90%).
+- Delinquency 30+ DPD (target: CON-PL ≤2.0%, Commercial ≤1.0%).
+- Covenant breach rate per quarter (target: ≤8%).
+
+Dashboard Sources:
+- Keystone CRM reports: Deal Cycle Time (RPT-LOAN-CT).
+- MeridianScore model drift monitor (RPT-MDL-DRIFT).
+- LoanSphere delinquency dashboard (LS-DQ-01).
+
+# 14. Regional Variations
+
+US:
+- Reg O insider lending limits apply (NFG-REGO-040). State filing times vary (UCC).
+- Max consumer APR varies by state; system caps dynamically.
+
+Canada:
+- Interest Act disclosures; prepayment penalties must follow Canadian format.
+- Quebec language requirements for documents.
+
+UK/EU:
+- Consumer: FCA CONC rules; cooling-off 14 days.
+- GDPR: Data minimization; DSAR response within 30 days (NFG-GDPR-001).
+
+CRE LTV/DSCR:
+- US: LTV ≤70% owner-occ; DSCR ≥1.25x.
+- UK: LTV ≤65%; DSCR ≥1.30x; interest coverage per PRA rules.
+- CA: LTV ≤70%; DSCR ≥1.20x but stress test at +300 bps.
+
+# 15. References
+
+Internal Policies:
+- NFG-KYC-0110 Customer Identification and AML
+- NFG-SEC-17a-4-Archival Communications Archiving
+- NFG-CREDIT-1202 Underwriting Standards
+- NFG-APP-200 Appraisal Independence
+- NFG-ECOA-100 Adverse Action
+- NFG-FAIRLEND-0300 Fair Lending Monitoring
+- NFG-SEC-LOG-012 Secure Logging and Masking
+- BCP-REC-200 Business Continuity for Records
+
+See also:
+- NFG-DEALDESK-0002 Deal Desk Standard Operating Procedure
+- NFG-PRICING-0201 Enterprise Pricing Policy
+- NFG-VENTURE-0105 Venture Lending Program (for startups)
+
+# 16. Change log
+
+- 1.0.0 (2025-10-03): Initial publication of Lending Products playbook covering TL-STD-001, LOC-REV-002, EQF-003, CRE-MORT-004, CON-PL-005; includes pricing guardrails, approval matrix, CRM schema, API endpoints, SLAs, and procedures.
+
+Key takeaways: Always KYC before pricing, use the guardrails and approval matrix for any concessions, document covenants and collateral precisely in Keystone, and follow the Deal Desk workflow to hit SLAs. Escalate early via DD-LOANS for hot deals. Funding is T+1 post-signature with dual controls.

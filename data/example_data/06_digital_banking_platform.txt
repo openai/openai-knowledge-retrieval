@@ -1,0 +1,518 @@
+---
+doc_id: DOC-DBP-2025-0001
+doc_type: Enablement Playbook
+title: Digital Banking Platform — Sales, Advisory, and Support Guide
+business_unit: Retail & Commercial Banking
+audience: Frontline Advisors; Sales; Relationship Managers; Underwriters; Support
+owners:
+  - Priya Nair, Director, Digital Banking Product
+  - Marcus Lee, Sr. Deal Desk Manager
+owner_dept: Digital Channels & Product; Revenue Operations
+tags:
+  - Digital Banking
+  - Online Banking
+  - Treasury
+  - APIs
+  - SMB
+  - Retail
+  - Payments
+search_terms:
+  - digital banking platform
+  - online banking portal
+  - treasury management
+  - business banking app
+  - API banking
+regions:
+  - US
+  - CA
+  - UK
+  - EU
+regulatory_scope:
+  - KYC/AML
+  - E-Sign
+  - Data Residency
+  - PSD2 (EU/UK)
+  - GLBA (US)
+  - PIPEDA (CA)
+  - PCI DSS
+created_at: 2025-10-03
+updated_at: 2025-10-03
+effective_date: 2025-11-01
+review_cadence: Quarterly
+last_reviewed_by: Compliance Partner, Elena García (GRC)
+approvals:
+  - Chief Product Officer, Digital (v1.0)
+  - Head of Compliance (Retail & Commercial)
+  - InfoSec Risk Committee
+version: 1.0.0
+visibility: Internal
+confidentiality: Internal
+systems:
+  - NFG-CRM (Salesforce, org: NFG-PROD)
+  - NFG-Core (Core Banking)
+  - NFG-PaymentHub (ACH/Wires/RTP)
+  - NFG-Identity (Okta)
+  - NFG-DataLake (Snowflake)
+  - NFG-Notifications (SendGrid/SMS)
+  - NFG-DocuSign
+product_codes:
+  - DBP-CHK
+  - DBP-SAV
+  - DBP-BIZ
+  - DBP-API
+  - DBP-CARD
+  - DBP-TREAS
+related_docs:
+  - DOC-KYC-2024-0007
+  - DOC-API-2025-0003
+  - DOC-PRC-2025-0009
+  - DOC-TREAS-2025-0002
+canonical_url: https://kb.nfg/internal/docs/DOC-DBP-2025-0001
+---
+
+# 1. Quick Reference (TL;DR)
+
+- What: NFG Digital Banking Platform (DBP) is our unified online/mobile portal and API suite for retail and SMB/commercial clients to manage deposits, payments, cards, and treasury services.
+- Who: Retail consumers, sole proprietors, SMBs (1–250 FTE), lower-mid market (251–2,000 FTE) with basic to advanced treasury needs.
+- Where: Web (bank.nfg.com), iOS/Android apps, and REST APIs (api.nfg.com/v1).
+- SLAs:
+  - Uptime SLO: 99.95% monthly; Incident P1 response 15 minutes; P2 1 hour.
+  - Support: Frontline triage within 30 minutes (business hours), L2 within 4 hours.
+  - Onboarding: Retail 1 business day; SMB 3 business days; Commercial 5 business days (post-KYC).
+  - Payments cutoffs: ACH 18:00 ET; Wires domestic 17:00 ET; RTP 24/7/365.
+- Resilience: RPO 5 minutes; RTO 30 minutes across dual-region data centers (us-east/us-west).
+- Do:
+  - Qualify on entitlements (dual approval, ACH limits, API usage) and data residency.
+  - Use Approval Matrix for discounts >15% or ACH limits >$5M/day.
+  - Capture use case tags in NFG-CRM “DBP Use Case” field.
+- Don’t:
+  - Promise custom SSO beyond SAML/OIDC standard.
+  - Commit features not on DBP Roadmap without Product approval.
+- Escalation: Deal Desk (deal-desk@nfg.com) for pricing/terms; L2 Support via Slack #dbp-l2; P1 incidents: on-call +1-877-NFG-HELP.
+
+# 2. Customer Personas and Use Cases
+
+- Retail Consumer (RET)
+  - Needs: Account view, bill pay, P2P, card controls.
+  - Fit: Low complexity, mobile-first.
+  - Non-fit: International treasury, bulk payments.
+
+- SMB Owner (SMB)
+  - Needs: Multi-user access, ACH payroll, wires, positive pay, QuickBooks.
+  - Fit: 1–250 FTE; monthly payments <$10M.
+  - Non-fit: Complex liquidity sweeping, multi-currency pooling.
+
+- Lower-Mid Market Treasurer (LMM)
+  - Needs: Segregation of duties, entitlements, SSO, API integration for ERP.
+  - Fit: 251–2,000 FTE; requires ACH same-day, RTP, SFTP reporting.
+  - Non-fit: Global pooling across >10 jurisdictions; advanced trade finance.
+
+Primary Use Cases:
+- Payments: ACH credits/debits, wires, RTP, bill pay.
+- Collections: Lockbox file ingestion, ACH debits, RTP requests for payment.
+- Treasury: Positive pay, ACH filters/blocks, dual approvals, daily limit governance.
+- Data/Reporting: Real-time balances, intraday transactions, statements via API/SFTP.
+- Cards: Virtual card issuance (commercial), card controls.
+- Developer: REST APIs for payments and reporting; webhooks.
+
+Eligibility:
+- Must pass KYC/AML (NFG-KYC-0110), sanctions screening (NFG-AML-023).
+- Data Residency: EU clients provisioned in EU region (GDPR/PSD2).
+- Risk Fit: ACH RDFI/NACHA return rates projected <1.0% (debits) and <10% (any).
+
+# 3. Qualification and Discovery Questions
+
+BANT/CHAMP prompts:
+- Budget: What is your current monthly payments volume ($)? Any per-item fee targets?
+- Authority: Who approves treasury entitlements and payment limits internally?
+- Need: Which rails are required (ACH, wire, RTP)? Do you need dual approvals or SSO?
+- Timing: Go-live deadline? Payroll/AR cycles? Cutoff dependencies?
+- Challenges: Return rate issues? Fraud controls needed (positive pay, account validation)?
+- Metrics: Success defined by straight-through processing %, time-to-post, API latency?
+- Process: Current bank file formats? NACHA/ISO 20022? Batch sizes?
+
+Red flags:
+- Requires host-to-host mainframe protocols (no H2H; use SFTP only).
+- Needs custom APIs beyond /payments and /balances.
+- Demands per-transaction latency guarantees <100ms (DBP SLO p50 250ms, p95 800ms).
+- ACH debit model with unverified consumer base (elevated fraud risk).
+
+# 4. Product/Policy Overview
+
+Capabilities:
+- Web/mobile portal with role-based entitlements; SAML/OIDC SSO (NFG-Identity).
+- Payments: ACH, wires (domestic/int’l), RTP, bill pay; same-day ACH.
+- Controls: Dual approval, maker-checker, daily and per-transaction limits, device trust.
+- Treasury add-ons: Positive pay, ACH filters/blocks, account reconciliation.
+- Data: Real-time balances, intraday posted transactions, statement export (CSV/ISO 20022 camt.053).
+- Developer: REST APIs, OAuth2 client credentials, webhooks (HTTPS, mTLS optional).
+- Notifications: Email/SMS for approvals, exceptions, and payment status.
+
+Limitations:
+- No custom UI per client; theme is standard with logo upload.
+- International wires: No exotic currencies outside G10 + select EM (see Regional Variations).
+- No file-based host-to-host beyond SFTP+PGP.
+- RTP max per transaction $1,000,000 (subject to change by network).
+
+Dependencies:
+- Requires active NFG deposit account(s) (DBP-CHK/DBP-SAV).
+- Entitlement changes require admin and out-of-band MFA.
+- API access requires signed DBP-API schedule and IP allowlist.
+
+# 5. Pricing, Fees, and Discounting
+
+Pricing table (monthly unless noted):
+- Platform Access:
+  - Retail (DBP-CHK/SAV): $0
+  - SMB (DBP-BIZ): $49 base includes 5 users; $5 per add’l user
+  - LMM/Treasury (DBP-TREAS): $199 base includes 10 users; $7 per add’l user
+- Payments:
+  - ACH credit: $0.12/item; same-day +$0.05
+  - ACH debit: $0.15/item; NOC/return $5 each
+  - Domestic wire: $12 outgoing; $8 incoming
+  - Int’l wire: $25 outgoing + FX spread; $15 incoming
+  - RTP send: $0.50/item; request for payment $0.25
+- Treasury:
+  - Positive pay: $45 + $0.02/check
+  - ACH filters/blocks: $30 per account
+- APIs:
+  - API platform fee (DBP-API): $99 includes 250k calls; $0.0005 per add’l call
+  - Webhooks: $0.00 first 5 endpoints; $10 per add’l
+- Implementation:
+  - Standard onboarding: $0
+  - SSO/SAML setup: $750 one-time for LMM
+  - File mapping (SFTP): $1,500 one-time
+
+Discounting guardrails:
+- Standard levers: Waive base fee for 3 months with 24-month term; volume-based rate tiers above $10M/mo ACH.
+- Max frontline discretionary: 15% off platform and per-item fees.
+- Bundled term discounts require 12+ month term and minimum ACH volume $5M/mo.
+
+Approval Matrix:
+- Level 0: ≤15% discount; ACH limit ≤$5M/day; RM approval; log in NFG-CRM (Approval_Notes__c).
+- Level 1: 16–25% discount or ACH limit $5M–$20M/day; Deal Desk + Product Owner approval (ServiceNow catalog SRV-DBP-APP-001).
+- Level 2: 26–40% discount or ACH limit $20M–$50M/day; VP Product + Regional Risk Manager; attach financials.
+- Level 3: >40% discount or ACH limit >$50M/day; CRO + CFO sign-off; Legal review for custom terms.
+
+# 6. Deal Desk Workflow
+
+Step-by-step:
+1) Qualify and capture in NFG-CRM:
+   - Create Opportunity with Product_Code__c = DBP-BIZ/DBP-TREAS.
+   - Complete DBP Qualification fields (see Data and CRM Fields).
+   - SLA: Complete within 1 business day of discovery.
+
+2) Pricing and Limits proposal:
+   - Generate quote in CPQ (Q-DBP-####).
+   - If discounts >15% or ACH >$5M/day, open ServiceNow SRV-DBP-APP-001.
+   - SLA: Deal Desk turnaround 2 business days.
+
+3) KYC/AML:
+   - Submit application APP-YYYY-#### via Onboarding Portal.
+   - Attach UBO docs; run sanctions (NFG-AML-023).
+   - SLA: Retail 1 day; SMB 3 days; LMM 5 days post-docs.
+
+4) Contracting:
+   - Use DBP MSA + Schedule (DBP-API if applicable) via NFG-DocuSign template DS-TPL-DBP-01.
+   - Control: Legal clause check for data residency and API rate-limits.
+   - SLA: 2 business days for standard; 5 days with redlines.
+
+5) Implementation:
+   - Provision in NFG-Core and NFG-Identity; create Admin User.
+   - Control: Dual control verification for entitlements via L2 Support.
+   - SLA: 1–3 business days.
+
+6) Go-Live:
+   - Test payment $1.00 on each rail; validate approvals, limits, notifications.
+   - Evidence: Attach test logs to Opportunity (File: GLV-DBP-<CustID>.pdf).
+   - SLA: Same day after provisioning.
+
+Escalation path:
+- Pricing/terms: Deal Desk (Marcus Lee) → VP Product → CRO.
+- Risk/KYC: Onboarding Ops → Regional Risk Manager → Head of Compliance.
+- Technical: L2 DBP Support → SRE On-call → Incident Commander (P1).
+
+# 7. Risk and Compliance Disclosures
+
+Required statements:
+- “Electronic communications and transactions via the NFG Digital Banking Platform are subject to the NFG Online Banking Agreement and applicable network rules (NACHA, RTP).”
+- “Funds availability and processing times are subject to cutoffs and may vary by rail.”
+- “For ACH debits, client is responsible for obtaining and retaining proper authorizations under NACHA rules.”
+- “International payments are subject to sanctions screening; some transactions may be declined.”
+
+Policies:
+- NFG-KYC-0110 Customer Identification Program.
+- NFG-SEC-17a-4-Archival Electronic Records Retention.
+- NFG-DATA-1002 Data Classification and Residency.
+- NFG-PSD2-UK-100 Open Banking Interface Policy.
+- NFG-BCP-0901 Business Continuity (RPO/RTO).
+- NFG-PCI-1250 Card Data Handling (no PAN storage in DBP).
+
+Talk track guardrails:
+- Do not advise on tax or legal implications.
+- Do not guarantee payment delivery time beyond published cutoffs/SLOs.
+- Use “subject to approval and risk review” for limits and pricing.
+
+# 8. Data and CRM Fields
+
+Canonical CRM fields (NFG-CRM, Object: Opportunity unless noted):
+
+- Product_Code__c (Picklist): DBP-CHK, DBP-BIZ, DBP-TREAS, DBP-API.
+- DBP_Use_Case__c (Multi-select): Payroll, AP, AR, Treasury Controls, API Integration, RTP, International Wires.
+- Monthly_Payment_Volume__c (Currency, 2dp): e.g., 12500000.00; min 0.
+- Avg_TXN_Size__c (Currency): e.g., 1500.00.
+- Required_Rails__c (Multi-select): ACH, Wire_Domestic, Wire_Intl, RTP, BillPay.
+- ACH_Daily_Limit_Requested__c (Currency): e.g., 20000000.00.
+- Dual_Approval_Required__c (Checkbox): true/false.
+- SSO_Required__c (Checkbox): true/false.
+- Data_Residency__c (Picklist): US, CA, EU, UK.
+- API_Access__c (Checkbox): true/false.
+- API_Endpoints_Needed__c (Text): e.g., /payments,/balances,/webhooks.
+- Accounting_System__c (Picklist): QuickBooks, NetSuite, Sage Intacct, Other.
+- Return_Rate_History__c (Percent, 2dp): e.g., 0.85.
+- Cutoff_Dependencies__c (Text): e.g., “Payroll Tue/Thu by 15:00 ET.”
+- Risk_Rating__c (Picklist): Low, Medium, High (prelim by RM).
+- KYC_Application_ID__c (Text): e.g., APP-2025-0345.
+- Implementation_Complexity__c (Picklist): Standard, SSO, SFTP+Mapping, API+Webhooks.
+- Approval_Notes__c (Long Text): decision and approvers.
+
+Validation rules:
+- If API_Access__c = true, then Data_Residency__c cannot be blank and API_Endpoints_Needed__c required.
+- ACH_Daily_Limit_Requested__c > 5000000 requires Risk_Rating__c not High.
+- SSO_Required__c = true requires Implementation_Complexity__c in {SSO, API+Webhooks}.
+
+Example record:
+- CUST-12987; Opportunity ID: OP-2025-00921; Product_Code__c = DBP-TREAS; Monthly_Payment_Volume__c = 25000000.00; Required_Rails__c = ACH; Wire_Domestic; RTP; ACH_Daily_Limit_Requested__c = 20000000.00; Data_Residency__c = US; API_Access__c = true; API_Endpoints_Needed__c = /payments,/balances,/webhooks; Risk_Rating__c = Medium.
+
+# 9. Integrations and APIs
+
+Base URL: https://api.nfg.com/v1
+Auth: OAuth2 Client Credentials (token: https://api.nfg.com/oauth2/token). Scopes: payments:write, accounts:read, webhooks:manage.
+
+Endpoints:
+- POST /payments/ach
+- POST /payments/wire
+- GET /accounts/{accountId}/balances
+- GET /transactions?accountId=...
+- POST /webhooks
+- GET /status/health
+
+Example request (masked):
+POST /payments/ach
+Headers:
+- Authorization: Bearer eyJhbGciOi... (redacted)
+- Idempotency-Key: 0b2d6f78-9e34-4db6-9c5a-5f3f0b98f913
+Body:
+{
+  "companyId": "CMP-55621",
+  "originationAccount": "****1234",
+  "batch": {
+    "effectiveDate": "2025-11-15",
+    "serviceClass": "CCD"
+  },
+  "entries": [
+    {
+      "type": "CREDIT",
+      "amount": 2500.00,
+      "currency": "USD",
+      "recipient": {
+        "name": "ACME SUPPLIES INC",
+        "routingNumber": "******210",
+        "accountNumber": "****6789"
+      },
+      "remittance": "INV-2025-8841"
+    }
+  ]
+}
+
+Example response:
+{
+  "paymentId": "PMT-ACH-2025-000112",
+  "status": "SUBMITTED",
+  "cutoff": "2025-11-15T18:00:00Z",
+  "limitsApplied": { "daily": 20000000.00, "perTransaction": 2000000.00 },
+  "approvals": { "required": 2, "completed": 1 }
+}
+
+Webhook event (payment.status.changed):
+POST https://client.example.com/hooks/dbp
+Body:
+{
+  "eventId": "EVT-2025-77881",
+  "type": "payment.status.changed",
+  "occurredAt": "2025-11-15T17:31:20Z",
+  "data": {
+    "paymentId": "PMT-ACH-2025-000112",
+    "oldStatus": "SUBMITTED",
+    "newStatus": "APPROVED"
+  },
+  "signature": "sha256=ab34... (HMAC)"
+}
+
+Error patterns:
+- 400 DBP-VAL-001 Missing required field.
+- 401 DBP-AUTH-401 Invalid token or scope.
+- 409 DBP-IDEMP-409 Duplicate idempotency key.
+- 422 DBP-LMT-ACH Daily limit exceeded.
+- 503 DBP-SYS-503 Planned maintenance window.
+
+Latency SLO: p50 250ms; p95 800ms; p99 1500ms.
+
+# 10. Procedures
+
+Onboarding (Retail/SMB/LMM):
+1) Create Opportunity and collect required CRM fields (Section 8).
+2) Submit application in Onboarding Portal (APP-YYYY-####); attach IDs/UBO docs.
+3) Sanctions screening auto-runs; if potential match, escalate to Compliance Queue (GRC-AML-Q-02).
+4) Risk scoring in NFG-DataLake; ensure score ≤7 (scale 1–10) for standard path.
+5) Provision DBP access in NFG-Identity; invite Admin User.
+Control checks:
+- Evidence: KYC_Application_ID__c populated; sanction clearance confirmation saved.
+- Dual Control: Two separate operators must approve ACH limits in Admin Console.
+- Audit: Capture provisioning log (LOG-PRV-<APPID>.txt) in Opportunity Files.
+
+Servicing — Entitlement Change:
+1) Client Admin requests via DBP portal or Support.
+2) L1 validates requestor identity; L2 executes change in Admin Console.
+3) Out-of-band verification call-back to authorized contact.
+4) Document change in Case (CS-####) with Before/After entitlements.
+SLA: 1 business day.
+
+Exception — ACH Limit Increase (Urgent Payroll):
+1) Client submits urgent request before 14:00 ET with payroll evidence (PDF).
+2) RM opens ServiceNow SRV-DBP-EXC-ACH; selects reason “Payroll”.
+3) Risk reviews return history and balance coverage; target ≤45 minutes.
+4) If approved, SRE applies temporary limit until cutoff; revert next business day.
+Control: Attach approval emails; record temporary change in NFG-Logs, Change ID CHG-DBP-2025-0144.
+
+Incident Response (P1 outage):
+- Detect via monitoring; auto-page SRE on-call.
+- Status page update within 15 minutes; RM Advisory email via NFG-Notifications.
+- RPO/RTO enforced per NFG-BCP-0901; failover if MTTR > 20 minutes.
+- Post-incident report within 2 business days.
+
+# 11. Objection Handling Matrix
+
+- “Fees are higher than my current bank.”
+  - Response: We can align fees to volume. With your projected $12M/month ACH, your per-item drops to $0.09, and we can waive the base fee for 3 months on a 24-month term, subject to approval.
+
+- “We need custom UI and workflow.”
+  - Response: We standardize UI to ensure security and supportability. You can configure roles, approvals, and limits, and extend via our APIs and webhooks for your internal workflows.
+
+- “We require guaranteed sub-100ms API latency.”
+  - Response: Our published SLO is p50 250ms and p95 800ms. For latency-sensitive flows, we recommend pre-scheduling batches and using webhooks to trigger downstream processes.
+
+- “Our auditors require dual approval and positive pay.”
+  - Response: Both are native. We’ll help you configure maker-checker, daily limits, and positive pay with exception decisions before 12:00 local time.
+
+- “International wires to emerging markets?”
+  - Response: We support G10 and select EM corridors. Let’s review your corridors; where we don’t have direct coverage, we can route via partner rails or suggest alternatives.
+
+# 12. Term Sheet Template (Mini)
+
+Client: [Legal Name] | CUST-ID: CUST-XXXXX
+Effective Date: YYYY-MM-DD
+Term: 24 months; auto-renew 12 months unless 30 days’ notice.
+
+Services:
+- DBP Platform: DBP-BIZ | 10 users included.
+- Payments: ACH credit/debit; same-day ACH enabled; Domestic wire; RTP.
+- Treasury: Positive pay; ACH filters.
+- API: Endpoints /payments,/balances; 2 webhooks.
+
+Limits:
+- ACH Daily: $20,000,000; Per TXN: $2,000,000; Dual approvals required.
+- Wires Daily: $5,000,000; Int’l corridors: USD/EUR/GBP/JPY.
+- RTP Per TXN: $1,000,000.
+
+Pricing:
+- Platform: $49/month + $5/additional user.
+- ACH: $0.10 credit; $0.13 debit; same-day +$0.04.
+- Wires: $10 domestic; $22 international + FX.
+- RTP: $0.45 send; $0.20 RFP.
+- APIs: $99 includes 250k calls; $0.0005/additional call.
+
+SLA/SLO:
+- Uptime 99.95%; P1 response 15 minutes.
+- Cutoffs: ACH 18:00 ET; Wire domestic 17:00 ET; RTP 24/7.
+
+Security:
+- SSO: SAML via NFG-Identity; IP allowlist required for APIs.
+- MFA mandatory; device trust enabled.
+
+Compliance:
+- Subject to NFG-KYC-0110, NACHA, GLBA.
+- Data residency: US region.
+
+Approvals:
+- RM: [Name]; Product: [Name]; Risk: [Name]; Legal: [Name].
+
+Notes:
+- Early termination fee: 3 months of platform fees if terminated without cause.
+
+# 13. KPIs and Dashboards
+
+Leading indicators:
+- Time-to-Onboard (TTOnb): Target ≤3 business days SMB; Owner: Onboarding Ops.
+- First Value Time (FVT): First payment executed within 7 days; Owner: RM.
+- Entitlement Completion Rate: Dual approvals and limits configured by Day 2; Owner: Support.
+
+Lagging indicators:
+- Platform Adoption: Weekly Active Users/Total Users ≥60% after 60 days; Owner: Product.
+- Straight-Through Processing (STP): ≥98% payments without manual intervention; Owner: Operations.
+- ACH Return Rate: Debits <1%; Credits <0.5%; Owner: Risk.
+- API Error Rate: <0.3% 4xx (excluding 401), <0.05% 5xx; Owner: SRE.
+
+Dashboards (NFG-CRM + DataLake):
+- DBP Deal Health (Dash-DBP-01): pipeline, discount bands, ACH limit requests.
+- DBP Operations (Dash-DBP-02): cutoffs adherence, exception queues, positive pay decisions.
+- DBP Tech (Dash-DBP-03): uptime, latency percentiles, webhook retries.
+
+# 14. Regional Variations
+
+US:
+- Regulations: GLBA, NACHA; RTP via TCH; data residency US.
+- Cutoffs as listed; same-day ACH windows per Fed schedule.
+
+Canada (CA):
+- Interac e-Transfer roadmap H2 2026; current: EFT batch with 21:00 ET cutoff.
+- PIPEDA compliance; data stored in CA region upon request (DBP-CA).
+
+UK:
+- Faster Payments supported; cutoff N/A (24/7); CHAPS domestic cutoff 16:00 local.
+- PSD2 SCA enforced; open banking APIs available via NFG-OB-UK base path.
+- Data residency UK/EU; SSO with enforced step-up per SCA.
+
+EU:
+- SEPA Credit Transfer (SCT) and SEPA Instant (SCT Inst) 24/7; fees vary; FX not applicable intra-SEPA.
+- GDPR strict residency; consent records per NFG-SEC-17a-4-Archival.
+
+International Wires:
+- Supported currencies: USD, EUR, GBP, JPY, CAD, AUD, CHF, SEK, NOK, DKK, SGD, HKD, MXN.
+- Restricted corridors subject to sanctions lists; OFAC/UK HMT/EU consolidated.
+
+# 15. References
+
+Internal:
+- NFG-KYC-0110 Customer Identification Program
+- NFG-AML-023 Sanctions Screening Standard
+- NFG-DATA-1002 Data Classification and Residency
+- NFG-SEC-17a-4-Archival Electronic Records Retention
+- NFG-PCI-1250 Card Data Handling
+- NFG-BCP-0901 Business Continuity and Disaster Recovery
+- NFG-PSD2-UK-100 Open Banking Interface Policy
+- NFG-API-2004 OAuth2 Client Credentials Implementation Guide (See DOC-API-2025-0003)
+- NFG-TREAS-3001 Positive Pay Operations (See DOC-TREAS-2025-0002)
+- NFG-PRC-9009 Enterprise Discounting Policy (See DOC-PRC-2025-0009)
+- See also: DOC-KYC-2024-0007 Onboarding Checklist; DOC-API-2025-0003 API Catalog
+
+External:
+- NACHA Operating Rules
+- RTP Network Participation Rules
+- PSD2 RTS on SCA (EU/UK)
+
+# 16. Change log
+
+- 1.0.0 (2025-10-03): Initial publication covering pricing, approval matrix, CRM schema, APIs, SLAs, RPO/RTO, procedures, and regional variations.
+
+Key takeaways: Qualify clients on rails, volume, entitlements, and data residency; use the pricing table and Approval Matrix to shape offers; capture canonical fields in NFG-CRM; route discounts >15% and high ACH limits via Deal Desk; set clear expectations on cutoffs, SLOs, and compliance. For technical clients, position DBP APIs with OAuth2, idempotency, and webhook patterns. Escalate urgent payroll limit increases via the defined exception process and document all control evidence.

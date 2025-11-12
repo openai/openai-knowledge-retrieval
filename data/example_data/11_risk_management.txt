@@ -1,0 +1,380 @@
+---
+doc_id: NFG-RISK-0201
+doc_type: Enablement Playbook
+title: Risk Management — Frontline Guide for Deal Execution and Customer Engagement
+business_unit: Enterprise Risk & Commercial Banking
+audience: Advisors, Sales, Relationship Managers, Underwriters, Sales Ops, Support
+owners: 
+  - Priya Natarajan (Director, Enterprise Risk)
+  - Daniel Cho (Head of Deal Desk)
+owner_dept: Enterprise Risk Management (ERM)
+tags: [risk-management, underwriting, credit-risk, operational-risk, kyc, aml, deal-desk, approvals, limits, covenants]
+search_terms: [risk appetite, risk rating, RCSA, EAR, exposure limits, KYC, AML, sanctions, credit memo, covenant monitoring, stress testing]
+regions: [US, CA, UK, EU, APAC]
+regulatory_scope: [GLBA, GDPR, SOX-404, OCC Heightened Standards, FCA SYSC, MAS 637, NFG-SEC-17a-4-Archival, NFG-KYC-0110, NFG-AML-0205, NFG-BCP-0009]
+created_at: 2025-10-03
+updated_at: 2025-10-03
+effective_date: 2025-10-10
+review_cadence: Quarterly
+last_reviewed_by: Morgan Ruiz (Chief Risk Officer)
+approvals: 
+  - CRO Approval: CRO-APP-2025-0912
+  - Legal Review: LGL-REV-2025-221
+version: 1.0.0
+visibility: Internal
+confidentiality: Internal
+systems: [Polaris CRM, RiskHub, Aurora Underwriting, Gatekeeper Deal Desk, Nimbus DocVault, Atlas Data Lake, Sentinel DLP, EventBridge]
+product_codes: [RM-SVC-101 (Risk Assessment), RM-COV-201 (Covenant Monitoring), RM-LMT-310 (Exposure Limits), RM-ALR-415 (Risk Alerts)]
+related_docs: [NFG-UNDER-0143, NFG-KYC-0110, NFG-AML-0205, NFG-DEAL-0012]
+canonical_url: https://kb.nfg.corp/docs/NFG-RISK-0201
+---
+
+# 1. Quick Reference (TL;DR)
+- Who: Frontline advisors, RMs, underwriters, and support engaging any customer with credit, deposit, payments, or capital markets exposure > $100,000.
+- What: Apply NFG risk rating, exposure limits, covenants, and ongoing monitoring per RiskHub workflows; capture evidence in Polaris CRM.
+- When: 
+  - Pre-sale qualification before proposal.
+  - Pre-commitment credit decision (underwriting).
+  - Post-close monitoring monthly/quarterly.
+- Where: Polaris CRM for customer data; Aurora for underwriting; RiskHub for ratings/limits; Gatekeeper for approvals; Nimbus DocVault for artifacts.
+- SLAs:
+  - Initial risk pre-check: 4 business hours.
+  - Full risk assessment (EAR): 2 business days standard; 8 business hours expedited (fee).
+  - Deal Desk approval turnaround: 1 business day for Level 1–2; 2 days for Level 3+.
+- Do:
+  - Run KYC/AML screening before sharing term sheets (NFG-KYC-0110).
+  - Use the Exposure and Approval Matrix in Section 5.
+  - Record all exceptions and mitigating controls.
+- Don’t:
+  - Promise pricing or limits before risk rating is assigned.
+  - Email PII/financials; upload to Nimbus only (NFG-SEC-17a-4-Archival).
+- Escalation: Underwriter of record → Risk Manager (Region) → ERM Duty Officer (24x7: +1-415-555-0198).
+
+# 2. Customer Personas and Use Cases
+Personas:
+- Middle-Market Corporate CFO (Revenue $50M–$500M): Needs revolving credit, FX hedging, cash management.
+- Fintech COO (Venture-backed): Needs sponsor bank services, payment flows, safeguarding.
+- Institutional Asset Manager (AUM $1B+): Needs custody, securities lending, leverage.
+- Cross-border Importer/Exporter: Needs trade finance, letters of credit, sanctions screening.
+
+Use Cases:
+- New Revolving Credit Facility (RCF) up to $50M with springing covenants.
+- Payment processing for marketplace platform with embedded wallets.
+- Securities-backed line of credit with daily margining.
+- Supply chain finance for international vendors.
+
+Eligibility Fit:
+- Audited financial statements or reputable review.
+- Transparent ownership to UBO level; passes KYC/AML and sanctions checks.
+- Industry within NFG risk appetite (no prohibited industries list NFG-RA-100).
+
+Non-Fit (Redirect/Decline):
+- Cryptomixers, unlicensed MSBs, sanctioned counterparties.
+- Opaque ownership structures or PEPS without enhanced due diligence (EDD) feasibility.
+- Highly leveraged balance sheet with interest coverage < 1.5x absent collateral/guarantees.
+
+# 3. Qualification and Discovery Questions
+BANT/CHAMP-style prompts:
+- Budget: “Have you allocated fees for risk assessment or collateral appraisal? Typical fees range $2,500–$25,000.”
+- Authority: “Who signs the borrowing resolution? Is Audit Committee approval required?”
+- Need: “What risk objective are you solving—liquidity, FX, settlement, operational resilience?”
+- Timing: “Any covenants or maturities within 120 days?”
+- Challenge: “Any pending litigation, regulatory inquiries, or data breaches in the last 24 months?”
+- Metrics: “Target leverage, DSCR, and liquidity thresholds you manage to?”
+- Process: “Can we obtain bank/broker statements, AR aging, and customer concentration detail?”
+
+Red flags:
+- Refusal to disclose UBO to 25% threshold.
+- Last-minute pressure to issue term sheet before KYC complete.
+- Material weakness disclosure without remediation plan.
+- Rapid growth with negative operating cash flow and reliance on related-party financing.
+
+# 4. Product/Policy Overview
+Capabilities:
+- Risk rating engine (RiskHub v3.2) producing Obligor Risk Rating (ORR 1–10) and Facility Risk Rating (FRR A–E).
+- Exposure Limits module setting Single Obligor Limit (SOL) and Country Risk Limit (CRL).
+- Covenant Monitoring service (RM-COV-201) with monthly/quarterly triggers.
+- Automated Risk Alerts (RM-ALR-415) via EventBridge for covenant breaches and sanctions hits.
+- Exception Management with documented mitigating controls and sunset dates.
+
+Limitations:
+- Startups < 12 months of operating history require EDD and sponsor support.
+- Cashflow-negative facilities > 24 months tenor require collateral or guarantees.
+- Sanctions screening uses 15-minute batch windows; real-time hits require manual confirmation.
+
+Dependencies:
+- Polaris CRM customer master (CUST_ID).
+- KYC via Lexicon KYC API and internal NFG-KYC-0110 workflow.
+- Financial spreading in Aurora Underwriting (FS-Template-03).
+
+# 5. Pricing, Fees, and Discounting
+Standard fees (USD; regionally adjusted, see Section 14):
+- Risk Assessment (RM-SVC-101): $4,500 standard; $9,500 complex (consolidations > 3 entities).
+- Expedited Assessment SLA (8 hours): +$2,000.
+- Covenant Monitoring (RM-COV-201): $750/month per obligor (includes 3 covenants).
+- Additional Covenant: $125/month.
+- Annual Limit Review (RM-LMT-310): $2,000.
+
+Discounting guardrails:
+- Max discretionary discount per deal: 15% (Sales Director).
+- Bundled services (3+): up to 20% with Risk Manager approval.
+- No discount on expedited fee without Level 2 approval.
+
+Approval Matrix:
+- Level 0: List price. Owner: RM/Advisor. Documentation: None. SLA: Immediate.
+- Level 1: ≤15% discount; ≤$25M exposure; ORR ≤ 6. Owner: Sales Director + Underwriter. SLA: 1 business day.
+- Level 2: 16–25% discount; $25M–$75M exposure; ORR 7–8 or FRR D. Owner: Regional Risk Manager. SLA: 2 business days.
+- Level 3: >25% discount; >$75M exposure; ORR 9–10; any prohibited exception. Owner: ERM Committee. SLA: 3 business days.
+
+# 6. Deal Desk Workflow
+Step-by-step:
+1) Pre-Check (Sales/RM)
+- Action: Create Opportunity in Polaris (OPP-YYYY-####). Run KYC pre-screen.
+- Evidence: Screenshot of KYC “Pass” uploaded to Nimbus DocVault under folder /OPP-####/KYC.
+- SLA: 4 business hours.
+
+2) Risk Intake (Underwriter)
+- Action: Submit Exposure Assessment Request (EAR) via RiskHub.
+- Required artifacts: 3 years financials, AR/AP aging, cash flow, org chart, UBO attestations.
+- SLA: 2 business days standard.
+
+3) Rating and Limits (RiskHub)
+- Action: Generate ORR/FRR, set SOL/CRL, propose covenants.
+- Control: Automated cross-check with Atlas Data Lake for industry PD/LGD benchmarks.
+
+4) Pricing/Terms Draft (Advisor + Underwriter)
+- Action: Build term sheet using Section 12 template.
+- Control: Check limit utilization vs SOL in RiskHub.
+
+5) Approvals (Gatekeeper Deal Desk)
+- Action: Route per Approval Matrix; attach EAR (EAR-2025-####).
+- SLA: Level-based. Escalation auto-triggers if > SLA by 4 hours.
+
+6) Customer Negotiation (Advisor)
+- Action: Present terms. Document objections and resolutions in Polaris Activity log.
+
+7) Close & Book (Operations)
+- Action: Final KYC/AML, sanctions check, covenant baseline capture, document execution.
+- SLA: 1 business day post-approval.
+- Control: Sentinel DLP scan before archival in Nimbus.
+
+Escalation Path:
+- Stuck > SLA: Page Risk Duty Officer via Gatekeeper “Escalate” button.
+- Disagreements on rating: Submit Reconsideration Ticket (RRT-####) to ERM Analytics.
+
+# 7. Risk and Compliance Disclosures
+Required verbal statement (pre-term sheet):
+- “NFG’s credit and risk terms are subject to Know Your Customer, anti-money laundering, and sanctions compliance and may change based on our risk assessment.”
+
+Required written disclosure (term sheet footer):
+- “Facility availability is contingent upon ongoing compliance with covenants and NFG’s risk policies NFG-KYC-0110, NFG-AML-0205, and NFG-RA-100. NFG may suspend availability upon material adverse change or sanctions designation.”
+
+Recording/archival:
+- All customer communications affecting risk terms must be logged in Polaris and archived per NFG-SEC-17a-4-Archival (7-year retention, WORM storage).
+
+# 8. Data and CRM Fields
+Canonical fields (Polaris CRM):
+- CUST_ID (string, required, format: CUST-#####), example: CUST-14829.
+- OPP_ID (string, required), example: OPP-2025-0372.
+- ORR (integer 1–10, required), example: 7.
+- FRR (enum [A,B,C,D,E], required), example: C.
+- EXPOSURE_REQUESTED (currency, >= $100,000), example: $25,000,000.00.
+- SOL (currency, required), example: $40,000,000.00.
+- CRL_COUNTRY (ISO-3166-1 alpha-2), example: GB.
+- CRL_LIMIT (currency), example: $100,000,000.00.
+- COLLATERAL_TYPE (enum [AR, Inventory, RealEstate, Securities, Cash]), example: AR.
+- COVENANTS (json array), example: ["DSCR>=1.5x","MinCash=$5,000,000"].
+- EXCEPTIONS_FLAG (boolean), example: true.
+- EXCEPTIONS_DESC (text, max 1,000 chars), example: “Waived audited FS for FY-1; compensating control: parent guarantee.”
+- KYC_STATUS (enum [Pass, EDD, Fail]), example: EDD.
+- AML_SCREEN_RESULT (enum [Clear, Hit-Review, Hit-Confirm]), example: Clear.
+- SANCTIONS_STATUS (enum [Clear, Potential, Confirmed]), example: Potential.
+- APPROVAL_LEVEL (enum [L0,L1,L2,L3]), example: L2.
+- APPROVAL_REF (string), example: APP-2025-0194.
+- MONITORING_FREQ (enum [Monthly, Quarterly]), example: Quarterly.
+- NEXT_REVIEW_DATE (date YYYY-MM-DD), example: 2026-03-31.
+
+Validation:
+- ORR 9–10 requires APPROVAL_LEVEL >= L3.
+- If SANCTIONS_STATUS != Clear, booking is blocked.
+- EXPOSURE_REQUESTED must be <= SOL.
+
+# 9. Integrations and APIs
+RiskHub API (internal):
+- POST /api/v3/ear
+  - Request:
+    {
+      "opp_id": "OPP-2025-0372",
+      "cust_id": "CUST-14829",
+      "financials_ref": "Nimbus:/OPP-2025-0372/Financials/FY2022-2024.zip",
+      "country_exposure": ["US","GB"],
+      "requested_exposure": 25000000,
+      "products": ["RCF","Payments"],
+      "edd": true
+    }
+  - Response:
+    {
+      "ear_id": "EAR-2025-00491",
+      "status": "InReview",
+      "sla_due": "2025-10-07T18:00:00Z"
+    }
+
+- GET /api/v3/ratings?cust_id=CUST-14829
+  - Response:
+    {
+      "orr": 7,
+      "frr": "C",
+      "sol": 40000000,
+      "crl": [{"country":"GB","limit":100000000}],
+      "model_version": "3.2.11"
+    }
+
+EventBridge topics:
+- risk.alerts.covenant_breach
+- risk.alerts.sanctions_hit
+Payload example (sanitized):
+{
+  "cust_id": "CUST-14829",
+  "opp_id": "OPP-2025-0372",
+  "alert_type": "covenant_breach",
+  "covenant": "DSCR>=1.5x",
+  "reported_value": "1.2x",
+  "breach_date": "2026-01-15",
+  "severity": "High"
+}
+
+RPO/RTO:
+- RiskHub: RPO 15 minutes; RTO 1 hour (NFG-BCP-0009).
+- Polaris CRM: RPO 0 (synchronous multi-region); RTO 4 hours.
+- Nimbus DocVault: RPO 0; RTO 2 hours; WORM compliant (NFG-SEC-17a-4-Archival).
+
+# 10. Procedures
+A) Onboarding Risk Assessment (RM-SVC-101)
+1. Create EAR in RiskHub. Control: Mandatory KYC_STATUS in Polaris must be Pass or EDD.
+2. Collect financials and documents via SecureLink (no email). Evidence: Nimbus upload receipt.
+3. Spread financials in Aurora (FS-Template-03). Control: Two-person review for adjustments > $500k.
+4. Assign ORR/FRR. Evidence: RiskHub rating snapshot exported to Nimbus.
+5. Set SOL and proposed covenants. Control: Compare to Atlas PD/LGD benchmarks (±2 sigma).
+6. Draft term sheet; route through Gatekeeper per Section 5. Evidence: APP-#### stored.
+7. Communicate terms with required disclosures. Evidence: Polaris Activity log with timestamp.
+8. Book facility post-approval. Control: Sanctions re-check within 24 hours of booking.
+
+B) Ongoing Covenant Monitoring (RM-COV-201)
+1. Configure covenant definitions in RiskHub. Evidence: JSON config stored in Nimbus.
+2. Ingest customer data monthly/quarterly via SFTP or API. Control: Checksum validation; Sentinel DLP scan.
+3. Evaluate covenants. If breach, auto-create Case in Polaris (CASE-####).
+4. Notify RM and Underwriter via risk.alerts.covenant_breach. SLA: RM must contact client in 1 business day.
+5. Remediation plan documented; set deadline (≤30 days) or trigger default remedies. Evidence: Case notes.
+6. Close case with evidence (financials, waiver approval). Control: Second-line QA sample 10% of cases monthly.
+
+C) Exceptions Handling
+1. Identify exception (e.g., leverage > policy). Flag EXCEPTIONS_FLAG in Polaris.
+2. Propose mitigating controls (e.g., additional collateral, guaranty, pricing add-on).
+3. Submit Exception Memo to Gatekeeper with sunset date. Approval per Level 2+.
+4. Track exceptions dashboard weekly. Control: Auto-expire alerts 10 days before sunset.
+
+D) Sanctions/AML Escalation
+1. Potential hit received. Booking blocked automatically.
+2. AML Investigator review within 4 hours. Evidence: Case AML-#### in Atlas.
+3. If confirmed, decline/exit per NFG-AML-0205. Notify Legal and ERM. Document SAR if required.
+4. If cleared, update SANCTIONS_STATUS=Clear; proceed with booking.
+
+# 11. Objection Handling Matrix
+- “The fee for risk assessment is too high.”
+  Response: “Our fee reflects the accelerated SLA and two-person review. Bundling monitoring reduces total by up to 20% with approval. We can also scope standard SLA at $4,500.”
+
+- “We can’t provide audited financials.”
+  Response: “We can consider reviewed statements with a parent guaranty or higher collateral coverage. This would route to Level 2 approval.”
+
+- “Why do you need UBO information?”
+  Response: “Regulations require us to verify ownership to prevent sanctions and AML risk. We only collect what’s necessary and store it in WORM-compliant Nimbus per NFG-SEC-17a-4-Archival.”
+
+- “We need terms today.”
+  Response: “We can expedite the assessment within 8 business hours for $2,000 and start with a preliminary view, subject to KYC completion.”
+
+# 12. Term Sheet Template (Mini)
+Term Sheet ID: TS-2025-0287
+Borrower: [Customer Legal Name] (CUST-14829)
+Facility: Revolving Credit Facility (RCF)
+Amount: $25,000,000.00
+Tenor: 36 months
+Pricing: SOFR + 275 bps; Unused fee 25 bps
+Collateral: First lien on AR and Inventory
+Covenants:
+- DSCR >= 1.50x (Quarterly)
+- Leverage (Net Debt/EBITDA) <= 3.00x (Quarterly)
+- Minimum Liquidity >= $5,000,000 (Monthly)
+Conditions Precedent:
+- KYC/AML clearance (NFG-KYC-0110; NFG-AML-0205)
+- ORR <= 7; FRR <= C
+- Sanctions screening within 24 hours of closing
+Reporting:
+- Monthly borrowing base certificate within 15 calendar days
+- Quarterly financial statements within 45 calendar days
+Events of Default:
+- Payment default > 5 business days
+- Breach of covenants not cured within 30 days
+- Sanctions designation
+Approvals:
+- APPROVAL_LEVEL: L2
+- APPROVAL_REF: APP-2025-0194
+Disclosures: See Section 7.
+
+Constraints:
+- If ORR deteriorates by ≥2 notches, pricing step-up +50 bps and reduced SOL.
+
+# 13. KPIs and Dashboards
+Leading:
+- Time to Initial Risk Pre-Check (target ≤ 4 hours). Owner: Sales Ops.
+- EAR Cycle Time (target ≤ 2 days standard, ≤ 8 hours expedited). Owner: Underwriting.
+- Covenant Data Timeliness (percent on-time submissions, target ≥ 95%). Owner: RM.
+
+Lagging:
+- Covenant Breach Rate (≤ 8% of portfolio per quarter).
+- Non-performing Exposure (NPE) ratio (≤ 1.5%).
+- Exceptions with expired sunset (0%). Owner: ERM.
+
+Quality/Compliance:
+- QA Exceptions Rate in onboarding (≤ 5%).
+- KYC Rework Rate (≤ 3%).
+
+Dashboards:
+- RiskOps in Polaris Analytics: tiles for SLA adherence, breach severity heatmap, exceptions aging.
+- ERM Committee Board: exposure vs SOL/CRL, ORR migration, stress loss at 95% VaR.
+
+# 14. Regional Variations
+US:
+- GLBA governs customer data; SAR filing requirements under BSA/FinCEN. Use OFAC lists.
+- State usury caps may influence pricing add-ons.
+
+UK/EU:
+- GDPR data minimization; ensure purpose limitation in KYC data retention.
+- FCA SYSC requires robust governance and outsourcing oversight for third-party data providers.
+
+CA:
+- OSFI Guideline B-10 for third-party risk management. PIPEDA for privacy.
+
+APAC:
+- MAS 637 credit risk; data residency for SG personal data; use MAS sanctions lists.
+
+Fees:
+- EU VAT may apply to monitoring services.
+- FX hedging add-ons require EMIR reporting in EU.
+
+# 15. References
+Internal policies:
+- NFG-KYC-0110 Know Your Customer Standard
+- NFG-AML-0205 AML and Sanctions Program
+- NFG-SEC-17a-4-Archival Records Retention
+- NFG-RA-100 Enterprise Risk Appetite
+- NFG-BCP-0009 Business Continuity and DR
+- NFG-DLP-300 Sentinel Data Loss Prevention
+
+Related docs:
+- NFG-UNDER-0143 Underwriting Playbook (See also)
+- NFG-DEAL-0012 Deal Desk Operations
+
+# 16. Change log
+- 1.0.0 (2025-10-03): Initial release. Added Approval Matrix, API examples, SLAs, RPO/RTO, and procedures.
+
+Key takeaways: Run KYC early, generate ORR/FRR and limits in RiskHub, follow the Approval Matrix for pricing and exposure, document everything in Polaris and Nimbus, monitor covenants on time, and escalate quickly if SLAs or sanctions hits occur. This keeps deals moving fast and compliant while protecting NFG’s risk appetite.

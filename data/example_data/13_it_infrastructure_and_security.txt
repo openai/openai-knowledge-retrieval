@@ -1,0 +1,359 @@
+---
+doc_id: NFG-ITS-0007
+doc_type: Playbook
+title: IT Infrastructure and Security — Frontline Enablement Guide
+business_unit: Enterprise Technology & Security (ETS)
+audience: Sales, Advisors, Relationship Managers, Underwriters, Customer Support
+owners: 
+  - Alex Chen (Head of Infra Services)
+  - Priya Nair (Deputy CISO)
+owner_dept: ETS — Infrastructure & Cybersecurity
+tags: [IT Infrastructure, Security, Hosting, Data Residency, DR/BCP, VPN, SFTP, SOC2, ISO27001, Incident Response]
+search_terms: [uptime SLA, RPO RTO, data residency, encryption, pen test, security questionnaire, DPA, VPN, SFTP, logging, DR tiers, exception process]
+regions: [US, CA, EU, UK, APAC]
+regulatory_scope: [SOC2-Type2, ISO-27001:2013, GDPR, UK-GDPR, PIPEDA, NYDFS-500, MAS-TRM]
+created_at: 2025-10-03
+updated_at: 2025-10-03
+effective_date: 2025-10-10
+review_cadence: Quarterly
+last_reviewed_by: Priya Nair (Deputy CISO)
+approvals: [CISO Office, Head of Sales Enablement, Legal-Privacy]
+version: 1.0.0
+visibility: Internal
+confidentiality: Internal
+systems: [Salesforce (SFDC), ServiceNow (SNOW), Archer GRC, Splunk, Okta, Zscaler, AWS, Azure, GCP, HashiCorp Vault, Confluent Kafka]
+product_codes: [ITINF-CORE, SEC-ENH, DR-PREM, NET-VPN, SFTP-MGD, LOG-EXPT, PEN-ATTST]
+related_docs: [NFG-DS-0012, NFG-LEGAL-0031, NFG-BCP-0004, NFG-DATA-0009]
+canonical_url: https://kb.nfg.corp/ets/it-infrastructure-and-security
+---
+
+# 1. Quick Reference (TL;DR)
+- What: NFG’s standardized IT Infrastructure & Security posture, hosting options, connectivity, logging, and DR/BCP commitments to support client trust and deal execution.
+- Who to engage: Infra Services (Alex Chen), Security Assurance (Priya Nair), Privacy (Legal-Privacy), Deal Desk (Sales Ops), DPO (EU deals).
+- SLAs:
+  - Core platform uptime: 99.95% monthly; VPN/SFTP: 99.90%.
+  - Incident response: Sev-1 triage within 15 minutes; client comms within 60 minutes (NFG-IR-0003).
+  - Support: 24x7 for Sev-1/2; business hours for Sev-3/4.
+- DR/BCP:
+  - Tier 1 RPO 15 min / RTO 2 hours; Tier 2 RPO 1 hour / RTO 8 hours; Tier 3 RPO 24 hours / RTO 48 hours.
+- Data residency: US/EU/CA hosting options; client-selectable where contractually required.
+- Encryption: Data at rest AES-256; in transit TLS 1.2+; KMS-backed keys with dual control (NFG-CRY-0201).
+- Do:
+  - Use the approved talk track for SOC2/ISO certifications.
+  - Capture security requirements in SFDC fields (see Section 8).
+  - Route exceptions via Deal Desk → Security Assurance in SNOW (SEC-EXC).
+- Don’t:
+  - Commit to custom controls or data residency not listed in Section 14 without approvals.
+  - Share architecture diagrams externally without CISO review (NFG-SEC-INFOCLASS).
+
+# 2. Customer Personas and Use Cases
+- Asset Managers (Buy-Side): Require audited controls, SFTP for trade files, EU data residency for UCITS funds.
+- Banks/Prime Brokers: Require VPN+IP allowlist, message integrity checks, near-real-time logging export.
+- Insurers: Need Tier 1 DR for daily valuations; request annual pen test attestation and DPA.
+- FinTech Platforms: Prefer API-first, webhook alerts, sandbox segregation, and SOC2 report access.
+
+Fit:
+- Customers needing managed secure file exchange, resilient hosting, and standard regulatory attestations.
+- Deals requiring clear SLAs, DR tiers, and security questionnaires with rapid turnaround.
+
+Non-fit (refer to Custom Solutions team):
+- On-prem deployment, proprietary HSM requirements, or client-owned cloud tenancy management.
+- Sub-24-hour bespoke pen test cycles or client-supplied endpoint agents on NFG infrastructure.
+
+# 3. Qualification and Discovery Questions
+- Business impact/tier:
+  - What is the maximum tolerable downtime (hours)? Data loss tolerance (minutes)?
+- Data sensitivity:
+  - Will we process PII/PCI/PHI? Which data elements? Any special categories (GDPR Art. 9)?
+- Residency and sovereignty:
+  - Must data be stored/processed in US/EU/CA only? Any cross-border transfer constraints?
+- Connectivity:
+  - Do you require SFTP or site-to-site IPsec? Static source IPs? Certificate pinning?
+- Logging and audit:
+  - Do you need near-real-time log export? Which SIEM? Required retention period?
+- Compliance:
+  - Which artifacts are required (SOC2 Type II, ISO-27001 SoA, SIG/CAIQ)?
+- Red flags:
+  - Requests for custom crypto, client-managed keys in NFG tenancy, unrestricted admin access, or changing our incident severity definitions.
+
+# 4. Product/Policy Overview
+Capabilities:
+- Hosting: Multi-region (AWS us-east-1/us-west-2, Azure westeurope, Canada Central) with active-active for Tier 1.
+- Network: Zero Trust access via Zscaler; optional IPsec VPN, SFTP with SSH key-only auth, IP allowlisting.
+- Identity: Okta SSO, SCIM provisioning; MFA enforced; least privilege via RBAC (NFG-IDM-1002).
+- Data Protection: AES-256 at rest, TLS 1.2+ in transit, secrets in Vault, daily backups with cross-region replication.
+- Logging: Centralized Splunk; optional client log export via S3 signed URLs or syslog TLS (LOG-EXPT).
+- DR/BCP: Tested semi-annually; documented in NFG-BCP-0004 with evidence in Archer.
+- Security Assurance: Annual SOC2 Type II, ISO-27001 certified, annual CREST pen test, vulnerability management (NFG-VM-1203).
+
+Limitations:
+- No on-prem installations; no co-location access.
+- No client-installed EDR/agents on NFG-managed hosts.
+- Custom cryptography, customer-controlled KMS in NFG tenancy, or sub-hour DR RTO not supported without exec approval.
+
+Dependencies:
+- Internet connectivity, client firewall rules for VPN/SFTP, accurate IP/cert exchange, validated DPA where personal data is involved.
+
+# 5. Pricing, Fees, and Discounting
+Pricing (USD per month unless noted):
+- ITINF-CORE: Core hosting & security baseline (includes 99.95% uptime, DR Tier 2) — $12,500.00/tenant.
+- SEC-ENH: Enhanced security package (dedicated VPC/VNet, private link, quarterly attestation pack) — $4,000.00.
+- DR-PREM: Upgrade to DR Tier 1 (RPO 15m/RTO 2h) — $6,500.00.
+- NET-VPN: Site-to-site IPsec (up to 2 tunnels, HA) — $1,800.00.
+- SFTP-MGD: Managed SFTP endpoint (HA, up to 5 users) — $750.00; +$50.00/user above 5.
+- LOG-EXPT: Real-time log export (up to 100 GB/day) — $2,000.00; $15.00/GB overage.
+- PEN-ATTST: Annual third-party pen test attestation package — $3,500.00 (one-time).
+
+Discounting Guardrails:
+- Standard discount ceiling: 15% at Sales Manager level.
+- Bundles (3+ products): up to 20% with Deal Desk approval.
+- Strategic deals >$500k ARR: up to 30% with CISO + Finance approval; no discount on LOG-EXPT overage.
+
+Approval Matrix:
+- ≤15% discount: Sales Manager + Deal Desk approval in SFDC (AUTO-APP if margin ≥60%).
+- 16–20% discount: Sales Director + Deal Desk + Finance Ops.
+- 21–30% discount or any custom control: VP Sales + CISO + Legal-Privacy; SNOW task SEC-EXC required.
+- >30% or residency guarantee beyond listed regions: CRO + CISO + General Counsel.
+
+# 6. Deal Desk Workflow
+Steps:
+1) Capture Requirements (Owner: AE)
+   - Complete SFDC Security Requirements fields (Section 8).
+   - Attach client questionnaire (SIG/CAIQ) and DPA draft if applicable.
+   - SLA/DR tier selected; note data residency and connectivity needs.
+
+2) Initial Review (Owner: Deal Desk, SLA: 1 business day)
+   - Validate margin threshold and discount guardrails.
+   - Create SNOW request SEC-REQ with artifacts.
+
+3) Security Assurance Assessment (Owner: Sec Assurance, SLA: 3 business days)
+   - Map client asks to NFG controls; identify gaps.
+   - If exception needed, create SEC-EXC; propose compensating controls.
+
+4) Technical Feasibility (Owner: Infra Services, SLA: 2 business days)
+   - Validate VPN/SFTP parameters, log export capacity, DR tier feasibility.
+
+5) Legal & Privacy (Owner: Legal-Privacy, SLA: 3 business days)
+   - Finalize DPA, SCCs/IDTA if cross-border; review residency commitments.
+
+6) Approval & Term Sheet (Owner: AE + Deal Desk, SLA: 1 business day)
+   - Apply approval matrix; generate mini term sheet (Section 12).
+
+7) Close/Provision (Owner: Customer Onboarding, SLA: 5 business days)
+   - Create SNOW change for provisioning; confirm secrets exchange; schedule DR enrollment.
+
+Escalation Path:
+- Missed SLA or Sev-1 client demand: escalate in order — Deal Desk Lead → Deputy CISO → Head of Infra → CRO.
+
+# 7. Risk and Compliance Disclosures
+Required statements:
+- “NFG maintains SOC2 Type II and ISO-27001; reports available under NDA. We do not provide on-prem software or client-managed keys in our cloud tenancy.”
+- “Data at rest is encrypted with AES-256; in transit with TLS 1.2+. Administrative access is restricted under RBAC and MFA.”
+- “Disaster recovery commitments are as per contracted tier; testing occurs semi-annually with evidence on request.”
+- “Security incidents are communicated per NFG-IR-0003 within 60 minutes of confirmation for Sev-1.”
+
+Policy references:
+- NFG-SEC-17a-4-Archival (records retention).
+- NFG-KYC-0110 (customer data handling).
+- NFG-PRIV-0702 (DPA and cross-border).
+- NFG-VM-1203 (vulnerability management).
+- NFG-LOG-0901 (log retention and export).
+
+# 8. Data and CRM Fields
+Canonical SFDC fields (Object: Opportunity__c > Security_Requirements__c):
+- Data_Residency__c (Picklist: US, EU, CA; Required) — Example: EU
+- Personal_Data__c (Boolean; Required) — Example: true
+- Special_Categories__c (Multi-picklist: Health, Biometrics, None) — Example: None
+- DR_Tier__c (Picklist: Tier1, Tier2, Tier3; Required) — Example: Tier2
+- Connectivity__c (Multi-picklist: SFTP, VPN, Public_API) — Example: SFTP;VPN
+- Log_Export__c (Picklist: None, Batch-24h, Real-time) — Example: Real-time
+- Residency_Binding__c (Boolean) — Example: true
+- Questionnaire_Type__c (Picklist: SIG, CAIQ, Custom) — Example: CAIQ
+- PenTest_Attestation__c (Boolean) — Example: true
+- DPA_Required__c (Boolean; Required if Personal_Data__c = true) — Example: true
+- SCC_IDTA__c (Boolean; Required if Residency = EU and cross-border) — Example: true
+- Uptime_SLA__c (Picklist: 99.9, 99.95) — Example: 99.95
+Validation rules:
+- If Log_Export__c = Real-time then select LOG-EXPT in Products.
+- If Residency_Binding__c = true and Residency = EU, then SCC_IDTA__c must be evaluated.
+
+# 9. Integrations and APIs
+Health Status API:
+- Endpoint: GET https://status.api.nfg.corp/v1/status
+- Response (example):
+{
+  "service": "itinf-core",
+  "region": "us-east-1",
+  "status": "operational",
+  "uptime_30d": 99.97,
+  "last_incident": "2025-09-12T14:05:00Z"
+}
+
+Incident Webhook (client subscription via LOG-EXPT):
+- Endpoint: POST https://hooks.client.example.com/nfg/incidents
+- Request (example):
+{
+  "id": "INC-2025-0912-001",
+  "severity": "SEV-1",
+  "service": "sftp-mgd",
+  "region": "eu-west",
+  "detected_at": "2025-09-12T14:02:15Z",
+  "description": "Connectivity degradation detected",
+  "reference_url": "https://status.nfg.corp/incidents/INC-2025-0912-001",
+  "signature": "HMAC-SHA256 base64..."
+}
+
+SFTP Key Management API:
+- Endpoint: POST https://files.api.nfg.corp/v1/sftp/keys
+- Request:
+{
+  "user": "CUST-98231-sftp1",
+  "public_key": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB... client@example",
+  "allowed_ips": ["203.0.113.10/32", "198.51.100.0/28"]
+}
+- Response:
+{
+  "key_id": "KEY-2025-1003-0007",
+  "status": "active",
+  "fingerprint": "SHA256:af2...xyz",
+  "created_at": "2025-10-03T12:34:45Z"
+}
+
+Log snippet (Splunk export example, PII masked):
+2025-09-12T14:02:15Z sftp-mgd auth INFO user=CUST-98231-sftp1 src_ip=203.0.113.10 result=success
+2025-09-12T14:03:01Z sftp-mgd transfer INFO user=CUST-98231-sftp1 file=batch_2025-09-12.csv size=4.2MB checksum=9f2... masked
+
+# 10. Procedures
+Onboarding — Connectivity and Security Controls
+1) Intake (AE)
+   - Ensure SFDC security fields completed; attach CAIQ/SIG and DPA draft.
+   - Control check: Deal Desk verifies completeness; evidence: SFDC validation logs.
+
+2) Technical Design (Infra)
+   - Confirm VPN/SFTP parameters; exchange IPs and SSH keys via Vault SecureShare.
+   - Control check: Dual control for key activation (NFG-CRY-0201); evidence: SNOW change CHG-2025-10-0007.
+
+3) Provisioning (Infra)
+   - Create tenant (ITINF-CORE), apply baseline security (CIS hardened AMIs, RBAC).
+   - Set DR tier and replication policies.
+   - Control check: Segregation of duties enforced; evidence: SNOW tasks and Terraform plan outputs.
+
+4) Legal Finalization (Legal-Privacy)
+   - Execute DPA, SCCs/IDTA if needed; archive in Archer.
+   - Control check: DPO sign-off for EU data; evidence: Archer record PRIV-2025-EU-114.
+
+5) Client Validation (Support)
+   - Perform connectivity test (VPN failover, SFTP transfer), share status API endpoint.
+   - Control check: Evidence in SNOW test log; client UAT sign-off captured.
+
+Servicing — Incident Communications
+1) Detect (SOC)
+   - Alerts via Splunk/CloudWatch; Sev assignment per NFG-IR-0003.
+
+2) Notify (Support)
+   - For Sev-1/2, send initial comms within 60 minutes using template COMM-IR-01; include status page link.
+
+3) Mitigate (Infra + App teams)
+   - Execute runbooks; if DR failover needed, invoke per NFG-BCP-0004.
+
+4) Post-incident (Security Assurance)
+   - RCA within 5 business days; corrective actions tracked in SNOW PRB.
+
+Exceptions — Security Control Exception
+1) Submit SEC-EXC (AE via Deal Desk)
+   - Describe requested deviation (e.g., client requires TLS 1.3 only).
+
+2) Assess (Security Assurance)
+   - Evaluate risk, propose compensating control (e.g., TLS 1.2 disabled in client VNet only).
+
+3) Approve (CISO/Legal if privacy impact)
+   - Capture approval in SNOW; update term sheet with binding commitments.
+
+4) Implement (Infra)
+   - Execute change; regression testing; evidence attached to SEC-EXC.
+
+# 11. Objection Handling Matrix
+- “Do you support on-prem?”
+  - Response: We operate a secure, audited cloud model with 99.95% uptime and Tier 1/2 DR options. On-prem is not offered; we meet on-prem control outcomes via dedicated VPC/VNet and private link (SEC-ENH).
+- “We need EU-only data storage.”
+  - Response: We provide EU residency with processing and storage confined to Azure West Europe; cross-border blocked unless SCC/IDTA executed. See Section 14.
+- “Can we manage encryption keys?”
+  - Response: We use provider KMS with dual control and key rotation. Customer-managed keys in our tenancy are not supported; we can enforce per-tenant keys and provide audit logs.
+- “Share pen test results.”
+  - Response: We provide third-party attestation letters and executive summaries under NDA (PEN-ATTST). Full reports contain sensitive details and are not distributed.
+- “We need raw logs in our SIEM.”
+  - Response: LOG-EXPT streams via TLS syslog or S3 signed URLs with 1-minute latency. Overage fees apply beyond 100 GB/day.
+
+# 12. Term Sheet Template (Mini)
+Term_Sheet_ID: TS-2025-ITS-0142
+- Customer: CUST-12345 — Arcadia Asset Mgmt
+- Scope: ITINF-CORE, SEC-ENH, DR-PREM, SFTP-MGD (10 users), LOG-EXPT (100 GB/day)
+- Uptime SLA: 99.95% monthly (service credit: 5% MRC per 0.1% below SLA)
+- DR Tier: Tier 1 (RPO 15 min, RTO 2 hours)
+- Data Residency: EU only (Azure West Europe). Cross-border transfers prohibited without SCC/IDTA.
+- Connectivity: SFTP with SSH key-only; IP allowlist: 203.0.113.0/28
+- Logging: Real-time export via TLS syslog to client SIEM
+- Compliance: SOC2 Type II, ISO-27001 attestations under NDA
+- Incident Comms: Sev-1 within 60 minutes; weekly status during remediation
+- Fees: $12,500 (ITINF-CORE) + $4,000 (SEC-ENH) + $6,500 (DR-PREM) + $750 + $250 (5 extra SFTP users) + $2,000 (LOG-EXPT) = $26,000/month
+- Discounts: 15% on bundle (approved by Sales Manager + Deal Desk)
+- Term: 12 months; auto-renew; 60-day termination notice
+- Exceptions: None
+- Sign-offs: Sales Director, Deputy CISO, Legal-Privacy Counsel
+
+Constraints:
+- Any change to residency or DR tier triggers pricing/approval review.
+- Service credits capped at 20% MRC/month; no consequential damages (per MSA).
+
+# 13. KPIs and Dashboards
+Leading indicators:
+- Security Questionnaire Turnaround (target ≤5 business days; owner: Security Assurance).
+- Time to Provision Connectivity (target ≤5 business days; owner: Infra Services).
+- Exception Approval Cycle Time (target ≤7 business days; owner: Deal Desk).
+
+Lagging indicators:
+- Uptime by service (target ≥99.95% core; dashboard: ETS Ops Grafana).
+- MTTR for Sev-1 (target ≤2 hours).
+- Control Test Pass Rate (internal audits; target ≥98%).
+- % Deals with Residency Commitments (monitor risk concentration; owner: Legal-Privacy).
+
+Salesforce Dashboard Widgets:
+- Open SEC-REQ by Stage
+- Deals with DPA Required (count, avg cycle days)
+- LOG-EXPT utilization (GB/day vs cap)
+
+# 14. Regional Variations
+- EU/UK:
+  - Data residency options in Azure West Europe; SCCs/IDTA required for cross-border support/processing.
+  - DPIA may be required for special category data (GDPR Art. 35); DPO sign-off mandatory.
+
+- Canada:
+  - PIPEDA and provincial laws (e.g., Quebec Law 25) may require local storage; Canada Central region available.
+
+- US:
+  - NYDFS-500 for covered entities; enhanced logging retention (7 years for audit artifacts under NFG-SEC-17a-4-Archival).
+
+- APAC:
+  - MAS-TRM-aligned controls documented; no local residency regions offered; use standard cross-border mechanisms and client consent.
+
+Note: Where regional commitments conflict, the stricter standard applies. See also: NFG-DATA-0009 (Data Residency and Sovereignty).
+
+# 15. References
+Internal policies:
+- NFG-SEC-17a-4-Archival — Records Retention and Immutable Storage
+- NFG-CRY-0201 — Cryptographic Key Management and Dual Control
+- NFG-IR-0003 — Incident Response and Client Communications
+- NFG-BCP-0004 — Business Continuity and DR Testing
+- NFG-LOG-0901 — Log Collection, Retention, and Export
+- NFG-IDM-1002 — Identity and Access Management
+
+Related docs:
+- NFG-DS-0012 — Data Protection Enablement Guide (See also)
+- NFG-LEGAL-0031 — Data Processing Addendum (DPA) Playbook
+- NFG-BCP-0004 — DR/BCP Client Talking Points
+- NFG-DATA-0009 — Data Residency and Sovereignty Matrix (See also)
+
+# 16. Change log
+- 1.0.0 (2025-10-03): Initial publication covering SLAs, DR tiers, pricing, approval matrix, deal workflow, APIs, and regional variations.
+
+Key takeaways: Lead with our audited security posture, clear SLAs (99.95% uptime, Tiered RPO/RTO), and flexible connectivity (VPN/SFTP) while capturing requirements in SFDC. Use the approval matrix for discounts and route any custom control or residency requests through Deal Desk and Security Assurance. For EU/CA residency, involve Legal-Privacy early. Continuous logging and incident comms are available; avoid promising on-prem or client-managed keys.

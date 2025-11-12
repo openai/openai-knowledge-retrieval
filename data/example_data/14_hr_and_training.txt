@@ -1,0 +1,471 @@
+---
+doc_id: NFG-HR-TRN-0007
+doc_type: Playbook
+title: HR and Training Enablement for Frontline Revenue Teams
+business_unit: Global Retail & Institutional Sales
+audience:
+  - Advisors
+  - Sales Executives
+  - Relationship Managers (RMs)
+  - Underwriters
+  - Client Support Specialists
+owners:
+  - name: Priya Desai
+    title: Director, Sales Enablement
+    email: priya.desai@nfg.com
+  - name: Marcus O’Neil
+    title: HR Business Partner (HRBP), Sales & Distribution
+    email: marcus.oneil@nfg.com
+owner_dept: Sales Enablement & HRBP Office
+tags:
+  - training
+  - HR
+  - enablement
+  - certification
+  - LMS
+  - onboarding
+  - compliance
+search_terms:
+  - LearnHub
+  - certification status
+  - external training budget
+  - LMS API
+  - training request
+  - continuing education
+  - advisor licensing
+regions:
+  - US
+  - CA
+  - UK
+  - EU
+  - SG
+  - AU
+regulatory_scope:
+  - NFG-TRN-1001-Training-and-Certification
+  - NFG-SEC-17a-4-Archival
+  - NFG-KYC-0110
+  - NFG-GDPR-0200
+  - NFG-MiFIDII-0405
+created_at: 2025-10-03
+updated_at: 2025-10-03
+effective_date: 2025-10-15
+review_cadence: Quarterly
+last_reviewed_by: Compliance Ops (COE-Training)
+approvals:
+  - CRO Office
+  - HR Governance Council
+  - Regional Compliance Leads
+version: 1.0.0
+visibility: Employee
+confidentiality: Internal
+systems:
+  - LearnHub LMS
+  - PeopleBridge HRIS
+  - ApexCRM
+  - DocVault (Archive)
+  - ServiceGate (Ticketing)
+  - KeyShield SSO
+  - DataBus (Event Stream)
+product_codes:
+  - ENBL-TRN-001
+  - ENBL-TRN-EXT-002
+related_docs:
+  - NFG-COM-0009
+  - NFG-SEC-BCP-0021
+  - NFG-SALES-PRC-0012
+  - NFG-IT-IDM-0004
+canonical_url: https://kb.nfg.com/playbooks/NFG-HR-TRN-0007
+---
+
+# 1. Quick Reference (TL;DR)
+
+- Who: Frontline advisors, sales, RMs, underwriters, support needing onboarding, certifications, or training access; managers approving budgets and exceptions.
+- What: Enroll, certify, and track training in LearnHub; update certification status in ApexCRM automatically; request external training via ServiceGate.
+- When:
+  - Onboarding modules: within 10 business days of start date.
+  - Mandatory annual compliance training: by 2025-12-15.
+  - Product enablement: prior to pitching or binding policies.
+- Where:
+  - LearnHub: https://learnhub.nfg.com
+  - Training Requests: ServiceGate > HR & Training > Training Request
+  - Certification status: ApexCRM > User Profile > Certifications tab.
+- SLAs:
+  - Training enrollment requests triaged in 1 business day; fulfilled in 3 business days.
+  - External training budget approval: 5 business days.
+  - Certification sync to CRM: near-real-time (<15 minutes).
+  - LMS incident RTO: 4 hours; RPO: 0 hours (active-active).
+- Do:
+  - Complete “NFG Sales Ethics (TRN-COMP-100)” before client meetings.
+  - Use approved scripts for licensing disclosures.
+  - Attach completion certificates to DocVault using the provided naming standard.
+- Don’t:
+  - Pitch restricted products without the product certification badge in ApexCRM.
+  - Self-fund external training and seek reimbursement without pre-approval.
+  - Share LMS credentials or bypass SSO.
+
+# 2. Customer Personas and Use Cases
+
+- Advisor (Retail/Wealth)
+  - Needs: Licensing modules, product training, annual compliance.
+  - Use cases: Pre-appointment prep, continuing education credits (CE), new product launch readiness.
+  - Fit: Assigned to a client-facing cost center; active in ApexCRM.
+
+- Relationship Manager (Institutional)
+  - Needs: Complex product enablement, cross-border rules, confidentiality modules.
+  - Use cases: RFP response prep, solutioning workshops, renewal cycles.
+  - Fit: Handles accounts in multiple regions; requires MiFID II awareness.
+
+- Underwriter
+  - Needs: Risk policy updates, underwriting guidelines modules.
+  - Use cases: New line addition, model change reviews, delegated authority refreshers.
+  - Fit: Assigned to Underwriting BU with mandatory periodic recertification.
+
+- Client Support Specialist
+  - Needs: Systems training (ApexCRM, ServiceGate), escalation protocols.
+  - Use cases: Case handling, SLA management, documentation standards.
+  - Fit: Support org with KPI-linked training tracks.
+
+Non-fit indicators:
+- Contractors without NFG email or KeyShield SSO (use NFG-HR-TRN-EXT-002 contractor pathway).
+- Regions under training freeze window due to regulatory audits (check Regional Variations).
+
+# 3. Qualification and Discovery Questions
+
+BANT/CHAMP prompts:
+- Budget: Do you have a cost center and confirmed budget for external courses? What’s the maximum per learner?
+- Authority: Who approves training requests? Manager only, or HRBP and Compliance too?
+- Need: Which certification is gating your current pipeline (e.g., FI-Structured Credit L2)?
+- Timing: What’s your deadline relative to client meetings or renewal dates?
+- Challenges: Any past issues with course access, SSO, or content localization?
+- Metrics: Which KPIs will improve (win rate, time-to-first-meeting, policy bind rate)?
+- Red flags:
+  - Request to waive mandatory compliance modules.
+  - Mismatch between requested training and role/region (e.g., US annuities for UK-only RM).
+  - Attempt to book external vendor training without internal equivalent justification.
+
+# 4. Product/Policy Overview
+
+Capabilities:
+- LearnHub LMS delivers courses, tracks completion, issues digital badges.
+- ApexCRM auto-updates certification badges via LearnHub webhook events.
+- ServiceGate workflow for internal/external training requests with approval routing.
+- DataBus streams training events for dashboards in InsightView.
+
+Limitations:
+- No offline completions; all must be tracked in LearnHub or uploaded proof to DocVault.
+- External vendor CE credits require pre-approved mapping (HR-CAT-CE Map v3).
+- Language support: EN default; DE/FR/ES available for core compliance only.
+
+Dependencies:
+- KeyShield SSO for access; PeopleBridge HRIS must have active job profile and region.
+- DocVault retention enforced per NFG-SEC-17a-4-Archival (7 years).
+
+Definitions:
+- LMS: Learning Management System (LearnHub).
+- CE: Continuing Education credits.
+- Badge: Digital certification marker displayed in ApexCRM.
+- RTO/RPO: Recovery Time Objective / Recovery Point Objective.
+
+# 5. Pricing, Fees, and Discounting
+
+Internal training (ENBL-TRN-001):
+- Cost: $0 (internal chargeback applied to enablement budget).
+- CE credits: Included where available.
+
+External training (ENBL-TRN-EXT-002):
+- Baseline fee per learner: $1,200.00.
+- Volume tiers:
+  - 10–24 learners: $1,050.00 per learner.
+  - 25–49 learners: $950.00 per learner.
+  - 50+ learners: $825.00 per learner.
+- Add-ons:
+  - Localization: +$250.00 per language.
+  - Exam voucher: +$300.00 per voucher.
+
+Discounting guardrails:
+- Max discretionary discount: 10% by Manager.
+- 11–20% requires Regional Director approval.
+- >20% requires HRBP and Compliance sign-off with business case.
+
+Approval Matrix (External Training and Exceptions):
+- Level 1: Manager — Up to $5,000 total, ≤10% discount, SLA 2 business days.
+- Level 2: Regional Director — Up to $25,000, ≤20% discount, SLA 3 business days.
+- Level 3: HRBP + Compliance — Any amount, >20% discount, or regulatory-impacted content, SLA 5 business days.
+- Level 4: CRO Office — Exceptions to mandatory internal-first rule, SLA 7 business days.
+
+# 6. Deal Desk Workflow
+
+This workflow governs training requests and certification gates for deal readiness.
+
+Steps:
+1) Submit Request
+- System: ServiceGate > Form “TRN-Request-01”
+- Required artifacts: Business need statement, target date, course link (if external), cost center.
+- SLA: Ticket acknowledgment within 1 business day.
+- Control: Requester must be listed in PeopleBridge with active role.
+
+2) Eligibility Check
+- Owner: Sales Enablement Ops
+- Checks: Role-region fit, internal equivalent availability, CE mapping.
+- Evidence: Eligibility checklist attached to ticket.
+- Outcome: Approved to proceed or redirected to internal course.
+
+3) Budget and Approval Routing
+- System: ServiceGate auto-routes per Approval Matrix.
+- Control: Discounts above threshold trigger HRBP/Compliance step.
+- SLA: As per Approval Matrix.
+
+4) Enrollment and Provisioning
+- System: LearnHub course enrollment; KeyShield SSO verification.
+- Evidence: Enrollment confirmation (ENR-ID).
+- SLA: 3 business days from final approval.
+
+5) Completion Capture and CRM Sync
+- System: LearnHub webhook to ApexCRM; DocVault archival.
+- Control: Completion event must include Course Code, Learner ID, Timestamp.
+- SLA: CRM badge update <15 minutes; DocVault archival end-of-day batch.
+
+6) Exception Handling
+- Use Case: Missed deadline, course unavailability, LMS incident.
+- Escalation: Tier 1 Enablement Ops > Tier 2 HRBP > Tier 3 Compliance > Tier 4 CRO.
+- SLA: Workaround plan within 24 hours.
+
+7) Close and Measure
+- Artifact: Post-training survey; KPI baseline vs. post metrics.
+- Evidence: InsightView dashboard updated within 2 business days.
+
+# 7. Risk and Compliance Disclosures
+
+Required talk track for client-facing use:
+- “I am certified to discuss [Product] under NFG policy NFG-TRN-1001. If your needs involve products outside my certification, I will bring in a licensed specialist.”
+
+Paperwork and digital:
+- Include certification badge screenshot or ID in RFP responses where requested.
+- Add DocVault reference ID in proposal footers for regulated product advice.
+- Disclosures must be stored per NFG-SEC-17a-4-Archival for 7 years.
+
+Prohibited:
+- Advising on products without current badge in ApexCRM.
+- Claiming CE credits without LearnHub or approved DocVault proof.
+
+# 8. Data and CRM Fields
+
+Canonical fields (ApexCRM > User Profile > Certifications):
+
+- learner_id (string, required): PeopleBridge Employee ID, e.g., PB-009876.
+- course_code (string, required): e.g., TRN-COMP-100.
+- course_name (string): e.g., Sales Ethics and Conduct.
+- completion_status (enum): NOT_STARTED | IN_PROGRESS | COMPLETED | EXPIRED.
+- completion_date (date): YYYY-MM-DD, e.g., 2025-11-30.
+- expiry_date (date): YYYY-MM-DD, based on course policy.
+- badge_id (string): e.g., BADGE-2025-13456.
+- ce_credits (decimal(4,1)): e.g., 3.0.
+- region_scope (enum): US | CA | UK | EU | SG | AU.
+- verifier (string): Email of approver, e.g., priya.desai@nfg.com.
+- docvault_ref (string): e.g., DV-TRN-2025-000112.
+- source_system (enum): LEARNHUB | MANUAL_UPLOAD.
+- last_synced_at (datetime): ISO8601, e.g., 2025-10-03T10:14:22Z.
+
+Validation rules:
+- completion_status = COMPLETED requires completion_date and badge_id.
+- expiry_date must be >= completion_date.
+- region_scope must include user’s PeopleBridge region.
+- MANUAL_UPLOAD requires docvault_ref.
+
+Example record:
+{
+  "learner_id": "PB-009876",
+  "course_code": "TRN-PROD-FI-L2",
+  "course_name": "Fixed Income Structured Credit L2",
+  "completion_status": "COMPLETED",
+  "completion_date": "2025-10-01",
+  "expiry_date": "2026-10-01",
+  "badge_id": "BADGE-2025-77190",
+  "ce_credits": 4.0,
+  "region_scope": "US",
+  "verifier": "marcus.oneil@nfg.com",
+  "docvault_ref": "DV-TRN-2025-000145",
+  "source_system": "LEARNHUB",
+  "last_synced_at": "2025-10-01T14:12:09Z"
+}
+
+# 9. Integrations and APIs
+
+LearnHub to ApexCRM Webhook:
+- Endpoint: https://api.apexcrm.nfg.com/v1/training/completions
+- Auth: HMAC with KeyShield service token (kid: KH-TRN-01).
+- Event payload (example):
+{
+  "event_id": "EVT-TRN-2025-003421",
+  "event_type": "COURSE_COMPLETED",
+  "learner_id": "PB-009876",
+  "course_code": "TRN-COMP-100",
+  "badge_id": "BADGE-2025-55321",
+  "completion_timestamp": "2025-10-02T16:11:00Z",
+  "region_scope": "US",
+  "ce_credits": 2.0,
+  "docvault_ref": "DV-TRN-2025-000131",
+  "signature": "b64(hmac)"
+}
+
+Response (success):
+{
+  "status": "ok",
+  "crm_record_id": "CRM-CERT-100334"
+}
+
+Error patterns:
+- 400 INVALID_REGION: region_scope mismatch with PeopleBridge.
+- 409 DUPLICATE_EVENT: event_id already processed.
+- 422 EXPIRED_COURSE: completion timestamp outside course validity window.
+
+ServiceGate API for Request Status:
+- GET https://servicegate.nfg.com/api/v2/tickets/{ticket_id}
+- Returns SLA timers, approval stage, and assigned owner.
+
+DataBus Events:
+- Topic: nfg.training.completions.v1
+- Consumers: InsightView dashboards, Compliance Monitor.
+
+# 10. Procedures
+
+A) Onboarding Training
+1. Manager creates PeopleBridge profile and assigns job role and region.
+2. HR triggers LearnHub auto-enrollment for mandatory modules (TRN-COMP-100, TRN-INFOSEC-101, TRN-AML-110).
+3. Learner completes modules within 10 business days.
+4. Control check: Compliance Ops reviews 5% sample weekly; evidence logged in DocVault (DV-TRN-AUDIT-YYYY).
+5. Badge appears in ApexCRM; verify completion_status = COMPLETED.
+6. Escalate overdue items (>10 business days) to Manager and HRBP.
+
+B) Product Certification Prior to Deal
+1. Identify required certification based on product in ApexCRM opportunity.
+2. Search LearnHub for course code; enroll if not already assigned.
+3. Complete course and exam; ensure badge_id issued.
+4. Verify badge present on user profile in ApexCRM.
+5. Control: No product pitch until badge visible. Evidence: Screenshot attached to opportunity under “Compliance Docs”.
+6. If badge missing after 15 minutes, raise ServiceGate “TRN-Sync” incident; SLA 4 hours.
+
+C) External Training Request
+1. Submit ServiceGate TRN-Request-01 with:
+   - Business case tied to opportunity ID or account plan.
+   - Vendor link, syllabus, fees, dates.
+   - CE mapping if applicable.
+2. Enablement Ops checks for internal equivalent; if exists, reject external unless exception requested.
+3. Approval routing per matrix; track in ServiceGate.
+4. Upon approval, PO raised by Procurement; enroll learners.
+5. After completion, upload certificate to DocVault; set docvault_ref on CRM certification record.
+6. Control check: Finance reconciles PO vs. attendance; discrepancies escalated to HRBP.
+
+D) Exceptions (Regulatory or Urgent)
+1. If regulatory deadline imminent (<10 days) and course unavailable, open “TRN-Exception-02”.
+2. Provide client impact and dollar risk estimate.
+3. Compliance reviews and may authorize temporary supervised activity.
+4. Evidence: Supervision plan uploaded to DocVault; expiry date enforced.
+5. RTO: Plan issued within 24 hours; RPO: 0 hours (use current records only).
+
+# 11. Objection Handling Matrix
+
+- Objection: “I don’t have time for training before my client meeting.”
+  Response: “We can fast-track the essential module (90 minutes) and your badge syncs to CRM within 15 minutes. It’s required under NFG-TRN-1001; I’ll schedule a slot today and notify your manager.”
+
+- Objection: “External vendor is better than internal content.”
+  Response: “We prioritize vetted internal modules mapped to our policies. If the external course adds unique CE value, submit TRN-Request-01; we can approve within 5 business days with a clear business case.”
+
+- Objection: “The course isn’t in my language.”
+  Response: “Core compliance is available in DE/FR/ES. For product tracks, we can add localization in 10 business days with approval; there’s a $250 localization add-on per language.”
+
+- Objection: “I completed the course but no badge in CRM.”
+  Response: “Sync is near-real-time. If it exceeds 15 minutes, I’ll log a TRN-Sync incident. We’ll meet the 4-hour RTO and can provide a DocVault proof for interim use.”
+
+# 12. Term Sheet Template (Mini)
+
+Training Agreement — Internal/External
+
+- Agreement ID: TRN-AGR-2025-00XXX
+- Learner(s): PB-IDs list (comma-separated)
+- Manager: Name, Email
+- Course Type: INTERNAL | EXTERNAL
+- Course Code/Name: e.g., TRN-PROD-FI-L2 / Fixed Income Structured Credit L2
+- Vendor (if external): Name, URL
+- Dates: Start YYYY-MM-DD, End YYYY-MM-DD
+- Fees:
+  - Unit Price: $X,XXX.XX
+  - Quantity: N
+  - Discounts: X%
+  - Total: $XX,XXX.XX
+- CE Credits: X.X (mapped Y/N)
+- Region Scope: US | CA | UK | EU | SG | AU
+- Approvals:
+  - Manager (sign/date)
+  - Regional Director (if applicable)
+  - HRBP
+  - Compliance
+- SLAs:
+  - Enrollment: 3 business days post-approval
+  - Badge Sync: <15 minutes post-completion
+- Evidence:
+  - DocVault Refs: DV-TRN-YYYY-XXXXX (agreement, completion)
+- Constraints:
+  - Internal-first rule unless exception approved by CRO Office.
+  - Badge required prior to client interactions for regulated products.
+
+# 13. KPIs and Dashboards
+
+Leading indicators:
+- Time-to-Certification (median): Target ≤ 7 days from request to completion. Owner: Enablement Ops.
+- Enrollment SLA adherence: Target ≥ 95% within 3 business days. Owner: HRBP Ops.
+- Pre-meeting readiness (badge present before client meeting): Target ≥ 98%. Owner: Sales Managers.
+
+Lagging indicators:
+- Win rate uplift post-certification: +5% within 90 days. Owner: Sales Analytics.
+- Policy bind rate for certified reps vs. non-certified: +8% differential. Owner: Underwriting Ops.
+- Compliance exceptions issued: ≤ 2 per quarter. Owner: Compliance Ops.
+
+Dashboards:
+- InsightView > Training Readiness: by region, role, product.
+- ApexCRM > Certification Coverage: account and opportunity overlays.
+- Finance > Training Spend vs. Budget: variance ±5%.
+
+# 14. Regional Variations
+
+US:
+- AML/CTF modules TRN-AML-110 mandatory annually.
+- CE credits reported to FIN-ED registries via LearnHub integration.
+
+EU/UK:
+- MiFID II conduct training TRN-MIFID-200 required for advisors and RMs selling investment products.
+- GDPR refresher TRN-GDPR-201 annually; data processing quiz included.
+
+CA:
+- Provincial licensing differences; track region_scope = CA and province in PeopleBridge.
+- French language support prioritized for QC.
+
+SG/AU:
+- Cross-border selling rules TRN-CB-130 mandatory; localization available EN only at launch.
+
+Audit windows:
+- Training freezes 2 weeks pre-regulatory audit; exceptions require Compliance sign-off.
+
+See also: NFG-COM-0009 (Compliance Training Catalog) for product-specific regional modules.
+
+# 15. References
+
+Internal policies:
+- NFG-TRN-1001-Training-and-Certification
+- NFG-SEC-17a-4-Archival
+- NFG-KYC-0110
+- NFG-GDPR-0200
+- NFG-MiFIDII-0405
+- NFG-IT-IDM-0004 (Identity and Access)
+- NFG-SEC-BCP-0021 (Business Continuity for SaaS)
+
+Related docs:
+- NFG-COM-0009 — Compliance Training Catalog
+- NFG-SALES-PRC-0012 — Product Launch Readiness Runbook
+- NFG-SEC-BCP-0021 — LearnHub & ApexCRM BCP Procedures
+
+# 16. Change log
+
+- 1.0.0 (2025-10-03): Initial release covering onboarding, certification sync, external training approvals, APIs, KPIs, and regional rules.
+
+Key takeaways: Use LearnHub for all training; ensure badges appear in ApexCRM before client or underwriting activities; route external training via ServiceGate with the provided approval matrix and SLAs. Keep evidence in DocVault, monitor KPIs in InsightView, and escalate sync or access issues immediately to meet the 4-hour RTO and protect deals.

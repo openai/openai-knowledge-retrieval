@@ -1,0 +1,465 @@
+---
+doc_id: NFG-INS-0007
+doc_type: Enablement Playbook
+title: Insurance Offerings — Product, Pricing, and Deal Desk Guide
+business_unit: Retail & Commercial Insurance
+audience: Frontline Advisors, Sales, Relationship Managers (RMs), Underwriters, Support
+owners:
+  - Priya Desai (Director, Insurance Product)
+  - Marcus Lee (Head of Deal Desk)
+owner_dept: Insurance Product & Deal Desk
+tags:
+  - insurance
+  - life
+  - disability
+  - critical-illness
+  - underwriting
+  - pricing
+  - deal-desk
+search_terms:
+  - term life
+  - whole life
+  - disability insurance
+  - critical illness
+  - key person
+  - quote API
+  - underwriting rules
+regions:
+  - US
+  - CA
+  - UK
+  - EU
+  - APAC-SG
+regulatory_scope:
+  - NFG-KYC-0110
+  - NFG-SUIT-0201 (Suitability Assessment)
+  - NFG-AML-1005
+  - NFG-SEC-17a-4-Archival
+  - NAIC Model Regs (US)
+  - FCA ICOBS (UK)
+  - OSFI LICAT (CA)
+  - GDPR (EU)
+created_at: 2025-10-03
+updated_at: 2025-10-03
+effective_date: 2025-10-10
+review_cadence: Quarterly
+last_reviewed_by: Compliance (A. Chen), Risk (D. Novak)
+approvals:
+  - SVP Insurance (J. Morales)
+  - Chief Compliance Officer (L. Ortega)
+version: 1.0.0
+visibility: Internal
+confidentiality: Internal
+systems:
+  - Atlas CRM
+  - Aegis PAS (Policy Admin)
+  - Mercury Billing
+  - Helios DMS (Document Mgmt)
+  - Orion Data Lake
+  - Janus API Gateway
+  - Hermes ESB
+  - Zephyr CCaaS (Telephony)
+product_codes:
+  - INS-PTL
+  - INS-WL
+  - INS-DI
+  - INS-CI
+  - INS-KP
+related_docs:
+  - NFG-UND-0012
+  - NFG-AML-1005
+  - NFG-PRC-0031
+  - NFG-CRM-0200
+canonical_url: https://kb.nfg.local/insurance/offerings
+---
+
+# 1. Quick Reference (TL;DR)
+
+- Who this is for: Advisors, RMs, Underwriters, and Support selling/servicing NFG life and health protection.
+- What we offer:
+  - INS-PTL: Personal Term Life (10/20/30-year)
+  - INS-WL: Whole Life with cash value
+  - INS-DI: Disability Income (own-occupation)
+  - INS-CI: Critical Illness (lump-sum)
+  - INS-KP: Key Person (business)
+- Core SLAs:
+  - Instant quotes ≤3s API; 95th percentile ≤5s.
+  - Underwriting decision: Simplified ≤1 business day; Full UW ≤5 business days.
+  - Policy issuance after acceptance: ≤2 business days.
+  - Claims first response: ≤1 business day; resolution target ≤10 business days (non-contested).
+- Do:
+  - Capture income, smoking status, and beneficiary data in Atlas CRM before quote submission.
+  - Use pricing guardrails; escalate discounts beyond thresholds.
+  - Provide mandated disclosures (see Section 7).
+- Don’t:
+  - Promise coverage or rates prior to UW decision.
+  - Email PHI without Helios DMS secure link.
+- Escalations: Deal Desk via Slack #deal-desk-insurance and ticket DD-INS within 2 hours response; underwriting escalations to UW Duty Officer.
+
+# 2. Customer Personas and Use Cases
+
+- Individuals (US/CA/UK/EU)
+  - Young families seeking low-cost protection (INS-PTL 20/30).
+  - High earners seeking estate planning (INS-WL).
+  - Professionals requiring income protection (INS-DI).
+- SMEs (10–250 employees)
+  - Protect against loss of key revenue drivers (INS-KP).
+  - Offer voluntary benefits (INS-CI group add-on).
+- Financial sponsor-backed founders
+  - Collateral assignment for loans; layering INS-PTL and INS-KP.
+- Eligibility Fit
+  - Ages 18–70 (product-specific caps).
+  - Stable income documentation for INS-DI.
+  - Businesses operating ≥2 years for INS-KP.
+- Non-Fit
+  - High-risk occupations for certain products (e.g., offshore rig workers for DI).
+  - Residents in embargoed countries (NFG-AML-1005).
+  - Applicants with recent (≤12 months) major diagnoses for CI.
+
+# 3. Qualification and Discovery Questions
+
+- Budget, Authority, Need, Timeline (BANT)
+  - Budget: “What monthly premium range are you comfortable with?” (target ratio ≤2% of net income)
+  - Authority: “Who else will sign the application/consent?”
+  - Need: “Primary purpose—income replacement, estate planning, business continuity?”
+  - Timeline: “Do you need coverage effective by a specific date (e.g., loan closing)?”
+- Health and Lifestyle (do not diagnose)
+  - “Tobacco use in last 12 months?”
+  - “Family history of early cardiac/cancer deaths?”
+  - “Hazardous hobbies (aviation, diving, motorsports)?”
+- Financial
+  - “Annual income and liabilities?” (for DI benefit sizing)
+  - “Business revenue trend last 2 years?” (INS-KP)
+- Red Flags
+  - Mismatch between requested face amount and insurable interest.
+  - Multiple concurrent applications at different carriers.
+  - Incomplete identity docs (KYC failure risk).
+
+# 4. Product/Policy Overview
+
+- INS-PTL (Personal Term Life)
+  - Terms: 10/20/30 years; face amount $100,000–$5,000,000.
+  - Riders: Accelerated Death Benefit (ADB), Waiver of Premium (WOP).
+  - Limitations: Rates step-up on renewal; conversion to INS-WL available before final 5 years.
+- INS-WL (Whole Life)
+  - Permanent coverage; guaranteed cash value with participating dividends (non-guaranteed).
+  - Face amount $50,000–$3,000,000; policy loans up to 90% cash value, APR 6.00%.
+- INS-DI (Disability Income)
+  - Benefit: 60% of gross monthly income up to $15,000/month, elimination 60/90/180 days.
+  - Own-occupation definition for first 24 months; then reasonable occupation.
+  - Exclusions: Pre-existing conditions lookback 12/12.
+- INS-CI (Critical Illness)
+  - Lump sum $25,000–$500,000 for covered conditions (cancer, MI, stroke).
+  - 30-day survival period; one-time payout.
+- INS-KP (Key Person)
+  - For SMEs to cover loss of key executives; face $250,000–$10,000,000.
+  - Requires financial justification (10x–15x key person’s contribution).
+- Dependencies
+  - Aegis PAS for issuance, Mercury Billing for premium, Helios DMS for e-sign, Atlas CRM for prospecting.
+  - MIB and Rx checks via Hermes ESB; medical exams via Medix partner.
+
+# 5. Pricing, Fees, and Discounting
+
+Pricing is risk-based: age, sex, smoking, health class (Preferred Plus, Preferred, Standard, Substandard A–D), and riders.
+
+Pricing Table (illustrative, US region, monthly premiums)
+
+- INS-PTL 20-year, $500,000 face:
+  - Male, 35, Preferred: $28.30; Standard: $41.75
+  - Female, 35, Preferred: $24.10; Standard: $35.20
+- INS-WL $250,000 face:
+  - Male, 45, Standard: $315.50; Preferred: $287.90 (dividends not guaranteed)
+- INS-DI $8,000/month benefit, 90-day elimination:
+  - Age 40, White-collar: $126.40; Blue-collar: $182.75
+- Fees
+  - Policy fee: $4.00/month (all products)
+  - Rider fees: WOP +$0.10 per $1,000 face; ADB included.
+
+Discounting Guardrails
+
+- Standard advisor discretionary discount (D-1): up to 5% first-year premium (not fees).
+- Strategic deal discount (D-2): 6–12% with Deal Desk approval.
+- Enterprise partner program (D-3): up to 15% for group/affinity ≥100 members; requires VP Sales + Compliance approval.
+- Prohibited: Discounting beyond 15%, or differential pricing based on prohibited characteristics (NFG-FAIR-0102).
+
+Approval Matrix
+
+- Level L1: Up to 5% — Advisor + RM self-approval; log in Atlas CRM DiscountReason.
+- Level L2: >5% to 12% — Deal Desk Manager (DDM) approval; ticket DD-INS; SLA 8 business hours.
+- Level L3: >12% to 15% — VP Sales + Compliance Officer sign-off; SLA 2 business days.
+- Level L4: Any exception to underwriting class or fee waiver — Chief Underwriter + Legal; SLA 3 business days.
+
+# 6. Deal Desk Workflow
+
+Steps
+
+1) Qualify in Atlas CRM
+- Create Opportunity with Stage=“Discovery”, Segment=Individual/SME, ProductCode(s).
+- Required artifacts: KYC docs, Needs Analysis form NA-INS-2025, preliminary quote PDF.
+
+2) Submit Discount Request (if any)
+- Create DD-INS ticket via Portal; attach quote, rationale, competitive intel.
+- SLA: initial response ≤2 business hours; resolution per Approval Matrix.
+
+3) Underwriting Intake
+- Trigger UW via Atlas “Submit to UW” button; pushes to Aegis PAS with applicant data.
+- Control check: Automated KYC (NFG-KYC-0110) and AML screening via Hermes.
+
+4) Decision and Offer
+- UW classification returned to Atlas; generate Term Sheet (Section 12).
+- Evidence: UW decision ID UW-DEC-2025-#### stored in Helios DMS.
+
+5) Client Acceptance & E-sign
+- Send e-sign via Helios; collect ACH/CC for initial premium.
+- Control: Payment tokenization PCI-SEG-004; no card data in CRM notes.
+
+6) Issue Policy
+- Aegis PAS issues; Mercury Billing enrolls auto-pay; policy number POL-YYYY-#######.
+- SLA: issuance ≤2 business days post-acceptance.
+
+7) Handoff to Support
+- Create Service Record SRV-INS-####; schedule 30/180-day check-ins.
+
+Escalation Path
+
+- Pricing stalemate: DDM → VP Sales.
+- UW delay > SLA: UW Duty Officer (pager x7777), then Chief Underwriter.
+- System outage: Janus API Incident Bridge; RTO 2 hours, RPO 15 minutes; comms via StatusPage.
+
+# 7. Risk and Compliance Disclosures
+
+- Mandatory Statements (verbatim)
+  - “Premiums and benefits are subject to underwriting approval. Rates are not guaranteed until policy issuance.”
+  - “Dividends for participating whole life are not guaranteed.”
+  - “This is a solicitation of insurance. A licensed agent may contact you.”
+  - “We collect and process personal data in accordance with NFG Privacy Policy and GDPR where applicable.”
+- Suitability and Replacement
+  - Complete Suitability checklist SUIT-CK-0201 for replacements; provide state-specific forms (US).
+- Recordkeeping
+  - Store all sales communications in Helios DMS per NFG-SEC-17a-4-Archival (7-year minimum).
+- AML/KYC
+  - ID verification prior to binding; screen against sanctions lists (OFAC, HMT).
+
+# 8. Data and CRM Fields
+
+Canonical Fields in Atlas CRM (Opportunity + Applicant)
+
+- Opportunity
+  - OpportunityID (string, required) e.g., OPP-2025-004512
+  - Stage (enum: Discovery, UW, Offer, Accepted, Issued, Lost)
+  - ProductCodes (array) e.g., ["INS-PTL","INS-WL"]
+  - Region (enum: US, CA, UK, EU, APAC-SG)
+  - DiscountRequested (decimal, 0–0.15)
+  - DealDeskTicketID (string) e.g., DD-INS-001234
+- Applicant
+  - ApplicantID (string) e.g., APP-2025-0001
+  - FirstName/LastName (string)
+  - DOB (date, must be 18–70) e.g., 1987-06-12
+  - SSN/NIN (masked; store last4 only) e.g., ***-**-1234
+  - SmokingStatus (enum: Non, Occasional, Daily)
+  - OccupationCode (NAICS/SOC mapping)
+  - AnnualIncome (currency) e.g., $165,000.00
+  - BeneficiaryType (enum: Individual, Trust, Business)
+  - HealthClass (enum; post-UW) e.g., Preferred
+- Policy
+  - PolicyNumber (string) e.g., POL-2025-0012345
+  - FaceAmount (currency) e.g., $500,000.00
+  - TermLength (integer, years) e.g., 20
+  - Riders (array) e.g., ["ADB","WOP"]
+  - PremiumMonthly (currency) e.g., $28.30
+Validation Rules
+
+- FaceAmount must not exceed 20x annual income for INS-PTL unless UW override.
+- INS-DI benefit ≤60% income; hard stop in Janus API.
+- PII fields encrypted at rest (AES-256); no full SSN in free-text fields.
+
+# 9. Integrations and APIs
+
+Endpoints (Janus API Gateway)
+
+- Quote API: POST /v1/insurance/quotes
+  - Request (PII masked)
+  {
+    "productCode": "INS-PTL",
+    "region": "US",
+    "applicant": {
+      "dob": "1987-06-12",
+      "sex": "M",
+      "smoker": false,
+      "income": 165000
+    },
+    "faceAmount": 500000,
+    "termYears": 20,
+    "riders": ["ADB","WOP"]
+  }
+  - Response
+  {
+    "quoteId": "Q-2025-009876",
+    "monthlyPremium": 28.3,
+    "healthClass": "Preferred-Indicative",
+    "expiresAt": "2025-10-17T00:00:00Z",
+    "warnings": []
+  }
+
+- Underwriting Submit: POST /v1/underwriting/cases
+  - Request
+  {
+    "quoteId": "Q-2025-009876",
+    "applicantId": "APP-2025-0001",
+    "consents": ["MIB","Rx","E-Sign"],
+    "attachments": ["dms://helio/NA-INS-2025-APP-2025-0001.pdf"]
+  }
+  - Response
+  { "uwCaseId": "UW-2025-000432", "status": "InReview" }
+
+- Policy Issued Webhook (to Atlas)
+  - Event: policy.issued
+  - Payload
+  {
+    "policyNumber": "POL-2025-0012345",
+    "uwCaseId": "UW-2025-000432",
+    "premiumMonthly": 28.3,
+    "billingAccountId": "BA-2025-556677",
+    "effectiveDate": "2025-10-20"
+  }
+
+SLOs and Error Patterns
+
+- SLO: 99.9% Quote API availability; max latency p95 500ms internal.
+- Common errors:
+  - 422 POLICY_LIMIT_EXCEEDED — FaceAmount>20x income (INS-PTL).
+  - 409 DUPLICATE_CASE — existing open UW case for applicant.
+  - 403 CONSENT_MISSING — MIB/Rx consent absent.
+
+# 10. Procedures
+
+Onboarding (New Policy)
+
+1) Discovery and Needs Analysis
+- Complete NA-INS-2025; store in Helios DMS.
+- Control: Suitability SUIT-CK-0201 must be attached before UW submission.
+
+2) Quote and Present
+- Generate quote via Atlas → Janus API; present 2–3 options.
+- Evidence: Quote IDs logged in CRM.
+
+3) UW Submission
+- Collect e-consents; submit case; schedule medical if required (Medix).
+- Control: Hermes ESB confirms MIB/Rx pull success.
+
+4) Offer and Acceptance
+- Send Term Sheet; discuss riders and billing options.
+- Evidence: Client acceptance e-sign; payment token created in Mercury.
+
+5) Issue and Welcome
+- Verify policy data matches Term Sheet; issue and send welcome kit.
+- Control: Two-person verification in Aegis PAS for face amount ≥$1,000,000.
+
+Servicing (Endorsements/Claims)
+
+1) Endorsements
+- Create SRV-INS; update beneficiary or address; require identity verification.
+- Control: Changes above risk thresholds (beneficiary change to non-relative) flagged to Compliance.
+
+2) Claims Intake
+- Record Claim INT-CLM-####; collect death certificate/physician statement.
+- SLA: first response ≤1 business day; status updates every 3 days.
+- Control: Fraud screening via Orion patterns.
+
+Exceptions
+
+- UW Class Override
+  - Submit EXC-UW form; justify with labs/APS; L4 approval.
+- Backdate Requests
+  - Allowed ≤60 days to save age; document client acknowledgment; DDM approval.
+
+# 11. Objection Handling Matrix
+
+- “Premiums are too high.”
+  - Response: “We can adjust face amount or term to meet your budget. For example, moving from $750k to $500k reduces monthly by ~30%. Discounts up to 5% are available today.”
+- “I’m healthy—why need CI/DI?”
+  - Response: “CI/DI protect income and expenses during unexpected illness or injury. 1 in 4 workers will experience a disability before retirement. Benefits pay regardless of employment.”
+- “I don’t want a medical exam.”
+  - Response: “Many applicants qualify for simplified underwriting up to $1,000,000 with no exam, based on MIB/Rx checks.”
+- “Whole life is a bad investment.”
+  - Response: “WL is first an insurance product with guaranteed coverage and cash values. Dividends are not guaranteed; we can model conservative scenarios and compare to term + invest-the-difference.”
+- “Key person seems excessive.”
+  - Response: “Coverage is tied to financial impact. We use documented contribution (10–15x) to right-size the policy.”
+
+# 12. Term Sheet Template (Mini)
+
+Term Sheet — Non-Binding Summary
+- Applicant: APP-2025-0001 (John D., DOB 1987-06-12)
+- Product: INS-PTL — Term Life
+- Face Amount: $500,000.00
+- Term Length: 20 years
+- Riders: ADB, WOP
+- Indicative Health Class: Preferred (subject to underwriting)
+- Monthly Premium: $28.30 + $4.00 policy fee
+- Effective Date (target): 2025-10-20
+- Beneficiary: Jane D. (Spouse)
+- Disclosures:
+  - Rates subject to underwriting; coverage not in force until issue and first premium paid.
+  - Conversion option to INS-WL available until 5 years before term end.
+- Signatures:
+  - Advisor/RM: __________________ Date: _________
+  - Applicant: ____________________ Date: _________
+
+# 13. KPIs and Dashboards
+
+Leading Indicators
+
+- Quote-to-UW Submission Rate ≥60% (Owner: Sales Ops; weekly)
+- Average Quote Response Time ≤500ms p95 (Owner: Tech Ops; daily)
+- Suitability Form Attachment Rate 100% (Owner: Compliance; weekly)
+
+Lagging Indicators
+
+- App-to-Issue Conversion ≥45% (Owner: Product; monthly)
+- UW Cycle Time: Simplified ≤1 day; Full ≤5 days (Owner: UW; weekly)
+- Lapse Rate ≤6% at 12 months (Owner: Retention; quarterly)
+- Claims First Response SLA 95% (Owner: Claims; monthly)
+
+Dashboards
+
+- Atlas CRM “Insurance Pipeline” (URL: atlas://dash/INS-PIPE-01)
+- Aegis PAS “UW Throughput” (URL: aegis://dash/UW-THR-02)
+- Janus “API Health” (URL: janus://dash/API-INS-HEALTH)
+
+# 14. Regional Variations
+
+- US
+  - Replacement forms required in most states; NAIC Model Replacement Reg.
+  - CI definitions aligned with state mandates; some riders unavailable in CA.
+- Canada (CA)
+  - LICAT capital impacts for WL; provincial privacy (PIPA/Quebec Law 25).
+  - Smoking definition includes vaping; 24-month lookback.
+- UK
+  - FCA ICOBS requires demands-and-needs statement; cooling-off 30 days.
+  - Premium tax (IPT) applies; reflected in Mercury Billing calculations.
+- EU
+  - GDPR consent granularity; data minimization enforced (store last4 only).
+  - Cross-border selling requires passporting checks; consult Compliance.
+- APAC-SG
+  - MAS guidelines; fact-find form FF-SG-INS mandatory; cooling-off 14 days.
+
+# 15. References
+
+- Policies
+  - NFG-KYC-0110 — Customer Identification Program
+  - NFG-AML-1005 — Sanctions and AML Screening
+  - NFG-SEC-17a-4-Archival — Records Retention
+  - NFG-SUIT-0201 — Suitability and Needs Analysis
+  - NFG-FAIR-0102 — Fair Pricing and Non-Discrimination
+- Systems Guides
+  - NFG-CRM-0200 — Atlas CRM Data Standards
+  - NFG-UND-0012 — Underwriting Rules and Classes
+  - NFG-PRC-0031 — Pricing Models and Load Factors
+- See also: For underwriting exam scheduling and APS retrieval, refer to NFG-UND-0012.
+
+# 16. Change log
+
+- 1.0.0 (2025-10-03)
+  - Initial release covering INS-PTL, INS-WL, INS-DI, INS-CI, INS-KP; added pricing/approval matrix, API samples, CRM schema, SLAs, and regional variations.
+
+Key takeaways: Capture complete applicant data in Atlas CRM, adhere to pricing guardrails and approval matrix, submit clean cases to underwriting, and use mandated disclosures. Leverage Quote and Underwriting APIs for speed, escalate per workflow if SLAs risk breach, and ensure all artifacts are stored in Helios DMS for compliance.

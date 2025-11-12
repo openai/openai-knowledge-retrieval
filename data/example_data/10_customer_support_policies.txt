@@ -1,0 +1,344 @@
+---
+doc_id: NFG-CX-0042
+doc_type: Policy and Enablement Guide
+title: Customer Support Policies
+business_unit: Customer Experience (CX)
+audience: Frontline Advisors, Sales, Relationship Managers (RMs), Underwriters, Support Analysts
+owners: J. Patel (Head of CX Operations), L. Nguyen (Deal Desk Lead)
+owner_dept: CX Operations and Deal Desk
+tags: ["support", "SLA", "incident management", "support plans", "deal-desk", "RPO", "RTO", "customer service"]
+search_terms: ["support policy", "SLA", "response time", "premium support", "support credit", "escalation", "RPO RTO", "support addendum", "ticketing"]
+regions: ["US", "CA", "UK", "EU", "APAC"]
+regulatory_scope: ["SEC/FINRA recordkeeping", "GDPR", "UK-FCA", "OSFI", "MAS", "DORA (EU)"]
+created_at: 2025-10-03
+updated_at: 2025-10-03
+effective_date: 2025-11-01
+review_cadence: Quarterly
+last_reviewed_by: M. Ortega (Compliance) on 2025-10-02
+approvals: ["VP CX (A. Reynolds)", "Chief Compliance Officer (D. Okafor)", "CIO (R. Villareal)"]
+version: 1.0.0
+visibility: Internal
+confidentiality: Internal
+systems: ["NFG-CRM (Salesforce)", "NFG-SM (ServiceNow)", "NFG-KB (Confluence)", "NFG-Voice (Genesys Cloud)", "NFG-Chat (LivePerson)", "NFG-Notify (Twilio)", "NFG-DataLake (Snowflake)"]
+product_codes: ["SUPT-STD", "SUPT-PRM", "SUPT-ENT", "SUPT-ADD-24x7", "SUPT-ADD-DEDAM"]
+related_docs:
+  - NFG-SLA-1001
+  - NFG-INC-0200
+  - NFG-BCP-0100
+  - NFG-DL-0300
+  - NFG-PRIV-0022
+canonical_url: https://kb.nfg.corp/docs/NFG-CX-0042
+---
+
+# 1. Quick Reference (TL;DR)
+- Who: All frontline teams engaging customers; Support Ops owns process; Deal Desk approves paid plan changes and credits.
+- What: Standardized Support Plans (Standard, Premium, Enterprise), SLAs, escalation paths, communications, evidence requirements, and compliance statements.
+- When: 24x5 baseline coverage; 24x7 for Severity 1 (Sev1) incidents and paid add-ons.
+- Where: Log all cases in NFG-SM; link to account/opportunity in NFG-CRM; store artifacts in NFG-KB Space CX/Customers.
+- SLAs (first response/resolve target):
+  - Sev1 (critical outage): 15 min / 4 hrs (RTO 4 hrs; RPO 15 min)
+  - Sev2 (degraded core function): 1 hr / 1 business day
+  - Sev3 (minor impact): 4 business hrs / 3 business days
+  - Sev4 (informational): 1 business day / 10 business days
+- Do:
+  - Classify severity using Definitions; confirm business impact and scope.
+  - Use approved notification templates; update case every SLA interval.
+  - Capture root cause, customer comms, and evidence.
+- Don’t:
+  - Commit SLAs beyond plan entitlements without Deal Desk approval.
+  - Share personal data in chat/email beyond minimum necessary (NFG-PRIV-0022).
+  - Close cases without customer acknowledgment for Sev1–Sev3.
+
+# 2. Customer Personas and Use Cases
+- Retail Investor Support (RI):
+  - Use case: Portal access issues, statements, password resets.
+  - Fit: Standard plan (SUPT-STD); phone and chat during business hours.
+  - Non-fit: Custom runbooks or dedicated account managers.
+- Institutional/Wealth (IW):
+  - Use case: Portfolio data feeds, file transfer, reconciliation.
+  - Fit: Premium plan (SUPT-PRM) or Enterprise (SUPT-ENT) with 24x7 add-on.
+  - Non-fit: Uncontracted bespoke SLAs.
+- Insurance/Underwriting Partners (UWP):
+  - Use case: API down, policy issuance batch failures.
+  - Fit: Enterprise plan + Dedicated AM (SUPT-ADD-DEDAM).
+- Fintech Integrators (FTI):
+  - Use case: API onboarding, webhooks, sandbox issues.
+  - Fit: Premium plan with Developer-to-Developer channel.
+
+Eligibility:
+- Premium/Enterprise require annual contract ≥ $250,000 ARR or regulatory criticality classification “Tier 1/2” per NFG-BCP-0100.
+- 24x7 add-on requires on-call contact rota from client and signed SSLA (Support Service Level Addendum).
+
+# 3. Qualification and Discovery Questions
+Use CHAMP-style prompts:
+- Challenges: What is the business impact if this function is unavailable for 4 hours? Which processes are affected?
+- Authority: Who signs the SSLA? Who owns incident comms on your side?
+- Money: Do you have budget for 24x7 or dedicated AM? Are credits expected for past incidents?
+- Priorities: Upcoming cutover dates? Regulatory reporting deadlines?
+
+Red flags:
+- Requests for RTO < 1 hr without HA/DR contract.
+- No named technical contact; shared mailboxes only.
+- Data residency hard requirement not matched by region (see Regional Variations).
+- Expectation of proactive monitoring without API/alert integration enabled.
+
+# 4. Product/Policy Overview
+Capabilities:
+- Multi-channel support: email (support@nfg.com), phone, chat, in-product help.
+- Incident management with on-call rotations; automated paging via NFG-Notify.
+- Status page: status.nfg.com with incident timelines and postmortems (redacted).
+- Planned maintenance notifications ≥ 7 days notice (≥ 30 days for breaking changes).
+
+Limitations:
+- Configuration support only; no custom code development.
+- Data restore: RPO commitments vary by plan; object-level recovery best-effort for Standard.
+- No personal financial advice in support interactions.
+
+Dependencies:
+- Customer must maintain up-to-date contacts in NFG-CRM; enable API access for proactive alerts if contracted.
+- For API issues, client must provide request IDs, timestamps (UTC), and correlation IDs (X-NFG-CID).
+
+# 5. Pricing, Fees, and Discounting
+Support Plans (annual, billed upfront):
+- Standard (SUPT-STD): Included with platform; business hours, 24x5 for Sev1. $0 incremental.
+- Premium (SUPT-PRM): 24x5, faster SLAs, Developer channel. $60,000/year.
+- Enterprise (SUPT-ENT): 24x7 Sev1–Sev2, TAM quarterly reviews, runbook. $180,000/year.
+Add-ons:
+- 24x7 Coverage (SUPT-ADD-24x7) for Premium: $40,000/year.
+- Dedicated AM (SUPT-ADD-DEDAM): $75,000/year.
+
+Discounting Guardrails:
+- Max standard discount: 10% Premium; 15% Enterprise; 0% add-ons.
+- Multi-year (≥ 3-year) prepay: additional 5% with CFO approval.
+
+Approval Matrix:
+- Level 0: Within guardrails; Owner: Sales Manager; SLA to approve: 1 business day.
+- Level 1: Exceed discount by ≤ 5% or credit ≤ $25,000; Owner: Deal Desk Lead; SLA: 2 business days.
+- Level 2: Exceed discount by > 5% or credit $25,001–$100,000; Owner: VP CX + Finance; SLA: 3 business days.
+- Level 3: Any SLA override, unlimited credits, or regulatory risk; Owner: CCO + CFO; SLA: 5 business days.
+
+# 6. Deal Desk Workflow
+Use for: Support plan changes, SSLA commitments, service credits > $5,000.
+
+Steps:
+1) Submit Request: Open NFG-SM case type “Deal Desk - Support” with fields: Opportunity ID, Customer Tier, Requested Plan, Discounts, Credits.
+2) Artifacts Required:
+   - Draft SSLA (from Section 12), customer use case, and incident history (last 12 months from NFG-DataLake).
+   - Financial impact assessment (template DL-0300-T2).
+3) Compliance Check: Deal Desk verifies alignment with NFG-PRIV-0022, NFG-SEC-17a-4-Archival.
+4) Approval Routing: Auto-routed via matrix in Section 5 using approval rule DD-SUP-ALG-01.
+5) Customer Communication: Use template CC-SUP-SSLA-01; no commitments until approvals recorded in NFG-CRM (field: Support_Plan_Status__c = Approved).
+6) Contract Execution: DocuSign envelope ENVELOPE-2025-####; attach to CRM and NFG-SM.
+7) Provisioning: CX Ops updates entitlement in NFG-SM and toggles plan feature flags via API (see Section 9).
+8) Evidence and Closure: Upload approval artifacts; set Case Resolution Code = “Support Plan Change” and enter go-live date.
+
+SLAs:
+- Intake review within 4 business hours.
+- End-to-end cycle target: 5 business days (standard), 10 business days (Level 2+).
+
+Escalation Path:
+- Day 2 pending: Escalate to Deal Desk Lead.
+- Day 4 pending: Escalate to VP CX.
+- Regulatory/board-visible clients: Notify CCO immediately.
+
+# 7. Risk and Compliance Disclosures
+Required statements:
+- Data Handling: “For your protection, please do not send account numbers or PII in chat or email. Use the Secure Upload link in your portal.” (NFG-PRIV-0022)
+- Recording: “Calls and chats may be recorded and archived per NFG-SEC-17a-4-Archival.”
+- Incident Comms: “Estimated times to resolution are targets, not guarantees, unless expressly agreed in your SSLA.”
+- Advice Disclaimer: “Support provides technical assistance only and does not offer investment advice.”
+
+Paperwork:
+- Archive all comms and attachments via NFG-SM to WORM storage within 24 hours.
+- Include post-incident RCA within 10 business days for Sev1–Sev2 (NFG-INC-0200).
+
+# 8. Data and CRM Fields
+Canonical Fields (NFG-CRM Account/Case):
+- Account.Support_Plan__c (Picklist: Standard, Premium, Enterprise) — required; example: “Premium”
+- Account.Support_RPO_Minutes__c (Number) — 15, 60, 1440
+- Account.Support_RTO_Hours__c (Number) — 4, 24, 72
+- Case.Severity__c (Picklist: Sev1, Sev2, Sev3, Sev4) — required
+- Case.Business_Impact__c (Text 255) — required; example: “Trade confirmations delayed for 1,200 clients”
+- Case.Environment__c (Picklist: Prod, UAT, Sandbox) — required
+- Case.Correlation_ID__c (Text 64) — example: “CID-2025-10-03-000123”
+- Case.Root_Cause_Code__c (Picklist: Defect, Config, 3rd-Party, User Error, Unknown) — required at closure
+- Case.Resolution_Summary__c (Long Text 4000) — required at closure
+- Case.Client_OnCall_Contact__c (Lookup Contact) — required for Sev1/Sev2
+- Case.RCA_Required__c (Checkbox) — default true for Sev1/2
+Validation:
+- Sev1 requires Environment = Prod and Business_Impact__c length ≥ 50.
+- If Support_Plan__c = Standard, disallow 24x7 add-on in Entitlement table.
+
+Example Values:
+- Account.Support_Plan__c = “Enterprise”
+- Case.Severity__c = “Sev2”
+- Case.Correlation_ID__c = “CID-2025-10-03-000457”
+
+# 9. Integrations and APIs
+Feature Entitlement API (internal):
+- POST https://api.nfg.corp/support/v1/entitlements
+Request:
+{
+  "account_id": "CUST-458732",
+  "plan_code": "SUPT-PRM",
+  "addons": ["SUPT-ADD-24x7"],
+  "effective_date": "2025-11-01",
+  "approved_by": "EMP-00912"
+}
+Response:
+{
+  "entitlement_id": "ENT-2025-1101-00045",
+  "status": "provisioned",
+  "features": ["24x7_Sev1", "Faster_SLA", "Dev_Channel"]
+}
+
+Incident Webhook (customer to NFG) — for proactive monitoring:
+- POST https://api.nfg.corp/support/v1/incidents
+Headers: X-NFG-CID: CID-2025-10-03-000457
+Request:
+{
+  "customer_id": "CUST-220019",
+  "severity": "Sev1",
+  "summary": "High error rate on Orders API",
+  "observed_at": "2025-10-03T11:44:00Z",
+  "impact_count": 1200
+}
+Response:
+{
+  "case_id": "CASE-2025-1003-00089",
+  "status": "created",
+  "sla": {"first_response_minutes": 15, "resolve_hours": 4}
+}
+
+Event Bus (NFG-SM -> NFG-CRM):
+- Topic: nfg.support.case.updated
+- Payload fields: case_id, account_id, severity, status, next_sla_deadline_utc.
+
+# 10. Procedures
+A) New Customer Support Onboarding
+1) Verify Contract: Confirm Support_Plan__c and SSLA in NFG-CRM.
+   - Control: Compare contract fields to product_codes; evidence: screenshot in case.
+2) Contacts: Collect primary/secondary contacts, on-call rota, and secure email.
+   - Control: Validate business domain; evidence: Contacts added in CRM.
+3) Channels: Enable client access to portal, chat; provide Secure Upload link.
+   - Control: Test login; evidence: access confirmation ticket note.
+4) Runbook: For Premium/Enterprise, schedule runbook creation workshop.
+   - Control: Store runbook in NFG-KB; evidence: link in CRM custom field Runbook_URL__c.
+5) Monitoring/Integrations: Offer Incident Webhook setup.
+   - Control: Test 200 response; evidence: log snippet attached (see below).
+
+Log Snippet (artifact):
+2025-10-03T12:05:22Z INFO WebhookValidated cid=CID-2025-10-03-000501 acct=CUST-220019 status=200
+
+B) Incident Handling (Sev1–Sev4)
+1) Intake: Create NFG-SM case; set Severity__c; capture impact and timestamp UTC.
+   - Control: If Sev1, auto-page on-call via NFG-Notify; evidence: page ID in case comments.
+2) First Response: Acknowledge per SLA; include correlation ID.
+   - Control: Timeboxed; evidence: Case timeline shows response within SLA.
+3) Diagnose: Engage resolver groups (Apps, Infra, Data).
+   - Control: Assign within 15 min for Sev1; evidence: assignment audit.
+4) Communications: Send updates at SLA intervals (15/60/240/480 min depending on severity).
+   - Control: Use CC-SUP-INC-01 template; evidence: comms attached.
+5) Mitigation/Resolution: Implement workaround or fix; document.
+   - Control: CAB approval for prod changes if outside emergency change policy.
+6) Closure: Validate with customer; set Root_Cause_Code__c and Resolution_Summary__c.
+   - Control: Manager review for Sev1/2 within 1 business day.
+
+C) Data Restore Request
+1) Validate Entitlement: Check RPO/RTO from Support_Plan__c.
+2) Confirm Scope: Object(s) and timeframe; obtain CID.
+3) Execute Restore: Coordinate with Data Ops via NFG-SM task.
+4) Verify and Sign-off: Customer confirms; attach checksum.
+- Controls: Access logged in NFG-DataLake; approvals per NFG-SEC-17a-4-Archival.
+
+D) Service Credit Issuance
+1) Qualify: Confirm SLA breach via case audit.
+2) Calculate: % of monthly support fee or platform fee per SSLA.
+3) Approval: Route via Level 1–3 matrix.
+4) Issue: Credit memo CM-YYYY-#### via Finance; attach to CRM.
+- Control: Dual approval for credits > $25,000.
+
+# 11. Objection Handling Matrix
+- “We need 5-minute first response.” 
+  - Response: Our fastest SLA is 15 minutes under Enterprise with 24x7. For 5 minutes, we require a bespoke on-call arrangement and engineering standby; this triggers Level 3 approval and higher fees. Let’s review your true business impact windows.
+- “We expect free 24x7 coverage.”
+  - Response: Standard includes 24x5 for Sev1. 24x7 requires staffing and on-call rotations priced via SUPT-ADD-24x7. We can explore a multi-year discount with VP CX approval.
+- “Your RPO must be zero.”
+  - Response: Zero data loss implies synchronous replication and premium storage. Our Enterprise plan offers 15-minute RPO. For RPO 0, we need a DR architecture review and separate HA/DR contract.
+- “We need named engineers.”
+  - Response: A Dedicated AM is available as an add-on. Named engineers fall under Professional Services Statements of Work; we can scope that separately.
+
+# 12. Term Sheet Template (Mini)
+Support Service Level Addendum (SSLA) — Mini
+- Customer: [Account Name] (CUST-#####)
+- Plan Code: SUPT-PRM | SUPT-ENT
+- Add-ons: SUPT-ADD-24x7 | SUPT-ADD-DEDAM
+- Coverage Window: 
+  - Standard: 08:00–18:00 local region, Mon–Fri
+  - 24x7: Yes/No (if Yes, specify contact rota URL)
+- SLAs:
+  - Sev1 First Response: 15 min | 30 min
+  - Sev1 Resolve Target: 4 hrs | 6 hrs
+  - Sev2 First Response: 1 hr
+  - Sev2 Resolve Target: 1 business day
+- RPO/RTO:
+  - RPO: 15 min | 60 min
+  - RTO: 4 hrs | 24 hrs
+- Communications:
+  - Incident Updates: Every 15/60/240 min by severity
+  - Channels: Email DL, Status Page, Conference Bridge
+- Credits:
+  - If SLA breach confirmed, monthly fee credit: 10% Sev1, 5% Sev2 (cap 50%/month)
+- Term: 12 months; auto-renew unless 60 days’ notice
+- Approvals:
+  - NFG: Name/Title/Date
+  - Customer: Name/Title/Date
+- Notes/Exclusions: No investment advice; excludes scheduled maintenance.
+
+# 13. KPIs and Dashboards
+Leading indicators:
+- % Cases triaged within 15 minutes (target ≥ 95%)
+- % SLA updates on time (target ≥ 98%)
+- Monitoring coverage (accounts with webhook enabled) (target ≥ 70% of Premium/Enterprise)
+
+Lagging indicators:
+- First Response SLA attainment by severity (target ≥ 99% Sev1, ≥ 97% Sev2)
+- Mean Time to Resolve (MTTR) Sev1 (target ≤ 3.5 hrs)
+- Customer Effort Score (CES) average ≥ 4.2/5
+- Credits as % of support revenue (target ≤ 1.5%)
+
+Ownership:
+- CX Ops owns triage and updates; Deal Desk tracks credits; RMs own CES follow-ups.
+
+Dashboards:
+- NFG-CRM “Support Health” and NFG-SM “SLA Compliance” with filters by region, plan, severity.
+
+# 14. Regional Variations
+- EU/UK (GDPR, DORA): 
+  - Data residency: tickets stored in EU region for EU accounts; cross-border transfers require SCCs (NFG-PRIV-0022).
+  - Incident notifications to regulators may be required for material outages; coordinate with Compliance.
+- Canada (OSFI): 
+  - Critical third-party outages must be reported per TPRM guidelines; RMs must flag Tier 1 institutions.
+- APAC (MAS): 
+  - Maintenance windows must avoid local market hours; publish times in SGT.
+- US (SEC/FINRA):
+  - Record retention WORM storage minimum 7 years for broker-dealer communications (NFG-SEC-17a-4-Archival).
+
+# 15. References
+- Policies:
+  - NFG-SLA-1001 Support SLAs
+  - NFG-INC-0200 Incident Management Standard
+  - NFG-PRIV-0022 Data Privacy and Secure Communications
+  - NFG-SEC-17a-4-Archival Communications Retention
+  - NFG-BCP-0100 Business Continuity and DR
+- Systems Guides:
+  - NFG-SM-User-Guide v3.2
+  - NFG-CRM Field Dictionary v5.1
+- See also:
+  - NFG-CX-0045 “Incident Communications Playbook”
+  - NFG-PL-0099 “Premium Services and Professional Services Catalog”
+
+# 16. Change log
+- 1.0.0 (2025-10-03): Initial release consolidating support SLAs, pricing, approval matrix, APIs, and procedures. 
+
+Key takeaways: Use standardized plans and SLAs; never commit beyond entitlements without Deal Desk approval; classify severity strictly and communicate at defined intervals; capture evidence in CRM/SM for compliance; leverage the APIs and onboarding steps to enable proactive support; escalate per matrix to protect margin and regulatory obligations.

@@ -1,0 +1,507 @@
+---
+doc_id: NFG-ADVISE-PRC-001
+doc_type: Process Playbook
+title: Financial Advisory Process
+business_unit: Wealth Management and Retail Banking
+audience:
+  - Financial Advisors
+  - Relationship Managers
+  - Sales Specialists
+  - Underwriters
+  - Client Support
+owners:
+  - Priya Malhotra (Director, Advisory Enablement)
+  - Jordan Kim (Head, Deal Desk - Wealth)
+owner_dept: Wealth Advisory Enablement Office (WAEO)
+tags:
+  - advisory
+  - KYC
+  - suitability
+  - pricing
+  - deal-desk
+  - compliance
+search_terms:
+  - financial advisory process
+  - suitability assessment
+  - advisory pricing
+  - client onboarding
+  - MiFID II suitability
+regions:
+  - NAMER
+  - EMEA
+  - APAC
+regulatory_scope:
+  - SEC Reg BI
+  - FINRA 2111
+  - MiFID II Articles 24 & 25
+  - NFG-KYC-0110
+  - NFG-SEC-17a-4-Archival
+  - NFG-DPP-120 Data Privacy Program
+  - NFG-SUIT-100 Suitability and Best Interest
+created_at: 2025-10-03
+updated_at: 2025-10-03
+effective_date: 2025-10-15
+review_cadence: Quarterly
+last_reviewed_by: Chief Compliance Officer (CCO) — Wealth (Marina Duarte)
+approvals:
+  - CCO Wealth Compliance
+  - Head of Retail Banking
+  - Regional Legal (NAMER/EMEA/APAC)
+version: 1.0.0
+visibility: Internal
+confidentiality: Internal
+systems:
+  - AtlasCRM v7.4
+  - eKYC Portal (KYC-Cloud)
+  - DocVault360 (WORM storage)
+  - RiskCompass v3.2
+  - Quoter Pricing Engine v2.1
+  - Nimbus Telephony and Call Recording
+  - Aurora Data Lake
+product_codes:
+  - WM-ADV-MGD (Managed Advisory)
+  - WM-ADV-PLAN (Financial Planning)
+  - WM-ADV-DIS (Discretionary Portfolio)
+  - RB-ADV-LITE (Advisory Lite)
+  - INS-PLN (Insurance Planning Add-on)
+related_docs:
+  - NFG-ONB-001 (Client Onboarding & KYC)
+  - NFG-PRC-QUOTER-002 (Pricing Engine - Quoter)
+  - NFG-SUIT-100 (Suitability & Best Interest Policy)
+  - NFG-DATA-ARCH-017 (Records Retention & Archival)
+  - NFG-INV-PORT-004 (Portfolio Construction Standards)
+canonical_url: https://intranet.nfg.local/docs/NFG-ADVISE-PRC-001
+---
+
+# Quick Reference (TL;DR)
+
+- What: End-to-end Financial Advisory Process for onboarding, suitability, pricing, proposal, and ongoing reviews.
+- Who: Advisors/RMs (frontline), Underwriting (risk/credit), Deal Desk (pricing/approvals), Compliance (suitability), Support (servicing).
+- When: Initial discovery to signed agreement within 5 business days SLA (standard), 2 business days SLA (priority tier).
+- Where: AtlasCRM (client/prospect), eKYC Portal (identity/AML), RiskCompass (risk scoring), DocVault360 (records), Quoter (pricing).
+- SLAs:
+  - Discovery to Proposal Draft: 2 business days.
+  - Suitability Review: 1 business day (auto-approve if green), 3 business days (manual).
+  - Pricing Approvals: within 1 business day for Level 1–2; 2 business days for Level 3+.
+  - Account Opening: 1 business day post-docs.
+- Do:
+  - Capture BANT/CHAMP fields in AtlasCRM during first call.
+  - Record calls via Nimbus when discussing products.
+  - Use Quoter for all fees/discounts; never hand-calculate.
+  - Document suitability rationale using NFG-SUIT-100 template.
+- Don’t:
+  - Don’t recommend products before KYC completion for regulated regions.
+  - Don’t share personal contact info outside approved channels.
+  - Don’t store client docs outside DocVault360.
+
+# Customer Personas and Use Cases
+
+- Mass Affluent (assets $250,000–$1,999,999)
+  - Use cases: holistic planning, retirement income, tax-aware investing, advisory lite.
+  - Fit: seeks ongoing guidance; moderate risk tolerance.
+  - Non-fit: pure self-directed traders.
+- High-Net-Worth (HNW) ($2,000,000–$25,000,000)
+  - Use cases: discretionary portfolios, alternatives access, multi-generational planning.
+  - Fit: complexity requiring bespoke portfolios.
+  - Non-fit: unwilling to share financial statements.
+- Emerging Professionals (assets $50,000–$249,999)
+  - Use cases: goal-based planning, auto-invest, advisory lite.
+  - Fit: growth orientation, digital-first onboarding.
+  - Non-fit: ultra-short-term speculation requests.
+- Business Owners (operating revenue $1,000,000–$50,000,000)
+  - Use cases: cash management, retirement plans, key person insurance, liquidity events.
+  - Fit: coordinated business-personal strategies.
+  - Non-fit: crypto custody requests (unsupported).
+- Trusts and Charities
+  - Use cases: IPS-driven management, ESG mandates, governance reporting.
+  - Fit: formal Investment Policy Statement (IPS) and board approval processes.
+  - Non-fit: unincorporated associations lacking governance documents.
+
+Eligibility non-fit examples: sanctioned persons/entities, PEPs without enhanced due diligence, unverified source of funds, requests for prohibited products (e.g., unregistered crypto tokens).
+
+# Qualification and Discovery Questions
+
+Use BANT+CHAMP prompts:
+
+- Budget
+  - What annual advisory fee range are you comfortable with?
+  - Are there constraints on custodial platforms?
+- Authority
+  - Who must sign the advisory agreement? Any board/trustee approvals?
+- Need
+  - What primary goals: retirement, wealth transfer, income, philanthropy?
+  - What events in the next 12–24 months could impact liquidity?
+- Timing
+  - Target date for implementing a portfolio or plan?
+- Challenges
+  - Prior advisory relationships? What worked/didn’t?
+  - Tax considerations or concentrated stock positions?
+- Metrics
+  - How will you measure success (drawdown limits, income targets)?
+- Red flags
+  - Refuses risk questionnaire; insists on guaranteed returns; undisclosed crypto holdings; requests to backdate forms; asks to omit information on KYC.
+
+Record all responses in AtlasCRM Opp/Client record using fields in Section 8.
+
+# Product/Policy Overview
+
+Capabilities:
+
+- Advisory Models
+  - Discretionary: NFG manages per IPS. Product: WM-ADV-DIS.
+  - Non-Discretionary: Advisor recommends; client approves trades. Product: WM-ADV-MGD.
+  - Planning Only: Financial plans without asset management. Product: WM-ADV-PLAN.
+  - Advisory Lite: Digital guidance + human check-ins. Product: RB-ADV-LITE.
+- Services
+  - Risk profiling (RiskCompass), goal-based planning, tax-loss harvesting (where eligible), quarterly performance reviews, fiduciary reporting for charities/trusts.
+- Limitations
+  - No direct crypto custody; no private placements in Advisory Lite; alternatives limited to qualified purchasers; insurance planning requires INS-PLN add-on.
+- Dependencies
+  - eKYC clearance, Source of Funds verification, Suitability rating green/amber, signed Advisory Agreement stored in DocVault360.
+- Policy Anchors
+  - NFG-SUIT-100 (suitability), NFG-KYC-0110 (identity), NFG-SEC-17a-4-Archival (records), NFG-DPP-120 (privacy), SEC Reg BI and FINRA 2111.
+
+# Pricing, Fees, and Discounting
+
+Standard advisory fee schedule (annualized; billed quarterly in arrears):
+
+| Tiered AUM Band | Discretionary (WM-ADV-DIS) | Managed (WM-ADV-MGD) | Planning Only (WM-ADV-PLAN) | Advisory Lite (RB-ADV-LITE) |
+| --- | --- | --- | --- | --- |
+| First $1,000,000 | 1.00% | 0.85% | $2,000 flat/year | $300 flat/year |
+| Next $4,000,000 | 0.80% | 0.70% | n/a | n/a |
+| Over $5,000,000 | 0.55% | 0.50% | n/a | n/a |
+
+- Minimums: DIS $500,000; MGD $250,000; PLAN $1,000; LITE $300.
+- Family aggregation available across related accounts under same household ID (HHID).
+- Discount guardrails:
+  - Max discretionary discount without approval: 10 bps (0.10%) for AUM > $2,000,000.
+  - Planning fee discount up to 20% allowed for existing AUM clients.
+
+Approval Matrix (discounts off standard):
+
+| Level | Discount Range | Role Approver | Additional Conditions | SLA |
+| --- | --- | --- | --- | --- |
+| L1 | Up to 10 bps or ≤20% on PLAN/LITE | Regional Sales Manager | AUM ≥ $250,000 | 4 business hours |
+| L2 | 11–25 bps or ≤35% on PLAN/LITE | Deal Desk Manager | Rationale + competitor quote attached | 1 business day |
+| L3 | 26–40 bps or ≤50% on PLAN/LITE | Head of Wealth, Compliance concurrence | Margin analysis from Quoter | 2 business days |
+| L4 | >40 bps or >50% on PLAN/LITE | Executive Pricing Council | Rare; requires CFO sign-off | 3 business days |
+
+All discounts must be calculated and submitted via Quoter Quote ID (e.g., Q-2025-10384). Manual overrides prohibited.
+
+# Deal Desk Workflow
+
+Step-by-step with required artifacts and SLAs:
+
+1) Discovery and Call Recording (Owner: Advisor)
+- Capture in Nimbus (Call ID auto-linked to AtlasCRM via CTI).
+- SLA: same-day logging.
+- Artifact: Call transcript summary (Nimbus Note) tagged “DISCOVERY”.
+
+2) KYC Initiation (Owner: Support)
+- Launch eKYC from AtlasCRM (API: /kyc/start).
+- SLA: within 1 business day of discovery.
+- Artifact: KYC Case ID (KYC-2025-00XXX), identity docs uploaded to DocVault360.
+
+3) Risk Profiling (Owner: Advisor)
+- Administer RiskCompass questionnaire (RCQ-Form v3).
+- SLA: 1 business day post-KYC.
+- Artifact: Risk Score (0–100), category (Conservative/Moderate/Growth).
+
+4) Suitability Assessment (Owner: Compliance)
+- Auto-rule check using NFG-SUIT-100; amber cases require manual review.
+- SLA: Green 4 hours; Amber 3 business days.
+- Artifact: Suitability Memo (S-2025-XXXX) stored in DocVault360.
+
+5) Pricing and Quote (Owner: Advisor, Deal Desk)
+- Generate fees in Quoter; attach competitor quotes if seeking discount.
+- SLA: 1 business day.
+- Artifact: Quoter PDF, Quote ID.
+
+6) Proposal and IPS Draft (Owner: Advisor)
+- Prepare proposal with IPS draft (IPS-Template v2.4).
+- SLA: 2 business days from risk profile.
+- Artifact: Proposal PDF, IPS draft in DocVault360.
+
+7) Approvals (Owner: Deal Desk/Compliance)
+- Route via AtlasCRM Approval Flow (AF-2025-XXXXX).
+- SLA: per Approval Matrix.
+- Artifact: Approval log with timestamps; margin check.
+
+8) Agreement and Account Opening (Owner: Support)
+- Send Advisory Agreement (AA-Form v5) for e-sign.
+- SLA: 1 business day post-approval.
+- Artifact: Signed AA, Custody account numbers.
+
+9) Implementation (Owner: Portfolio Ops)
+- Fund transfers, model assignment, tax settings.
+- SLA: 2 business days after funding.
+- Artifact: Trade blotter ID (TB-2025-XXXXX).
+
+10) First 90-Day Review (Owner: Advisor)
+- Schedule check-in; verify onboarding satisfaction.
+- SLA: within 90 days.
+- Artifact: Review Note (REV-2025-XXXXX).
+
+Escalation Path: Advisor -> Regional Sales Manager -> Deal Desk Manager -> Head of Wealth. Compliance escalations to Deputy CCO (Wealth).
+
+# Risk and Compliance Disclosures
+
+Required statements during conversations and in documents:
+
+- Best Interest: “NFG acts in your best interest under applicable regulations, including Reg BI and MiFID II where applicable.”
+- Fee Disclosure: Present fee schedule and any third-party costs; provide Quoter output.
+- Conflicts: Disclose revenue-sharing or soft-dollar arrangements (see NFG-COI-022).
+- Performance: No guarantees; present risks of loss; include drawdown history for models.
+- Recording Consent: Advise calls may be recorded via Nimbus.
+- Data Privacy: Reference NFG-DPP-120; obtain consent for data processing and cross-border transfer where relevant.
+- Suitability: Document rationale per NFG-SUIT-100; retain evidence in DocVault360 (WORM).
+- Archival: All communications and agreements archived per NFG-SEC-17a-4-Archival (RPO 15 minutes; RTO 4 hours).
+
+# Data and CRM Fields
+
+Canonical AtlasCRM fields (object: Client; object: Opportunity):
+
+| Field Name | Object | Type | Validation | Example |
+| --- | --- | --- | --- | --- |
+| CUST_ID | Client | String (pattern CUST-[0-9]{5}) | Required, unique | CUST-12345 |
+| HHID | Client | String | Optional; links households | HH-90877 |
+| Risk_Score | Client | Integer (0–100) | Required pre-proposal | 62 |
+| Risk_Category | Client | Picklist | Conservative/Moderate/Growth | Moderate |
+| KYC_Case_ID | Client | String | Required before agreement | KYC-2025-00123 |
+| Source_of_Funds | Client | Picklist | Salary/Business/Sale of Property/Inheritance | Business |
+| PEP_Status | Client | Boolean | Requires EDD if true | false |
+| Suitability_Status | Client | Picklist | Green/Amber/Red | Green |
+| Proposal_ID | Opportunity | String | Generated by Quoter integration | Q-2025-10384 |
+| AUM_Projected | Opportunity | Currency | ≥$50,000 for LITE waived | $1,250,000.00 |
+| Product_Code | Opportunity | Picklist | WM-ADV-DIS/MGD/PLAN/RB-ADV-LITE | WM-ADV-DIS |
+| Discount_bps | Opportunity | Number (0–200) | Approval required >10 | 15 |
+| Competitor_Quote_Attached | Opportunity | Boolean | Required if Discount_bps >10 | true |
+| IPS_Version | Opportunity | String | Template version ≥2.4 | 2.4 |
+| Account_Custodian | Opportunity | Picklist | NFG Custody/Third-Party | NFG Custody |
+| Onboarding_Status | Opportunity | Picklist | Discovery/KYC/Suitability/Proposal/Approved/Opened | Proposal |
+| Review_90Day_Date | Client | Date (YYYY-MM-DD) | Auto-set post-open | 2026-01-12 |
+
+Validation rule example: If Discount_bps > 10 then Competitor_Quote_Attached must be true and Approval_Flow_ID populated.
+
+# Integrations and APIs
+
+Key endpoints and event payloads (PII masked):
+
+- eKYC Start
+  - POST https://api.nfg.local/kyc/start
+  - Request:
+    {
+      "cust_id": "CUST-12345",
+      "name": "REDACTED",
+      "dob": "REDACTED",
+      "document_type": "PASSPORT",
+      "region": "NAMER"
+    }
+  - Response:
+    {
+      "kyc_case_id": "KYC-2025-00123",
+      "status": "PENDING",
+      "sla_hours": 24
+    }
+
+- RiskCompass Score
+  - GET https://api.nfg.local/riskcompass/score?cust_id=CUST-12345
+  - Response:
+    {
+      "cust_id": "CUST-12345",
+      "risk_score": 62,
+      "category": "Moderate",
+      "timestamp": "2025-10-03T14:20:00Z"
+    }
+
+- Quoter Create Quote
+  - POST https://api.nfg.local/quoter/quotes
+  - Request:
+    {
+      "opp_id": "OPP-2025-55678",
+      "product_code": "WM-ADV-DIS",
+      "aum": 1250000.00,
+      "region": "EMEA",
+      "requested_discount_bps": 15
+    }
+  - Response:
+    {
+      "quote_id": "Q-2025-10384",
+      "standard_fee_bps": 95,
+      "approved_discount_bps": 15,
+      "approvals_required": ["L2"],
+      "margin_flag": "PASS"
+    }
+
+- Event: Document Archived (DocVault360)
+  - Topic: docvault.archive
+  - Payload:
+    {
+      "doc_id": "AA-2025-77889",
+      "cust_id": "CUST-12345",
+      "worm": true,
+      "rpo_minutes": 15,
+      "rto_hours": 4,
+      "retention_policy": "NFG-SEC-17a-4-Archival"
+    }
+
+# Procedures
+
+Onboarding (standard)
+
+1) Pre-Call Prep
+- Review Prospect 360 in AtlasCRM; confirm sanctions screening pre-call (soft check).
+- Control: Record screenshot evidence in CRM Attachments.
+
+2) Conduct Discovery
+- Use Qualification prompts; tag Nimbus call.
+- Control: Complete Discovery Checklist in CRM; system enforces completion.
+
+3) Initiate KYC
+- Send eKYC link; verify doc receipt.
+- Control: KYC Case auto-sync; Support verifies matches to legal name and DOB.
+
+4) Risk Profiling and Goals
+- Administer RCQ-Form v3; create at least 3 goals in CRM (retirement, education, cash reserve).
+- Control: Risk_Score and Risk_Category must be present to proceed.
+
+5) Suitability
+- Submit Suitability Memo; Compliance auto check for product-code fit.
+- Control: If Suitability_Status is Red, system blocks proposal.
+
+6) Pricing and Proposal
+- Generate Quoter quote; attach competitor analysis if discount >10 bps.
+- Control: Approval flow triggers based on Discount_bps; prevents agreement until approved.
+
+7) Agreement and Account Opening
+- Send AA-Form v5 for e-sign through DocVault360 eSign.
+- Control: WORM archive confirmation required; Account_Custodian cannot be set until AA archived.
+
+8) Funding and Implementation
+- Coordinate ACATS/transfer; assign model; confirm tax settings.
+- Control: Two-person check on model assignment; Trade blotter requires IPS draft ID.
+
+9) Post-Implementation Review
+- Schedule 90-day review; log outcomes.
+- Control: CRM task auto-created; Aging report sent to Advisor weekly.
+
+Servicing
+
+- Address change: Collect proof; update AtlasCRM and notify eKYC for re-verification if cross-border.
+- Beneficiary change: Use Form BEN-2025; signature verification via eSign.
+- Fee dispute: Open Case in AtlasCRM (CASE-2025-XXXXX); Deal Desk responds within 1 business day.
+
+Exceptions
+
+- High Concentration Positions (>20% single security)
+  - Requires L3 approval and Client Acknowledgment Form CAF-2025.
+- Illiquid Alternative Exposure (>15% of portfolio)
+  - Requires Liquidity Risk Addendum and HNW qualification evidence.
+- PEP/EDD Clients
+  - Enhanced documentation; Compliance sign-off mandatory; annual review frequency increased.
+
+Evidence Retention
+
+- All steps must include artifacts in DocVault360. RPO 15 minutes, RTO 4 hours. Retention: minimum 7 years post-relationship.
+
+# Objection Handling Matrix
+
+| Objection | Response | Evidence/Follow-up |
+| --- | --- | --- |
+| “Fees seem high.” | Our tiered schedule reduces fees as assets grow. Here’s your quote: 0.95% blended, with potential 10 bps relationship discount. | Present Quoter Q-2025-10384; attach competitor quote if seeking L2 approval. |
+| “I want guaranteed returns.” | We cannot guarantee returns. We can design a portfolio targeting lower volatility and capital preservation aligned to your risk profile. | Share model drawdown history; include RiskCompass rationale. |
+| “I don’t want to complete KYC.” | Regulations require us to verify identity and source of funds before providing advice. The process is digital and usually takes under 24 hours. | eKYC link and status update; document refusal if any. |
+| “Why so many documents?” | Regulations mandate clear disclosures to act in your best interest and to document suitability and fees. We streamline via eSign to reduce friction. | Provide AA-Form v5 and Suitability Memo summary. |
+| “Another firm offered 30 bps less.” | We can evaluate a competitive adjustment within policy if you provide their written quote, ensuring we maintain service quality and compliance. | Attach competitor quote; route L2/L3 approval. |
+
+# Term Sheet Template (Mini)
+
+Term Sheet — Advisory Services (Example)
+
+- Client ID: CUST-12345
+- Household ID: HH-90877
+- Product: WM-ADV-DIS (Discretionary)
+- AUM Committed: $1,250,000.00
+- Blended Advisory Fee: 0.95% (Quoter Q-2025-10384)
+- Discount: 15 bps approved (L2)
+- Custodian: NFG Custody
+- Risk Profile: Moderate (Score 62)
+- IPS Version: 2.4; Drawdown limit -12%; Target tracking error 3–5%
+- Liquidity Needs: $50,000 in 6 months held in cash sleeve
+- Tax Management: Enable tax-loss harvesting; Lot selection: HIFO
+- Review Cadence: Quarterly reviews; 90-day initial check-in
+- Onboarding Timeline: Agreement signed 2025-10-20; Account open 2025-10-21; Fully invested by 2025-10-23
+- Disclosures Provided: Fee schedule, conflicts statement, Reg BI disclosure, privacy notice (NFG-DPP-120)
+- Approvals: L2 pricing approval (Deal Desk Manager); Suitability Green
+- Effective Date: 2025-10-21
+- Signatures: Client eSign; Advisor eSign; NFG Authorized Signatory
+
+Constraints: Valid for 30 days; subject to KYC completion and funding within 15 days; discount void if AUM falls below $1,000,000.
+
+# KPIs and Dashboards
+
+Leading indicators (Owner: Regional Sales Manager):
+
+- Discovery-to-Proposal Cycle Time: Target ≤2 business days; Alert >3 days.
+- KYC Completion Rate within 24 hours: Target ≥85%.
+- Suitability Auto-Green Rate: Target ≥70% of cases.
+
+Lagging indicators (Owner: Head of Wealth):
+
+- 90-Day Retention: Target ≥95%.
+- Fee Realization vs Quote: Target ≥98%; Alert <95%.
+- Compliance Exceptions per 100 Accounts: Target ≤2; Alert ≥5.
+
+Operational SLOs:
+
+- DocVault360 Archive Confirmation: 99.9% within 15 minutes (RPO 15m).
+- Nimbus Call Linking: 99% within 1 hour.
+- Quoter Approval SLA Adherence: ≥95%.
+
+Dashboards:
+
+- AtlasCRM Advisory Pipeline (by stage, SLA breach flags).
+- Compliance Suitability Heatmap (Green/Amber/Red by region).
+- Fee Realization Tracker (Quoter vs actual billing).
+
+# Regional Variations
+
+NAMER (US/Canada)
+
+- Reg BI and FINRA 2111 suitability apply. Signed Reg BI disclosure required.
+- Tax-loss harvesting restricted in certain states due to state tax rules; refer NFG-TAX-STAT-009.
+
+EMEA
+
+- MiFID II appropriateness/suitability questionnaires mandatory; 24-hour cooling-off for remote agreements in some countries.
+- Ex-UK clients: 10% depreciation reporting for portfolios with leverage triggers notification.
+
+APAC
+
+- Enhanced cross-border data consent; privacy notices include data localization clauses.
+- Some jurisdictions require wet signature for trusts; use hybrid process with courier and DocVault scan-in.
+
+Fee Caps and Minimums by Region
+
+- EMEA fee cap: 2.00% all-in including platform fees.
+- APAC minimum AUM for DIS: $750,000 equivalent in local currency.
+
+# References
+
+- Internal Policies:
+  - NFG-SUIT-100 Suitability and Best Interest
+  - NFG-KYC-0110 Know Your Customer Standard
+  - NFG-SEC-17a-4-Archival Records Retention
+  - NFG-DPP-120 Data Privacy Program
+  - NFG-COI-022 Conflicts of Interest
+- Systems and Procedures:
+  - NFG-ONB-001 Client Onboarding & KYC
+  - NFG-PRC-QUOTER-002 Pricing Engine - Quoter
+  - NFG-INV-PORT-004 Portfolio Construction Standards
+- See also: If engaging small-business owners for lending plus advisory, refer NFG-SMB-LEND-005 for combined underwriting considerations.
+
+# Change log
+
+- 1.0.0 (2025-10-03): Initial release of Financial Advisory Process playbook covering end-to-end workflow, pricing/approval matrix, CRM schema, API endpoints, and regional variations.
+
+Key takeaways: Use AtlasCRM, eKYC, RiskCompass, Quoter, and DocVault360 in sequence to move from discovery to signed agreement within 5 business days. Always document suitability and fees, route discounts via the Approval Matrix, and maintain evidence in WORM storage. Follow SLAs, escalate through Deal Desk when needed, and use the objection matrix to keep conversations compliant and concise.

@@ -1,0 +1,386 @@
+---
+doc_id: DOC-CO-0001
+doc_type: Company Overview and History
+title: Northbridge Financial Group — Company Overview and History
+business_unit: Corporate Strategy and Enablement
+audience: Sales, Advisors, Relationship Managers, Underwriters, Support
+owners:
+  - name: Maya Chen
+    title: VP, Corporate Strategy
+    email: maya.chen@nfg.internal
+  - name: Luis Ortega
+    title: Director, Sales Enablement
+    email: luis.ortega@nfg.internal
+owner_dept: Strategy & Enablement (STRAT-ENBL)
+tags:
+  - company-overview
+  - corporate-history
+  - enablement
+  - deal-desk
+  - compliance
+search_terms:
+  - NFG history
+  - Northbridge origin
+  - founding timeline
+  - leadership
+  - mission and values
+  - products and services
+  - acquisitions
+  - regulatory profile
+regions:
+  - US
+  - CA
+  - UK
+  - EU
+  - SG
+  - AU
+regulatory_scope:
+  - Banking (US OCC)
+  - Investment Advisory (SEC)
+  - Insurance (NAIC)
+  - Payments (PSD2, FCA)
+  - Data Protection (GDPR, CCPA)
+created_at: 2025-10-03
+updated_at: 2025-10-03
+effective_date: 2025-10-03
+review_cadence: Quarterly
+last_reviewed_by: Priya Natarajan, Chief Compliance Officer
+approvals:
+  - CRO-Office: 2025-10-02
+  - General Counsel: 2025-10-02
+version: 1.0.0
+visibility: Internal
+confidentiality: Internal
+systems:
+  - Salesforce (SFDC-NA12)
+  - DealDesk Portal (DDP-01)
+  - Archer GRC (ARCH-PRD)
+  - ServiceNow (SN-ITSM)
+  - Okta SSO
+  - Snowflake Data Lake (SF-NFG)
+  - Kafka Event Bus (KAF-01)
+  - Secure Document Vault (SDV-SEC17)
+product_codes:
+  - NFG-INV
+  - NFG-LEND
+  - NFG-TRUST
+  - NFG-PAY
+related_docs:
+  - DOC-SALES-0003
+  - DOC-DEAL-0101
+  - DOC-COMPL-0202
+  - DOC-PROD-INV-1001
+canonical_url: https://kb.nfg.internal/docs/DOC-CO-0001
+---
+
+# 1. Quick Reference (TL;DR)
+
+- Who we are: Northbridge Financial Group (NFG), founded 1987 in Boston, MA; diversified financial services across Wealth & Investment (NFG-INV), Commercial Lending (NFG-LEND), Fiduciary & Trust (NFG-TRUST), and Payments & Treasury (NFG-PAY); 18,400 employees in 26 countries.
+- What we stand for: “Advise with clarity. Execute with rigor.” Culture anchored in compliance-by-design and client outcomes.
+- Where we operate: US, Canada, UK, EU, Singapore, Australia; booking entities include NFG Bank N.A. (US OCC), NFG Securities LLC (FINRA/SEC), NFG Payments Ltd (FCA).
+- Core SLAs: 
+  - Corporate profile request (RFP/RFI facts): 1 business day turnaround via DealDesk Portal (DDP-01).
+  - Standard due diligence packet (SOC2, ISO 27001 letters, financials): 2 business days via Secure Document Vault (SDV-SEC17).
+  - Executive briefing scheduling: 5 business days lead time; 30-minute format.
+- Data resiliency: Corporate knowledge base RPO: 4 hours; RTO: 2 hours (SDV-SEC17 + Snowflake).
+- Do:
+  - Use approved statements in Disclosures (Section 7).
+  - Anchor origin story to our client-first risk culture and track record.
+  - Confirm legal entity and regulator when referencing licenses.
+- Don’t:
+  - Don’t imply guaranteed returns, deposit insurance for non-deposit products, or unlimited payment guarantees.
+  - Don’t share non-public financials outside SDV-SEC17 controlled access.
+
+# 2. Customer Personas and Use Cases
+
+- Institutional CIO/CTO: Needs comfort on vendor stability, control environment, and scale. Use for onboarding NFG as a manager, lender, or payments provider.
+- Corporate Treasury: Evaluates cash management, payments resilience, and cross-border capabilities; often requests company lineage and regulatory perimeter.
+- UHNW Family Office: Prioritizes fiduciary heritage and conflict management for trust/estate solutions.
+- Middle-Market CFO: Assesses lending capacity/history through cycles.
+- Regulators/Auditors (client-side): Require evidence of compliance history and incident management maturity.
+
+Eligibility fit:
+- Fit: Clients valuing regulated, multi-jurisdictional providers with strong risk frameworks and audited controls.
+- Non-fit: Startups requiring rapid, experimental product changes or unregulated crypto custody.
+
+# 3. Qualification and Discovery Questions
+
+BANT/CHAMP prompts:
+- Budget: “Do you have vendor qualification thresholds tied to regulatory status or financial ratios (e.g., debt/equity, liquidity)?”
+- Authority: “Who signs off on vendor risk? What artifacts do they need (SOC2 Type II, ISO 27001, PCI-DSS)?”
+- Need: “Which part of NFG’s portfolio are you considering, and which licenses matter for your use case?”
+- Timing: “When is your go-live? Do you require an executive briefing or site visit before final approval?”
+- Challenges: “Any prior issues with providers related to outages, data sovereignty, or audit exceptions?”
+- Metrics: “How will you measure successful onboarding (SLA, error rates, uptime)?”
+
+Red flags:
+- Requests to bypass due diligence, refusal to use SDV-SEC17, claims of guaranteed returns requirement, pressure to misstate regulatory coverage.
+
+# 4. Product/Policy Overview
+
+Company mission: Provide transparent, regulated financial services with operational excellence.
+
+Lines of business:
+- NFG-INV: Discretionary and non-discretionary investment advisory; 1,200 advisors; SEC Form ADV on file with CRD 194021.
+- NFG-LEND: Asset-based lending, equipment finance, and cash-flow loans; OCC-chartered bank entity NFG Bank N.A.
+- NFG-TRUST: Corporate trustee, estate administration; chartered trust company in Delaware and Channel Islands.
+- NFG-PAY: Domestic and cross-border payments, virtual accounts, treasury APIs; PSD2-compliant in EU via NFG Payments Ltd.
+
+Compliance-by-design:
+- Enterprise policies: NFG-SEC-17a-4-Archival (immutable records), NFG-KYC-0110 (Customer Identification), NFG-BCP-200 (Business Continuity), NFG-INFOSEC-27001 (ISMS).
+- Systems of record: 
+  - SFDC-NA12 for CRM, 
+  - Archer GRC for risk,
+  - SDV-SEC17 for artifacts,
+  - Snowflake for analytics (restricted, tokenized PII).
+
+Historical milestones:
+- 1987: Founded as Northbridge Investment Counsel in Boston.
+- 1996: Launch of Commercial Lending unit; rebrand to NFG.
+- 2003: Acquisition of Harbor Trust Co. (expansion into fiduciary services).
+- 2012: NFG Payments Ltd established in London (FCA 742619).
+- 2020–2022: Cloud migration to Snowflake and Kafka microservices; ISO 27001 certified.
+- 2023: Surpassed $750B in client assets advised; zero material audit findings for the third consecutive year.
+- 2024: Launched real-time cross-border rails (NFG-PAY/Instant).
+
+# 5. Pricing, Fees, and Discounting
+
+Corporate-level fee posture:
+- NFG-INV: Advisory fee bands (tiered AUM).
+- NFG-LEND: Interest margin over benchmark; arrangement fees.
+- NFG-TRUST: Schedule-based trustee fees; special asset surcharges.
+- NFG-PAY: Per-transaction fees + monthly platform fee.
+
+Standard fee bands (illustrative):
+- NFG-INV Advisory:
+  - 0–$25M AUM: 65 bps
+  - $25–$100M: 50 bps
+  - $100M+: 35 bps
+- NFG-PAY:
+  - Platform: $2,500/month
+  - Domestic ACH: $0.08/txn
+  - Cross-border SWIFT: $9.00/txn
+
+Discount guardrails:
+- Max discretionary discount without approval: 10% off card for any unit.
+- Multi-product bundle: Up to additional 5% with SVP approval and 24-month term.
+
+Approval Matrix (Discounting)
+- Level 0: Up to 10% — Owner: Sales Director; Evidence: Quote-0001 in SFDC; SLA: 4 hours.
+- Level 1: 10.01–20% — Owner: VP Sales + Finance BP; Evidence: Margin Analysis (DDP-01); SLA: 1 business day.
+- Level 2: 20.01–30% — Owner: Deal Desk + BU CFO; Evidence: Competitive Justification, Win-Loss notes; SLA: 2 business days.
+- Level 3: >30% or negative unit margin — Owner: CRO + Legal; Evidence: Strategic Deal Memo; SLA: 5 business days; Escalation: CRO Office.
+
+# 6. Deal Desk Workflow
+
+Use for any external request referencing NFG history, stability, or licenses that could impact risk evaluation or pricing.
+
+Steps:
+1) Intake (SLA: 4 business hours)
+- Submit DDP-01 intake with RFI/RFP ID (e.g., RFI-2025-1147).
+- Required artifacts: Client name (CUST-12345), opportunity (OPP-98111), use case summary, due date, requested statements.
+- Control check: Validate client is in SFDC with KYC stage ≥ “KYC-Prelim”.
+
+2) Artifact Assembly (SLA: 1 business day for standard packets)
+- Pull latest SOC2, ISO 27001, financial highlights, org charts from SDV-SEC17.
+- Control check: Verify document versions and dates; must match “current” flag in SDV.
+
+3) Legal/Compliance Review (SLA: 1–2 business days)
+- Route to Legal and CCO queue in Archer.
+- Control check: Redline any custom statements; map to approved language library (LIB-CORP-OVW).
+
+4) Executive Briefing (optional)
+- Schedule within 5 business days; assign Exec Sponsor (SVP+).
+- Control check: Briefing deck approved by Strategy (v# logged).
+
+5) Delivery & Logging
+- Deliver via SDV secure link; set access TTL to 14 days.
+- Control check: Record in SFDC “Due Diligence Completed” date; attach DDP-01 case.
+
+Escalation path:
+- If SLA breach imminent, escalate to Deal Desk Manager within 2 hours; beyond 24 hours, to VP Sales Enablement; regulatory-sensitive items escalate to CCO immediately.
+
+# 7. Risk and Compliance Disclosures
+
+Required statements:
+- “NFG provides investment advisory services through NFG Securities LLC, an SEC-registered investment adviser; registration does not imply a certain level of skill.”
+- “Banking services are offered by NFG Bank N.A., Member FDIC. Non-deposit products are not FDIC insured, not bank guaranteed, and may lose value.”
+- “Payments services in the UK/EU provided by NFG Payments Ltd, authorized by the FCA under FRN 742619 for payment services.”
+- “All communications may be recorded and archived per NFG-SEC-17a-4-Archival.”
+- “We do not offer guarantees of investment performance. Historical performance is not indicative of future results.”
+
+Paperwork:
+- Use the latest disclosures from SDV-SEC17 folder “Legal/Disclosures/Current.”
+- For regional marketing, include GDPR/CCPA notices per NFG-DATA-PRIV-100.
+
+# 8. Data and CRM Fields
+
+Canonical company profile fields (SFDC-NA12)
+- Company_Established_Year__c (Number, 4-digit; e.g., 1987) — Required
+- Headquarters_City__c (Text; e.g., Boston)
+- Legal_Entities_Selected__c (Multi-Select; e.g., NFG Bank N.A.; NFG Securities LLC)
+- Regulatory_Licenses__c (Long Text; e.g., “OCC #245119; SEC CRD 194021; FCA FRN 742619”)
+- Lines_of_Business__c (Picklist; INV/LEND/TRUST/PAY)
+- Corporate_Story_Anchor__c (Text; e.g., “Advised through 5 cycles; zero material audit findings since 2021”)
+- Due_Diligence_Packet_Link__c (URL; SDV link)
+- Executive_Sponsor__c (Lookup(User))
+- Artifact_Version__c (Text; e.g., “LIB-CORP-OVW v3.4”)
+- Last_Updated_By_DealDesk__c (DateTime)
+
+Validation:
+- Legal_Entities_Selected__c must include at least one entity aligned with opportunity product codes.
+- Due_Diligence_Packet_Link__c must be SDV-SEC17 link pattern: https://sdv.nfg.internal/share/[token]
+
+Example record (CUST-12345):
+- Company_Established_Year__c: 1987
+- Headquarters_City__c: Boston
+- Legal_Entities_Selected__c: “NFG Bank N.A.; NFG Securities LLC; NFG Payments Ltd”
+- Regulatory_Licenses__c: “OCC #245119; SEC CRD 194021; FCA FRN 742619”
+- Lines_of_Business__c: “INV;PAY”
+- Corporate_Story_Anchor__c: “Client-first risk culture; ISO27001; RPO 4h/RTO 2h”
+- Due_Diligence_Packet_Link__c: “https://sdv.nfg.internal/share/abc123”
+- Executive_Sponsor__c: “USR-00871 (SVP, Institutional)”
+- Artifact_Version__c: “LIB-CORP-OVW v3.4”
+- Last_Updated_By_DealDesk__c: “2025-09-30T14:11:05Z”
+
+# 9. Integrations and APIs
+
+Public Payments API (Company capability illustration)
+- Endpoint: POST /v1/treasury/payments
+- Auth: OAuth2 client credentials via Okta
+- Idempotency-Key header required.
+
+Example request:
+{
+  "client_id": "CL-44501",
+  "debtor_account": "VA-99887766",
+  "creditor_account": "GB29NWBK60161331926819",
+  "amount": {"currency": "USD", "value": "12500.00"},
+  "remittance": "Invoice 5512",
+  "settlement_priority": "STANDARD"
+}
+
+Example response:
+{
+  "payment_id": "PMT-2025-000342",
+  "status": "ACCEPTED",
+  "estimated_settlement": "2025-10-04T15:00:00Z",
+  "fees": {"total": "9.00", "currency": "USD"}
+}
+
+Knowledge Artifacts API (internal)
+- Endpoint: GET /v1/artifacts/company-overview/current
+- Returns current approved corporate overview text block.
+
+Example response:
+{
+  "artifact_id": "LIB-CORP-OVW",
+  "version": "3.4",
+  "effective_date": "2025-08-15",
+  "checksum": "c3fcd3d76192e4007dfb496cca67e13b",
+  "content_ref": "sdv://LIB-CORP-OVW/3.4"
+}
+
+Eventing
+- Kafka topic: corp.overview.updated — consumers: DealDesk, Marketing CMS; SLO: propagate within 15 minutes.
+
+# 10. Procedures
+
+A) Provide Company Overview Packet to Prospect
+1) Confirm Opportunity alignment (SFDC product codes). Control: Lines_of_Business__c must match.
+2) Submit DDP-01 intake with due date. Evidence: DDP-Case-008912.
+3) Retrieve LIB-CORP-OVW current via API or SDV. Control: Version must match latest.
+4) Assemble packet (company history, licenses, SOC2 letter, ISO certificate). Evidence: SDV package link.
+5) Legal review if custom language requested. Control: Archer ticket COMMS-REQ-4421 approved.
+6) Deliver via SDV link. Control: Access TTL set; verified recipient email domain.
+7) Log completion in SFDC field “Due_Diligence_Completed__c”. Evidence: timestamp.
+
+B) Executive Briefing Request
+1) Propose 3 time slots ≥5 business days out. Control: Exec calendar check.
+2) Draft 5-slide deck: Overview, History, Risk, Products, Case study. Control: Strategy sign-off (STR-APP-2213).
+3) Rehearse talk track (15 mins). Evidence: Enablement session record.
+4) Host briefing; capture Q&A in SFDC Notes. Control: No off-script commitments.
+5) Send follow-up with SDV link and action items. Control: All items assigned in SFDC Tasks.
+
+C) Regional License Confirmation
+1) Identify intended services and client domicile.
+2) Check “Regulatory_Licenses__c” and Regional Variations (Section 14).
+3) If ambiguity, open Legal inquiry ticket. Control: No statements to client until confirmation.
+4) Update SFDC with confirmed entity. Evidence: Legal response attached.
+
+# 11. Objection Handling Matrix
+
+- “Are you big enough to support our scale?”
+  - Response: “We serve 2,100 institutional clients across 26 countries, processed 1.8B payments in 2024 with 99.985% uptime; RPO 4h/RTO 2h for core knowledge systems; payments platform RTO 30 minutes, RPO 5 minutes.”
+- “We’ve had vendors fail audits.”
+  - Response: “NFG has had zero material audit findings since 2021; SOC2 Type II and ISO 27001 annually renewed; artifacts are in SDV-SEC17.”
+- “Are you a bank or a fintech?”
+  - Response: “We operate regulated entities including an OCC-chartered bank and SEC-registered adviser, and we deliver technology-forward services with PSD2-compliant APIs.”
+- “Will you guarantee returns?”
+  - Response: “We do not guarantee performance. We align incentives through fee structures and risk management; see Disclosures.”
+- “How resilient is your platform?”
+  - Response: “Active-active data centers with quarterly failover tests; payments SLOs: 99.98% monthly availability, max 120-second API p95 latency.”
+
+# 12. Term Sheet Template (Mini)
+
+Company Overview and Diligence Support — Term Summary
+- Parties: Northbridge Financial Group (applicable legal entity) and [Client Legal Name].
+- Scope: Provision of corporate due diligence artifacts and executive briefings to support vendor onboarding.
+- Deliverables:
+  - Standard diligence packet (SOC2, ISO, licenses, financial highlights).
+  - 1 executive briefing (30 minutes).
+  - Up to 2 follow-up Q&A cycles.
+- SLAs:
+  - Packet delivery: 2 business days from request acceptance.
+  - Briefing scheduling: within 5 business days.
+- Fees: $0 (pre-sales support). Additional bespoke reports: $5,000 per report (Level 1 approval).
+- Confidentiality: NDA required; delivery via SDV-SEC17.
+- Term: 90 days from effective date.
+- Approvals: Sales Director (pre-sales), Legal (NDA), Compliance (artifact scope).
+- Constraints: No forward-looking financials beyond public disclosures; no client PII included.
+
+# 13. KPIs and Dashboards
+
+Enablement KPIs
+- RFP/RFI turnaround time — Target: ≤1 business day; Owner: Deal Desk; Dashboard: DDP-01/RFP-Board.
+- Artifact freshness (LIB-CORP-OVW version adoption) — Target: 100% current; Owner: Strategy; Dashboard: Archer GRC control C-OVW-101.
+- Briefing win rate uplift — Target: +15% conversion vs. baseline; Owner: Sales Ops; Dashboard: SFDC Pipeline Insights.
+- Compliance exceptions due to misstatements — Target: 0; Owner: Compliance; Dashboard: Archer Incident Report IR-COMMS.
+
+Operational SLOs
+- SDV artifact availability — 99.98% monthly; Owner: IT Ops.
+- Kafka propagation for updates — ≤15 minutes end-to-end; Owner: Platform Eng.
+
+# 14. Regional Variations
+
+- US: Banking via NFG Bank N.A. (OCC #245119), investments via NFG Securities LLC (SEC/FINRA). Marketing subject to Reg BI for brokerage activities and ADV for investment advisory.
+- Canada: NFG Securities Canada Inc., registered with provincial securities regulators; bilingual disclosures (EN/FR).
+- UK/EU: NFG Payments Ltd (FCA FRN 742619); PSD2/PSR compliance; GDPR DPA required; SEPA capabilities.
+- Singapore: NFG Asia Pte. Ltd., MAS exempt status for certain advisory activities; ensure MAS notices in materials.
+- Australia: NFG Australia Pty Ltd, AFSL for wholesale clients; no retail marketing without AFSL retail permissions.
+- Data residency: EU artifacts hosted in EU data zone; cross-border transfers under SCCs (NFG-DATA-PRIV-220).
+
+# 15. References
+
+Internal policies:
+- NFG-SEC-17a-4-Archival — Communications Archival Standard
+- NFG-KYC-0110 — Customer Identification Program
+- NFG-BCP-200 — Business Continuity and Disaster Recovery
+- NFG-INFOSEC-27001 — Information Security Management System
+- NFG-MKT-ADV-310 — Marketing and Advertising Review
+- NFG-DATA-PRIV-100 — Privacy Policy and Notices
+- NFG-DATA-PRIV-220 — Cross-Border Data Transfers
+
+Related docs:
+- DOC-SALES-0003 — Corporate Pitch Deck Guidelines
+- DOC-DEAL-0101 — Deal Desk Intake and SLAs
+- DOC-COMPL-0202 — Disclosures and Marketing Review Process
+- DOC-PROD-INV-1001 — Investment Advisory Product Guide
+
+See also: For product-specific details and pricing, refer to DOC-PROD-INV-1001 and BU-specific guides.
+
+# 16. Change log
+
+- 1.0.0 (2025-10-03): Initial publication. Consolidates corporate history, legal entities, SLAs, pricing guardrails, workflows, and disclosures into a single frontline-ready overview.
+
+Key takeaways: NFG is a diversified, regulated financial services firm with a 1987 heritage, strong control environment, and clear SLAs for diligence support. Use approved language, route requests through Deal Desk, confirm legal entity/regulator before statements, and deliver artifacts via SDV-SEC17. These steps reduce risk, accelerate onboarding, and strengthen client confidence in our history and capabilities.
