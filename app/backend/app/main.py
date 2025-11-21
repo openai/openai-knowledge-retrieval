@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import mimetypes
 import os
+import re
 import sys
+from itertools import chain
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, List
 
@@ -17,6 +19,7 @@ from chatkit.types import (
     Attachment,
     ClientToolCallItem,
     FileSource,
+    ResponseInputContentParam,
     ThreadItem,
     ThreadItemDoneEvent,
     ThreadMetadata,
@@ -41,21 +44,21 @@ try:
 except Exception:
     pass
 
-from cli.config import load_config
-from retrieval.citations import extract_spans
+from cli.config import load_config  # noqa: E402
+from retrieval.citations import extract_spans  # noqa: E402
 
-from .assistant_agent import (
+from .assistant_agent import (  # noqa: E402
     assistant_agent,
     clear_last_retrieved_chunks,
     get_last_retrieved_chunks,
     reset_current_thread,
     set_current_thread,
 )
-from .documents import (
+from .documents import (  # noqa: E402
     DocumentMetadata,
     as_dicts,
 )
-from .memory_store import MemoryStore
+from .memory_store import MemoryStore  # noqa: E402
 
 _DATA_DIR = Path(__file__).resolve().parents[2] / "data"  # legacy fallback
 
@@ -241,6 +244,49 @@ class KnowledgeAssistantServer(ChatKitServer[dict[str, Any]]):
                 return d
         return None
 
+    def _documents_from_text(
+        self, text: str, cfg: RootConfig
+    ) -> list[DocumentMetadata]:
+        """Infer referenced documents from freeform assistant text.
+
+        This is a best-effort fallback when explicit annotations and cached
+        citations are unavailable. It scans for common patterns and direct
+        mentions of document identifiers, filenames, stems, or titles.
+        """
+
+        raw = (text or "").strip()
+        if not raw:
+            return []
+
+        lowered = raw.lower()
+        documents = self._scan_documents(self._cfg_path, cfg)
+
+        matches: list[DocumentMetadata] = []
+        seen: set[str] = set()
+
+        # Look for bracketed hints such as "[doc:foo]" or "[citation: title]".
+        hinted = re.findall(r"\[(?:doc|source|citation):\s*([^\]]+)\]", raw, re.I)
+        for hint in hinted:
+            doc = self._lookup_document(self._cfg_path, cfg, hint.strip())
+            if doc and doc.id not in seen:
+                matches.append(doc)
+                seen.add(doc.id)
+
+        # Fallback: check for direct mentions of known documents.
+        for doc in documents:
+            identifiers = [
+                doc.id.lower(),
+                doc.filename.lower(),
+                Path(doc.filename).stem.lower(),
+                doc.title.lower(),
+            ]
+            if any(identifier and identifier in lowered for identifier in identifiers):
+                if doc.id not in seen:
+                    matches.append(doc)
+                    seen.add(doc.id)
+
+        return matches
+
     def _resolve_document_path(self, cfg_path: str, doc_id: str) -> Path | None:
         return (self._document_path_cache.get(cfg_path) or {}).get(doc_id)
 
@@ -335,7 +381,7 @@ class KnowledgeAssistantServer(ChatKitServer[dict[str, Any]]):
             if isinstance(content, AssistantMessageContent)
         )
         for line in texts:
-            for document in _documents_from_text(line):
+            for document in self._documents_from_text(line, cfg):
                 citations.append(
                     {
                         "document_id": document.id,
