@@ -5,9 +5,6 @@ from pathlib import Path
 
 import yaml
 
-from app.assistant_agent import clear_last_retrieved_chunks
-from app.main import AssistantMessageContent, AssistantMessageItem, KnowledgeAssistantServer
-
 
 def _make_config(tmp_path: Path, data_dir: Path) -> Path:
     config = {
@@ -30,9 +27,15 @@ def _make_config(tmp_path: Path, data_dir: Path) -> Path:
     return config_path
 
 
-def _make_server(monkeypatch, config_path: Path) -> KnowledgeAssistantServer:
+def _make_server(monkeypatch, config_path: Path):
     monkeypatch.setenv("RAG_CONFIG", str(config_path))
-    return KnowledgeAssistantServer(agent=object())
+    from app import main as main_module
+
+    # load_dotenv inside app.main uses override=True, so re-assert the test config
+    # after import to ensure the server reads the temporary config file.
+    monkeypatch.setenv("RAG_CONFIG", str(config_path))
+
+    return main_module.KnowledgeAssistantServer(agent=object())
 
 
 def test_documents_from_text_matches_bracket_hints(tmp_path, monkeypatch):
@@ -57,6 +60,9 @@ def test_documents_from_text_matches_bracket_hints(tmp_path, monkeypatch):
 
 def test_extract_citations_falls_back_to_text_when_no_annotations(tmp_path, monkeypatch):
     """`_extract_citations` should fall back to text parsing when no annotations exist."""
+    from app.assistant_agent import clear_last_retrieved_chunks
+    from app.main import AssistantMessageContent, AssistantMessageItem
+
     data_dir = tmp_path / "docs"
     data_dir.mkdir()
     doc_path = data_dir / "doc_two.txt"
