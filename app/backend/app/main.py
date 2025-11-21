@@ -44,8 +44,8 @@ try:
 except Exception:
     pass
 
-from cli.config import load_config  # noqa: E402
-from retrieval.citations import extract_spans  # noqa: E402
+from cli.config import load_config
+from retrieval.citations import extract_spans
 
 from .assistant_agent import (  # noqa: E402
     assistant_agent,
