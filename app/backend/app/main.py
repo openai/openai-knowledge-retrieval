@@ -19,7 +19,6 @@ from chatkit.types import (
     Attachment,
     ClientToolCallItem,
     FileSource,
-    ResponseInputContentParam,
     ThreadItem,
     ThreadItemDoneEvent,
     ThreadMetadata,
@@ -30,6 +29,7 @@ from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, Response, StreamingResponse
+from openai.types.responses import ResponseInputContentParam
 from starlette.responses import JSONResponse
 
 if TYPE_CHECKING:
