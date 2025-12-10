@@ -63,7 +63,7 @@ data/
 !data/example_data/**
 tmp/
 artifacts/
-configs/
+configs/*
 !configs/default.openai.yaml
 !configs/default.qdrant.yaml
 
