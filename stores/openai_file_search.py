@@ -177,8 +177,17 @@ class OpenAIFileSearchStore(VectorStore):
                 return set()
             return ids
 
-        existing_by_name = _list_all_files_by_name()
-        existing_vs_ids = _list_vector_store_file_ids()
+        skip_preflight = os.getenv("RAG_SKIP_PREFLIGHT", "").strip().lower() in {
+            "1",
+            "true",
+            "yes",
+        }
+        if skip_preflight:
+            existing_by_name = {}
+            existing_vs_ids = set()
+        else:
+            existing_by_name = _list_all_files_by_name()
+            existing_vs_ids = _list_vector_store_file_ids()
 
         def _ensure_file_uploaded(path: str) -> Tuple[str, str]:
             basename = os.path.basename(path)
