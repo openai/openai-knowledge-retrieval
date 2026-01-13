@@ -122,6 +122,10 @@ rag ingest --config configs/my.openai.yaml
 The CLI will create or reuse a vector store, upload documents, and print the resulting
 `vector_store_id`. Persist that value in your `.env`.
 
+Optional: set `RAG_SKIP_PREFLIGHT=1` to skip preflight de-dupe listings when your org
+has a large number of files. This starts uploads immediately, but can allow duplicate
+uploads because de-dupe is bypassed.
+
 ### 7. Launch the experience
 
 Start the FastAPI backend (reads `RAG_CONFIG`, defaulting to `configs/default.openai.yaml`):
