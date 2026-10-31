@@ -113,6 +113,12 @@ make qdrant-up
 
 This will start a local Qdrant instance on port 6333.
 
+Qdrant initialization reuses existing collections without recreating them.
+Connection, authorization, and metadata errors are propagated instead of being
+treated as a missing collection. Existing collections must use a single unnamed
+dense vector with the configured embedding dimension and distance metric; an
+incompatible configuration raises an error without modifying stored data.
+
 ### 6. Ingest your knowledge base
 
 ```bash
