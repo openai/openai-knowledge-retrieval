@@ -122,6 +122,11 @@ rag ingest --config configs/my.openai.yaml
 The CLI will create or reuse a vector store, upload documents, and print the resulting
 `vector_store_id`. Persist that value in your `.env`.
 
+For OpenAI File Search, existing attachments are skipped only after indexing has
+succeeded. Pending attachments are polled for completion; failed, cancelled, or
+timed-out indexing makes ingestion fail instead of reporting success. Existing
+failed attachments are reported without automatically deleting or recreating them.
+
 Optional: set `RAG_SKIP_PREFLIGHT=1` to skip preflight de-dupe listings when your org
 has a large number of files. This starts uploads immediately, but can allow duplicate
 uploads because de-dupe is bypassed.

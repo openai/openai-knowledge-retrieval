@@ -89,7 +89,7 @@ class OpenAIFileSearchStore(VectorStore):
         """Upload local files and ensure they are attached to the Vector Store.
 
         - Splits errors between file-store upload and vector-store attach/indexing.
-        - Skips duplicates in both stores (by filename+size for file store; by file_id for vector store).
+        - Reuses uploaded files by filename+size; skips only successfully indexed attachments.
         - Runs in parallel; retries the step that failed only.
         """
         file_paths = list(file_paths)
@@ -153,8 +153,8 @@ class OpenAIFileSearchStore(VectorStore):
                 return {}
             return out
 
-        def _list_vector_store_file_ids() -> set[str]:
-            ids: set[str] = set()
+        def _list_vector_store_file_statuses() -> dict[str, str]:
+            statuses: dict[str, str] = {}
             try:
                 cursor = None
                 while True:
@@ -166,7 +166,9 @@ class OpenAIFileSearchStore(VectorStore):
                     for rec in data:
                         fid = getattr(rec, "file_id", None) or getattr(rec, "id", None)
                         if fid:
-                            ids.add(str(fid))
+                            statuses[str(fid)] = (
+                                getattr(rec, "status", None) or getattr(rec, "state", None) or ""
+                            ).lower()
                     has_more = getattr(resp, "has_more", False)
                     if not has_more:
                         break
@@ -174,8 +176,8 @@ class OpenAIFileSearchStore(VectorStore):
                     if not cursor:
                         break
             except Exception:
-                return set()
-            return ids
+                return {}
+            return statuses
 
         skip_preflight = os.getenv("RAG_SKIP_PREFLIGHT", "").strip().lower() in {
             "1",
@@ -184,10 +186,10 @@ class OpenAIFileSearchStore(VectorStore):
         }
         if skip_preflight:
             existing_by_name = {}
-            existing_vs_ids = set()
+            existing_vs_statuses: dict[str, str] = {}
         else:
             existing_by_name = _list_all_files_by_name()
-            existing_vs_ids = _list_vector_store_file_ids()
+            existing_vs_statuses = _list_vector_store_file_statuses()
 
         def _ensure_file_uploaded(path: str) -> Tuple[str, str]:
             basename = os.path.basename(path)
@@ -233,8 +235,29 @@ class OpenAIFileSearchStore(VectorStore):
                         continue
                     raise
 
+        def _wait_for_indexing(file_id: str) -> None:
+            for poll_try in range(10):
+                time.sleep(1.0 + 0.25 * poll_try)
+                fetched = self.client.vector_stores.files.retrieve(
+                    vector_store_id=vs_id, file_id=file_id
+                )
+                status = (
+                    getattr(fetched, "status", None) or getattr(fetched, "state", None) or ""
+                ).lower()
+                if status in ("completed", "processed", "succeeded"):
+                    existing_vs_statuses[file_id] = status
+                    return
+                if status in ("failed", "errored", "cancelled"):
+                    raise RuntimeError(f"vector store indexing status={status}")
+            raise TimeoutError("vector store processing timed out")
+
         def _ensure_in_vector_store(file_id: str, basename: str) -> str:
-            if file_id in existing_vs_ids:
+            if file_id in existing_vs_statuses:
+                status = existing_vs_statuses[file_id]
+                if status in ("failed", "errored", "cancelled"):
+                    raise RuntimeError(f"vector store indexing status={status}")
+                if status not in ("completed", "processed", "succeeded"):
+                    _wait_for_indexing(file_id)
                 print(
                     f"[yellow]skip vector-store duplicate[/yellow] {basename} (file_id={file_id})"
                 )
@@ -242,7 +265,6 @@ class OpenAIFileSearchStore(VectorStore):
 
             # Attach with retries
             max_attempts = int(os.getenv("RAG_RETRY_MAX_ATTEMPTS", "5"))
-            last_err: Optional[Exception] = None
             for attempt in range(1, max_attempts + 1):
                 try:
                     rec = self.client.vector_stores.files.create(
@@ -251,33 +273,12 @@ class OpenAIFileSearchStore(VectorStore):
                         **self._chunking_strategy_kwargs(),
                     )
                     vs_file_id = str(getattr(rec, "id", ""))
-                    # Poll processing status
-                    for poll_try in range(10):
-                        time.sleep(1.0 + 0.25 * poll_try)
-                        fetched = self.client.vector_stores.files.retrieve(
-                            vector_store_id=vs_id, file_id=file_id
-                        )
-                        status = (
-                            getattr(fetched, "status", None)
-                            or getattr(fetched, "state", None)
-                            or ""
-                        ).lower()
-                        if status in ("completed", "processed", "succeeded"):
-                            print(
-                                f"[green]added to vector store[/green] {basename} (file_id={file_id}, vs_file_id={vs_file_id})"
-                            )
-                            existing_vs_ids.add(file_id)
-                            return "attached"
-                        if status in ("failed", "errored", "cancelled"):
-                            last_err = RuntimeError(
-                                f"vector store indexing status={status}"
-                            )
-                            raise last_err
-                    # If we exit the poll loop, treat as timeout and retry
-                    last_err = TimeoutError("vector store processing timed out")
-                    raise last_err
+                    _wait_for_indexing(file_id)
+                    print(
+                        f"[green]added to vector store[/green] {basename} (file_id={file_id}, vs_file_id={vs_file_id})"
+                    )
+                    return "attached"
                 except Exception as e:
-                    last_err = e
                     if attempt < max_attempts:
                         sleep_s = _retry_sleep_seconds(attempt, e)
                         print(
@@ -357,9 +358,7 @@ class OpenAIFileSearchStore(VectorStore):
         self, query: str, k: int, filters: Optional[Dict[str, Any]] = None
     ) -> List[ScoredChunk]:
         # Retrieval is handled in models.synthesis / retrieval pipeline
-        raise NotImplementedError(
-            "Use models.synthesis with file_search for OpenAI backend"
-        )
+        raise NotImplementedError("Use models.synthesis with file_search for OpenAI backend")
 
     def stats(self) -> Dict[str, Any]:
         return {
