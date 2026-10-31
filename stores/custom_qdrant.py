@@ -2,21 +2,22 @@ from __future__ import annotations
 
 import os
 from typing import Any, Dict, List, Optional
-from rich import print as rprint
 
+import grpc
 from qdrant_client import QdrantClient
+from qdrant_client.http.exceptions import UnexpectedResponse
 from qdrant_client.models import (
     Distance,
-    VectorParams,
-    PointStruct,
-    Filter,
     FieldCondition,
+    Filter,
     MatchAny,
+    PointStruct,
+    VectorParams,
 )
+from rich import print as rprint
 
 from cli.config import RootConfig
 from stores.base import Chunk, ScoredChunk, VectorStore
-
 
 _DISTANCE_MAP = {
     "cosine": Distance.COSINE,
@@ -60,28 +61,34 @@ class QdrantStore(VectorStore):
         )
 
     def _ensure_collection(self, cfg: RootConfig) -> None:
-        exists = False
-        try:
-            info = self.client.get_collection(self.collection)
-            exists = info is not None
-        except Exception:
-            exists = False
-        if not exists:
-            self.client.recreate_collection(
-                collection_name=self.collection,
-                vectors_config=VectorParams(size=self._vector_dim, distance=self.distance),
+        if not self.client.collection_exists(collection_name=self.collection):
+            try:
+                self.client.create_collection(
+                    collection_name=self.collection,
+                    vectors_config=VectorParams(size=self._vector_dim, distance=self.distance),
+                )
+            except UnexpectedResponse as exc:
+                if exc.status_code != 409:
+                    raise
+            except grpc.RpcError as exc:
+                if exc.code() != grpc.StatusCode.ALREADY_EXISTS:
+                    raise
+
+        # A concurrent creator may have won the race. Validate its configuration
+        # just as we validate a collection found by the initial existence check.
+        info = self.client.get_collection(self.collection)
+        vectors = info.config.params.vectors
+        if not isinstance(vectors, VectorParams):
+            raise TypeError(
+                f"Qdrant collection {self.collection!r} must use a single unnamed dense vector"
             )
-            rprint(
-                "[green]Created Qdrant collection[/green] "
-                f"name={self.collection} size={self._vector_dim} distance={self.distance}"
+        if vectors.size != self._vector_dim or vectors.distance != self.distance:
+            raise ValueError(
+                f"Qdrant collection {self.collection!r} has incompatible vector configuration: "
+                f"expected size={self._vector_dim}, distance={self.distance}; "
+                f"found size={vectors.size}, distance={vectors.distance}"
             )
-        try:
-            info = self.client.get_collection(self.collection)
-            pc = getattr(info, "points_count", None)
-            if pc is not None:
-                rprint(f"[dim]Qdrant collection points[/dim]: {pc}")
-        except Exception:
-            pass
+        rprint(f"[dim]Qdrant collection points[/dim]: {info.points_count}")
 
     def upsert(self, chunks: List[Chunk]) -> None:
         points = []
